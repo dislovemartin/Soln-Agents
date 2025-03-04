@@ -1,0 +1,18 @@
+name: "YAML Test Crew"
+agents:
+  - name: "Eve"
+    role: "Data Scientist"
+    expertise: "Machine Learning"
+  - name: "Frank"
+    role: "Engineer"
+    expertise: "Backend Development"
+tasks:
+  - id: 1
+    description: "Analyze dataset"
+    expected_output: "Analysis report"
+    agent_name: "Eve"
+  - id: 2
+    description: "Build API"
+    expected_output: "API documentation"
+    agent_name: "Frank"
+process: "sequential" 

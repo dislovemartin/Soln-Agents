@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolnAI Agents Documentation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Documentation</h2>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="overview.html">Overview</a></li>
+            <li><a href="creating_new_agent.html">Creating a New Agent</a></li>
+            <li><a href="agent_api_reference.html">API Reference</a></li>
+            <li><a href="deployment_guide.html">Deployment Guide</a></li>
+            <li><a href="troubleshooting_guide.html">Troubleshooting</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h1 id="solnai-agents-collection-overview">SolnAI Agents Collection Overview</h1>
+<h2 id="introduction">Introduction</h2>
+<p>The SolnAI Agents Collection is a comprehensive library of AI agents built for the SolnAI platform. These agents provide a wide range of functionalities and can be deployed as standalone services or integrated into the SolnAI ecosystem. This documentation provides an in-depth overview of the collection, its architecture, and how to work with the agents.</p>
+<h2 id="what-are-solnai-agents">What are SolnAI Agents?</h2>
+<p>SolnAI agents are specialized AI services that perform specific tasks, from summarizing YouTube videos to analyzing data, generating content, and more. Each agent is designed to be:</p>
+<ul>
+<li><strong>Self-contained</strong>: Each agent operates as an independent service</li>
+<li><strong>Containerized</strong>: Agents are packaged as Docker containers for easy deployment</li>
+<li><strong>API-driven</strong>: Agents expose RESTful APIs for integration</li>
+<li><strong>Stateful</strong>: Conversation history is maintained using databases like Supabase</li>
+</ul>
+<h2 id="architecture-overview">Architecture Overview</h2>
+<p>The SolnAI-agents repository follows a modular architecture that enables easy development, deployment, and integration of agents. The architecture consists of several key components:</p>
+<h3 id="directory-structure">Directory Structure</h3>
+<div class="codehilite"><pre><span></span><code><span class="nx">SolnAI</span><span class="o">-</span><span class="nx">agents</span><span class="o">/</span>
+<span class="err">├──</span><span class="w"> </span><span class="nx">base_python_docker</span><span class="o">/</span><span class="w">         </span><span class="err">#</span><span class="w"> </span><span class="nx">Base</span><span class="w"> </span><span class="nx">Docker</span><span class="w"> </span><span class="nx">image</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">Python</span><span class="w"> </span><span class="nx">agents</span>
+<span class="err">├──</span><span class="w"> </span><span class="nx">components</span><span class="o">/</span><span class="w">                 </span><span class="err">#</span><span class="w"> </span><span class="nx">Shared</span><span class="w"> </span><span class="nx">UI</span><span class="w"> </span><span class="nx">components</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="nx">ui</span><span class="o">/</span><span class="w">                     </span><span class="err">#</span><span class="w"> </span><span class="nx">Reusable</span><span class="w"> </span><span class="nx">UI</span><span class="w"> </span><span class="nx">elements</span>
+<span class="err">├──</span><span class="w"> </span><span class="o">~</span><span class="nx">sample</span><span class="o">-</span><span class="nx">n8n</span><span class="o">-</span><span class="nx">agent</span><span class="o">~/</span><span class="w">         </span><span class="err">#</span><span class="w"> </span><span class="nx">Sample</span><span class="w"> </span><span class="nx">n8n</span><span class="w"> </span><span class="nx">workflow</span><span class="w"> </span><span class="nx">template</span>
+<span class="err">├──</span><span class="w"> </span><span class="o">~</span><span class="nx">sample</span><span class="o">-</span><span class="nx">python</span><span class="o">-</span><span class="nx">agent</span><span class="o">~/</span><span class="w">      </span><span class="err">#</span><span class="w"> </span><span class="nx">Sample</span><span class="w"> </span><span class="nx">Python</span><span class="w"> </span><span class="nx">agent</span><span class="w"> </span><span class="nx">template</span>
+<span class="err">└──</span><span class="w"> </span><span class="p">[</span><span class="nx">agent</span><span class="o">-</span><span class="nx">specific</span><span class="o">-</span><span class="nx">directories</span><span class="p">]</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="nx">Individual</span><span class="w"> </span><span class="nx">agent</span><span class="w"> </span><span class="nx">implementations</span>
+</code></pre></div>
+
+<h3 id="agent-types">Agent Types</h3>
+<p>The repository includes several types of agents:</p>
+<ol>
+<li><strong>Python-based Agents</strong>: Built with FastAPI and Python, these agents run as standalone services</li>
+<li>
+<p>Examples: youtube-summary-agent, data-analysis-agent, research-agent</p>
+</li>
+<li>
+<p><strong>n8n Workflow Agents</strong>: Built using n8n automation platform</p>
+</li>
+<li>
+<p>Examples: ~sample-n8n-agent~, n8n-agentic-rag-agent</p>
+</li>
+<li>
+<p><strong>Web-based Agents</strong>: Specialized for web interactions</p>
+</li>
+<li>Examples: multi-page-scraper-agent, crawl4AI-agent</li>
+</ol>
+<h3 id="common-agent-structure">Common Agent Structure</h3>
+<p>Most agents follow a similar structure:</p>
+<ul>
+<li><strong>main.py</strong>: Core implementation (for Python agents)</li>
+<li><strong>Dockerfile</strong>: Container definition</li>
+<li><strong>requirements.txt</strong>: Dependencies</li>
+<li><strong>README.md</strong>: Documentation</li>
+<li><strong>.env.example</strong>: Template for environment variables</li>
+</ul>
+<h3 id="api-structure">API Structure</h3>
+<p>Most agents follow a standard API structure:</p>
+<h4 id="request-format">Request Format</h4>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User&#39;s question or command&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;unique-user-identifier&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;request-tracking-id&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;conversation-session-id&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="response-format">Response Format</h4>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AI response content&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Additional response data&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="authentication">Authentication</h3>
+<p>Agents typically use bearer token authentication:</p>
+<div class="codehilite"><pre><span></span><code><span class="err">Authorization: Bearer your_token_here</span>
+<span class="err">Content-Type: application/json</span>
+</code></pre></div>
+
+<h3 id="database-integration">Database Integration</h3>
+<p>Most agents use Supabase for storing conversation history. The typical schema is:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">messages</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="n">uuid</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">gen_random_uuid</span><span class="p">()</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">TIME</span><span class="w"> </span><span class="k">ZONE</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">session_id</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">message</span><span class="w"> </span><span class="n">JSONB</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+<span class="p">);</span>
+</code></pre></div>
+
+<h2 id="development-workflow">Development Workflow</h2>
+<p>The development workflow for SolnAI agents typically follows these steps:</p>
+<ol>
+<li><strong>Choose a Template</strong>: Start with one of the sample templates based on your needs</li>
+<li><strong>Implement Core Logic</strong>: Develop the agent's specific functionality</li>
+<li><strong>Test Locally</strong>: Verify the agent works as expected</li>
+<li><strong>Containerize</strong>: Package the agent as a Docker container</li>
+<li><strong>Deploy</strong>: Deploy the agent to your environment</li>
+</ol>
+<h2 id="deployment-options">Deployment Options</h2>
+<p>SolnAI agents can be deployed in various ways:</p>
+<ol>
+<li><strong>Local Development</strong>: Run the agent locally for development and testing</li>
+<li><strong>Docker Containers</strong>: Deploy as standalone containers</li>
+<li><strong>Kubernetes</strong>: Orchestrate multiple agents in a Kubernetes cluster</li>
+<li><strong>Cloud Services</strong>: Deploy to cloud platforms like AWS, GCP, or Azure</li>
+</ol>
+<h2 id="integration-patterns">Integration Patterns</h2>
+<p>SolnAI agents can be integrated with other systems in several ways:</p>
+<ol>
+<li><strong>Direct API Calls</strong>: Make HTTP requests to the agent's API</li>
+<li><strong>Event-Driven</strong>: Use message queues or event buses for asynchronous communication</li>
+<li><strong>Webhook Integration</strong>: Configure webhooks to trigger agent actions</li>
+<li><strong>UI Integration</strong>: Embed agent UIs in web applications</li>
+</ol>
+<h2 id="best-practices">Best Practices</h2>
+<p>When working with SolnAI agents, consider these best practices:</p>
+<ol>
+<li><strong>Security</strong>: Always use proper authentication and secure your API keys</li>
+<li><strong>Error Handling</strong>: Implement robust error handling in your agent</li>
+<li><strong>Logging</strong>: Add comprehensive logging for debugging and monitoring</li>
+<li><strong>Testing</strong>: Write tests for your agent's functionality</li>
+<li><strong>Documentation</strong>: Document your agent's API and usage examples</li>
+<li><strong>Resource Management</strong>: Optimize resource usage, especially for memory-intensive operations</li>
+</ol>
+<h2 id="conclusion">Conclusion</h2>
+<p>The SolnAI Agents Collection provides a powerful framework for building and deploying AI agents. By following the patterns and practices outlined in this documentation, you can create robust, scalable agents that integrate seamlessly with the SolnAI ecosystem. </p>
+    </div>
+</body>
+</html>

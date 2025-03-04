@@ -1,0 +1,12 @@
+
+        name: "YAML Crew"
+        agents:
+          - name: "Yaml Agent"
+            role: "Yaml Role"
+        tasks:
+          - id: 1
+            description: "Yaml Task"
+            expected_output: "Yaml Output"
+            agent_name: "Yaml Agent"
+        process: "sequential"
+        

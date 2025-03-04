@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolnAI Agents Documentation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Documentation</h2>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="overview.html">Overview</a></li>
+            <li><a href="creating_new_agent.html">Creating a New Agent</a></li>
+            <li><a href="agent_api_reference.html">API Reference</a></li>
+            <li><a href="deployment_guide.html">Deployment Guide</a></li>
+            <li><a href="troubleshooting_guide.html">Troubleshooting</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h1 id="solnai-agent-deployment-guide">SolnAI Agent Deployment Guide</h1>
+<p>This guide provides detailed instructions for deploying SolnAI agents in various environments, from local development to production.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#local-deployment">Local Deployment</a></li>
+<li><a href="#docker-deployment">Docker Deployment</a></li>
+<li><a href="#kubernetes-deployment">Kubernetes Deployment</a></li>
+<li><a href="#cloud-deployment">Cloud Deployment</a></li>
+<li><a href="#aws">AWS</a></li>
+<li><a href="#google-cloud">Google Cloud</a></li>
+<li><a href="#azure">Azure</a></li>
+<li><a href="#environment-variables">Environment Variables</a></li>
+<li><a href="#database-setup">Database Setup</a></li>
+<li><a href="#monitoring-and-logging">Monitoring and Logging</a></li>
+<li><a href="#security-considerations">Security Considerations</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Before deploying any SolnAI agent, ensure you have:</p>
+<ul>
+<li>Docker installed (for containerized deployments)</li>
+<li>Kubernetes CLI (kubectl) installed (for Kubernetes deployments)</li>
+<li>Access to a Supabase instance (for database storage)</li>
+<li>API keys for any external services used by the agent</li>
+<li>Git for version control</li>
+</ul>
+<h2 id="local-deployment">Local Deployment</h2>
+<p>For local development and testing, you can run agents directly:</p>
+<ol>
+<li>
+<p>Clone the repository:
+   <code>bash
+   git clone https://github.com/your-org/SolnAI-agents.git
+   cd SolnAI-agents/your-agent-directory</code></p>
+</li>
+<li>
+<p>Set up environment variables:
+   <code>bash
+   cp .env.example .env
+   # Edit .env with your credentials</code></p>
+</li>
+<li>
+<p>Install dependencies:
+   <code>bash
+   pip install -r requirements.txt</code></p>
+</li>
+<li>
+<p>Run the agent:
+   <code>bash
+   python main.py</code></p>
+</li>
+</ol>
+<p>The agent will be available at <code>http://localhost:8001</code> (or the port specified in your .env file).</p>
+<h2 id="docker-deployment">Docker Deployment</h2>
+<p>For more isolated and reproducible deployments, use Docker:</p>
+<ol>
+<li>
+<p>Build the Docker image:
+   <code>bash
+   docker build -t solnai/your-agent-name:latest .</code></p>
+</li>
+<li>
+<p>Run the container:
+   <code>bash
+   docker run -p 8001:8001 --env-file .env solnai/your-agent-name:latest</code></p>
+</li>
+</ol>
+<p>For production, you might want to use Docker Compose for managing multiple containers:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># docker-compose.yml</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3&#39;</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">your-agent</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8001:8001&quot;</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.env</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;curl&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;-f&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;http://localhost:8001/health&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+</code></pre></div>
+
+<p>Run with:</p>
+<div class="codehilite"><pre><span></span><code>docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+
+<h2 id="kubernetes-deployment">Kubernetes Deployment</h2>
+<p>For scalable, production-grade deployments, use Kubernetes:</p>
+<ol>
+<li>Create a Kubernetes deployment file:</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="c1"># deployment.yaml</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-agent</span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-agent</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-agent</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-agent</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-agent</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">solnai/your-agent-name:latest</span>
+<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8001</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">API_BEARER_TOKEN</span>
+<span class="w">          </span><span class="nt">valueFrom</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">secretKeyRef</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">agent-secrets</span>
+<span class="w">              </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-bearer-token</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SUPABASE_URL</span>
+<span class="w">          </span><span class="nt">valueFrom</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">secretKeyRef</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">agent-secrets</span>
+<span class="w">              </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">supabase-url</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SUPABASE_KEY</span>
+<span class="w">          </span><span class="nt">valueFrom</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">secretKeyRef</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">agent-secrets</span>
+<span class="w">              </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">supabase-key</span>
+<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1Gi&quot;</span>
+<span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;500m&quot;</span>
+<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;512Mi&quot;</span>
+<span class="w">        </span><span class="nt">livenessProbe</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">httpGet</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
+<span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8001</span>
+<span class="w">          </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">          </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">        </span><span class="nt">readinessProbe</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">httpGet</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
+<span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8001</span>
+<span class="w">          </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">          </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-agent</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-agent</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8001</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterIP</span>
+</code></pre></div>
+
+<ol>
+<li>Create a secret for sensitive information:</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>agent-secrets<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span>api-bearer-token<span class="o">=</span>your_token_here<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span>supabase-url<span class="o">=</span>your_supabase_url<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span>supabase-key<span class="o">=</span>your_supabase_key
+</code></pre></div>
+
+<ol>
+<li>Apply the deployment:</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>deployment.yaml
+</code></pre></div>
+
+<ol>
+<li>(Optional) Create an Ingress for external access:</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="c1"># ingress.yaml</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-agent-ingress</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/rewrite-target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/</span>
+<span class="w">    </span><span class="nt">cert-manager.io/cluster-issuer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">letsencrypt-prod</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-agent.example.com</span>
+<span class="w">    </span><span class="nt">http</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/</span>
+<span class="w">        </span><span class="nt">pathType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prefix</span>
+<span class="w">        </span><span class="nt">backend</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">service</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-agent</span>
+<span class="w">            </span><span class="nt">port</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">  </span><span class="nt">tls</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hosts</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-agent.example.com</span>
+<span class="w">    </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-agent-tls</span>
+</code></pre></div>
+
+<p>Apply with:</p>
+<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>ingress.yaml
+</code></pre></div>
+
+<h2 id="cloud-deployment">Cloud Deployment</h2>
+<h3 id="aws">AWS</h3>
+<p>To deploy on AWS, you can use:</p>
+<ol>
+<li><strong>Amazon ECS (Elastic Container Service)</strong>:</li>
+<li>Create a task definition for your container</li>
+<li>Set up an ECS service with the desired number of tasks</li>
+<li>
+<p>Use an Application Load Balancer for routing traffic</p>
+</li>
+<li>
+<p><strong>Amazon EKS (Elastic Kubernetes Service)</strong>:</p>
+</li>
+<li>Create an EKS cluster</li>
+<li>Apply your Kubernetes deployment files</li>
+<li>
+<p>Use AWS ALB Ingress Controller for routing traffic</p>
+</li>
+<li>
+<p><strong>AWS Lambda with Container Images</strong>:</p>
+</li>
+<li>Package your agent as a container image</li>
+<li>Deploy to Lambda with container image support</li>
+<li>Set up API Gateway for HTTP endpoints</li>
+</ol>
+<p>Example AWS CLI commands for ECS:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Create a task definition</span>
+aws<span class="w"> </span>ecs<span class="w"> </span>register-task-definition<span class="w"> </span>--cli-input-json<span class="w"> </span>file://task-definition.json
+
+<span class="c1"># Create a service</span>
+aws<span class="w"> </span>ecs<span class="w"> </span>create-service<span class="w"> </span>--cluster<span class="w"> </span>your-cluster<span class="w"> </span>--service-name<span class="w"> </span>your-agent-service<span class="w"> </span>--task-definition<span class="w"> </span>your-agent:1<span class="w"> </span>--desired-count<span class="w"> </span><span class="m">2</span><span class="w"> </span>--launch-type<span class="w"> </span>FARGATE<span class="w"> </span>--network-configuration<span class="w"> </span><span class="s2">&quot;awsvpcConfiguration={subnets=[subnet-12345678],securityGroups=[sg-12345678],assignPublicIp=ENABLED}&quot;</span><span class="w"> </span>--load-balancers<span class="w"> </span><span class="s2">&quot;targetGroupArn=arn:aws:elasticloadbalancing:region:account-id:targetgroup/your-target-group/1234567890,containerName=your-agent,containerPort=8001&quot;</span>
+</code></pre></div>
+
+<h3 id="google-cloud">Google Cloud</h3>
+<p>To deploy on Google Cloud, you can use:</p>
+<ol>
+<li><strong>Google Kubernetes Engine (GKE)</strong>:</li>
+<li>Create a GKE cluster</li>
+<li>Apply your Kubernetes deployment files</li>
+<li>
+<p>Set up an Ingress for external access</p>
+</li>
+<li>
+<p><strong>Cloud Run</strong>:</p>
+</li>
+<li>Build and push your container to Google Container Registry</li>
+<li>Deploy to Cloud Run with appropriate memory and CPU settings</li>
+</ol>
+<p>Example gcloud commands for Cloud Run:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Build and push the container</span>
+gcloud<span class="w"> </span>builds<span class="w"> </span>submit<span class="w"> </span>--tag<span class="w"> </span>gcr.io/your-project/your-agent
+
+<span class="c1"># Deploy to Cloud Run</span>
+gcloud<span class="w"> </span>run<span class="w"> </span>deploy<span class="w"> </span>your-agent<span class="w"> </span>--image<span class="w"> </span>gcr.io/your-project/your-agent<span class="w"> </span>--platform<span class="w"> </span>managed<span class="w"> </span>--region<span class="w"> </span>us-central1<span class="w"> </span>--allow-unauthenticated<span class="w"> </span>--set-env-vars<span class="o">=</span><span class="s2">&quot;API_BEARER_TOKEN=your_token,SUPABASE_URL=your_url,SUPABASE_KEY=your_key&quot;</span>
+</code></pre></div>
+
+<h3 id="azure">Azure</h3>
+<p>To deploy on Azure, you can use:</p>
+<ol>
+<li><strong>Azure Kubernetes Service (AKS)</strong>:</li>
+<li>Create an AKS cluster</li>
+<li>Apply your Kubernetes deployment files</li>
+<li>
+<p>Set up an Ingress for external access</p>
+</li>
+<li>
+<p><strong>Azure Container Instances</strong>:</p>
+</li>
+<li>Deploy your container directly to ACI</li>
+<li>
+<p>Set up environment variables for configuration</p>
+</li>
+<li>
+<p><strong>Azure App Service</strong>:</p>
+</li>
+<li>Deploy your container to App Service</li>
+<li>Configure environment variables in the App Service settings</li>
+</ol>
+<p>Example Azure CLI commands for ACI:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Create a resource group</span>
+az<span class="w"> </span>group<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>your-resource-group<span class="w"> </span>--location<span class="w"> </span>eastus
+
+<span class="c1"># Create a container instance</span>
+az<span class="w"> </span>container<span class="w"> </span>create<span class="w"> </span>--resource-group<span class="w"> </span>your-resource-group<span class="w"> </span>--name<span class="w"> </span>your-agent<span class="w"> </span>--image<span class="w"> </span>solnai/your-agent-name:latest<span class="w"> </span>--dns-name-label<span class="w"> </span>your-agent<span class="w"> </span>--ports<span class="w"> </span><span class="m">8001</span><span class="w"> </span>--environment-variables<span class="w"> </span><span class="nv">API_BEARER_TOKEN</span><span class="o">=</span>your_token<span class="w"> </span><span class="nv">SUPABASE_URL</span><span class="o">=</span>your_url<span class="w"> </span><span class="nv">SUPABASE_KEY</span><span class="o">=</span>your_key
+</code></pre></div>
+
+<h2 id="environment-variables">Environment Variables</h2>
+<p>All SolnAI agents require certain environment variables:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>API_BEARER_TOKEN</code></td>
+<td>Authentication token for API access</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>SUPABASE_URL</code></td>
+<td>URL of your Supabase instance</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>SUPABASE_KEY</code></td>
+<td>API key for Supabase access</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>PORT</code></td>
+<td>Port to run the agent on (default: 8001)</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>LOG_LEVEL</code></td>
+<td>Logging level (default: INFO)</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>Agent-specific variables may also be required. Check the agent's README.md for details.</p>
+<h2 id="database-setup">Database Setup</h2>
+<p>SolnAI agents use Supabase for storing conversation history. Set up your database with:</p>
+<ol>
+<li>
+<p>Create a Supabase project at <a href="https://supabase.com">supabase.com</a></p>
+</li>
+<li>
+<p>Create a <code>messages</code> table with the following SQL:</p>
+</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">messages</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="n">uuid</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">gen_random_uuid</span><span class="p">()</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">TIME</span><span class="w"> </span><span class="k">ZONE</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">session_id</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">message</span><span class="w"> </span><span class="n">JSONB</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_messages_session_id</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">messages</span><span class="w"> </span><span class="p">(</span><span class="n">session_id</span><span class="p">);</span>
+</code></pre></div>
+
+<ol>
+<li>Set up row-level security (RLS) policies as needed for your use case.</li>
+</ol>
+<h2 id="monitoring-and-logging">Monitoring and Logging</h2>
+<p>For production deployments, set up proper monitoring and logging:</p>
+<ol>
+<li><strong>Logging</strong>: Use a centralized logging solution like ELK Stack, Graylog, or cloud-native solutions:
+   ```python
+   # In your agent code
+   import logging</li>
+</ol>
+<p>logging.basicConfig(
+       level=os.getenv("LOG_LEVEL", "INFO"),
+       format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+   )
+   ```</p>
+<ol>
+<li><strong>Metrics</strong>: Implement Prometheus metrics for monitoring:
+   ```python
+   # Using the Prometheus client library
+   from prometheus_client import Counter, Histogram, start_http_server</li>
+</ol>
+<p># Define metrics
+   request_count = Counter('agent_requests_total', 'Total number of requests')
+   request_latency = Histogram('agent_request_latency_seconds', 'Request latency in seconds')</p>
+<p># Start metrics server
+   start_http_server(8000)
+   ```</p>
+<ol>
+<li>
+<p><strong>Health Checks</strong>: Ensure your agent has a proper health check endpoint:
+   ```python
+   @app.get("/health")
+   async def health_check():
+       # Check database connection
+       try:
+           supabase.table("messages").select("id").limit(1).execute()
+           db_status = "healthy"
+       except Exception:
+           db_status = "unhealthy"</p>
+<p>return {
+       "status": "healthy" if db_status == "healthy" else "unhealthy",
+       "database": db_status,
+       "version": "1.0.0"
+   }
+   ```</p>
+</li>
+</ol>
+<h2 id="security-considerations">Security Considerations</h2>
+<p>When deploying SolnAI agents, consider these security best practices:</p>
+<ol>
+<li><strong>API Authentication</strong>: Always use strong, unique tokens for the <code>API_BEARER_TOKEN</code></li>
+<li><strong>HTTPS</strong>: Ensure all production deployments use HTTPS</li>
+<li><strong>Secrets Management</strong>: Use Kubernetes Secrets, AWS Secrets Manager, or similar services</li>
+<li><strong>Network Security</strong>: Restrict access to your agents using network policies or security groups</li>
+<li><strong>Input Validation</strong>: Validate all user inputs to prevent injection attacks</li>
+<li><strong>Rate Limiting</strong>: Implement rate limiting to prevent abuse</li>
+<li><strong>Logging</strong>: Don't log sensitive information like tokens or personal data</li>
+</ol>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p>Common issues and solutions:</p>
+<h3 id="connection-errors">Connection Errors</h3>
+<p><strong>Problem</strong>: Agent can't connect to Supabase
+<strong>Solution</strong>: Check your Supabase URL and key, ensure network connectivity</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Test connection</span>
+curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://your-supabase-url/rest/v1/messages?limit=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;apikey: your-supabase-key&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer your-supabase-key&quot;</span>
+</code></pre></div>
+
+<h3 id="container-crashes">Container Crashes</h3>
+<p><strong>Problem</strong>: Docker container exits immediately
+<strong>Solution</strong>: Check logs and ensure environment variables are set correctly</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># View container logs</span>
+docker<span class="w"> </span>logs<span class="w"> </span>your-container-id
+</code></pre></div>
+
+<h3 id="memory-issues">Memory Issues</h3>
+<p><strong>Problem</strong>: Agent runs out of memory
+<strong>Solution</strong>: Increase memory limits in your deployment configuration</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># In Kubernetes</span>
+<span class="nt">resources</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2Gi&quot;</span><span class="w">  </span><span class="c1"># Increase as needed</span>
+</code></pre></div>
+
+<h3 id="api-timeouts">API Timeouts</h3>
+<p><strong>Problem</strong>: Requests to the agent time out
+<strong>Solution</strong>: Adjust timeout settings in your proxy/load balancer</p>
+<p>For nginx:</p>
+<div class="codehilite"><pre><span></span><code>proxy_read_timeout 300s;
+proxy_connect_timeout 300s;
+proxy_send_timeout 300s;
+</code></pre></div>
+    </div>
+</body>
+</html>

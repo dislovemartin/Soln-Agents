@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolnAI Agents Documentation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Documentation</h2>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="overview.html">Overview</a></li>
+            <li><a href="creating_new_agent.html">Creating a New Agent</a></li>
+            <li><a href="agent_api_reference.html">API Reference</a></li>
+            <li><a href="deployment_guide.html">Deployment Guide</a></li>
+            <li><a href="troubleshooting_guide.html">Troubleshooting</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h1 id="solnai-agent-api-reference">SolnAI Agent API Reference</h1>
+<p>This document provides a comprehensive reference for the SolnAI Agent API, including request/response formats, authentication, endpoints, and usage examples.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#authentication">Authentication</a></li>
+<li><a href="#common-request-format">Common Request Format</a></li>
+<li><a href="#common-response-format">Common Response Format</a></li>
+<li><a href="#error-handling">Error Handling</a></li>
+<li><a href="#standard-endpoints">Standard Endpoints</a></li>
+<li><a href="#agent-specific-endpoints">Agent-Specific Endpoints</a></li>
+<li><a href="#webhook-integration">Webhook Integration</a></li>
+<li><a href="#rate-limiting">Rate Limiting</a></li>
+<li><a href="#code-examples">Code Examples</a></li>
+</ul>
+<h2 id="authentication">Authentication</h2>
+<p>All SolnAI agents use bearer token authentication:</p>
+<div class="codehilite"><pre><span></span><code><span class="err">Authorization: Bearer your_token_here</span>
+<span class="err">Content-Type: application/json</span>
+</code></pre></div>
+
+<p>The token should be provided in the environment variable <code>API_BEARER_TOKEN</code> for each agent.</p>
+<h2 id="common-request-format">Common Request Format</h2>
+<p>Most agent endpoints accept a standard request format:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User&#39;s question or command&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;unique-user-identifier&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;request-tracking-id&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;conversation-session-id&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>query</code></td>
+<td>string</td>
+<td>The user's question, command, or input text</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td>string</td>
+<td>A unique identifier for the user making the request</td>
+</tr>
+<tr>
+<td><code>request_id</code></td>
+<td>string</td>
+<td>A unique identifier for the request (for tracking and debugging)</td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td>string</td>
+<td>A unique identifier for the conversation session (for maintaining context)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-response-format">Common Response Format</h2>
+<p>Most agent endpoints return responses in a standard format:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AI response content&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;additional&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;response data&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;processing_time&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.5s&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;model_used&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;model-name&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>success</code></td>
+<td>boolean</td>
+<td>Indicates whether the request was successful</td>
+</tr>
+<tr>
+<td><code>output</code></td>
+<td>string</td>
+<td>The main response text from the agent</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>object</td>
+<td>Additional data or structured information (optional)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="error-handling">Error Handling</h2>
+<p>When an error occurs, agents return a response with <code>success: false</code> and an error message:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;An error occurred while processing your request.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Detailed error message&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Common error codes:</p>
+<table>
+<thead>
+<tr>
+<th>HTTP Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>400</td>
+<td>Bad Request - Invalid input parameters</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized - Invalid or missing authentication token</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found - Requested resource not found</td>
+</tr>
+<tr>
+<td>429</td>
+<td>Too Many Requests - Rate limit exceeded</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error - Server-side error</td>
+</tr>
+</tbody>
+</table>
+<h2 id="standard-endpoints">Standard Endpoints</h2>
+<p>All SolnAI agents implement these standard endpoints:</p>
+<h3 id="health-check">Health Check</h3>
+<div class="codehilite"><pre><span></span><code>GET /health
+</code></pre></div>
+
+<p>Returns the health status of the agent.</p>
+<p><strong>Response:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;healthy&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="process-request">Process Request</h3>
+<div class="codehilite"><pre><span></span><code>POST /api/{agent-name}
+</code></pre></div>
+
+<p>The main endpoint for interacting with the agent.</p>
+<p><strong>Request:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Your question or command&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user123&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;req456&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sess789&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><strong>Response:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Agent&#39;s response&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;additional&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;response data&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2 id="agent-specific-endpoints">Agent-Specific Endpoints</h2>
+<p>Different agents may implement additional specialized endpoints. Here are some examples:</p>
+<h3 id="youtube-summary-agent">YouTube Summary Agent</h3>
+<div class="codehilite"><pre><span></span><code>POST /api/youtube-summary
+</code></pre></div>
+
+<p><strong>Request:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Summarize this video&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user123&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;req456&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sess789&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;video_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://www.youtube.com/watch?v=example&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="data-analysis-agent">Data Analysis Agent</h3>
+<div class="codehilite"><pre><span></span><code>POST /api/data-analysis
+</code></pre></div>
+
+<p><strong>Request:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Analyze this dataset&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user123&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;req456&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sess789&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://example.com/dataset.csv&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2 id="webhook-integration">Webhook Integration</h2>
+<p>Agents can be configured to send webhook notifications when processing is complete:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Process this task&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user123&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;req456&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sess789&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;webhook_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://your-service.com/webhook&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;webhook_auth_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your_webhook_token&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2 id="rate-limiting">Rate Limiting</h2>
+<p>SolnAI agents implement rate limiting to prevent abuse. The default limits are:</p>
+<ul>
+<li>60 requests per minute per IP address</li>
+<li>1000 requests per day per user_id</li>
+</ul>
+<p>When rate limits are exceeded, the agent returns a 429 status code with a response:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Rate limit exceeded. Please try again later.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;retry_after&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2 id="code-examples">Code Examples</h2>
+<h3 id="python-example">Python Example</h3>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">call_agent</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">request_id</span><span class="p">,</span> <span class="n">session_id</span><span class="p">,</span> <span class="n">api_token</span><span class="p">):</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">api_token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span>
+    <span class="p">}</span>
+
+    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span>
+        <span class="s2">&quot;user_id&quot;</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span>
+        <span class="s2">&quot;request_id&quot;</span><span class="p">:</span> <span class="n">request_id</span><span class="p">,</span>
+        <span class="s2">&quot;session_id&quot;</span><span class="p">:</span> <span class="n">session_id</span>
+    <span class="p">}</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+        <span class="s2">&quot;https://api.solnai.com/api/agent-name&quot;</span><span class="p">,</span>
+        <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">call_agent</span><span class="p">(</span>
+    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;What is the capital of France?&quot;</span><span class="p">,</span>
+    <span class="n">user_id</span><span class="o">=</span><span class="s2">&quot;user123&quot;</span><span class="p">,</span>
+    <span class="n">request_id</span><span class="o">=</span><span class="s2">&quot;req456&quot;</span><span class="p">,</span>
+    <span class="n">session_id</span><span class="o">=</span><span class="s2">&quot;sess789&quot;</span><span class="p">,</span>
+    <span class="n">api_token</span><span class="o">=</span><span class="s2">&quot;your_api_token_here&quot;</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">])</span>
+</code></pre></div>
+
+<h3 id="javascript-example">JavaScript Example</h3>
+<div class="codehilite"><pre><span></span><code><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">callAgent</span><span class="p">(</span><span class="nx">query</span><span class="p">,</span><span class="w"> </span><span class="nx">userId</span><span class="p">,</span><span class="w"> </span><span class="nx">requestId</span><span class="p">,</span><span class="w"> </span><span class="nx">sessionId</span><span class="p">,</span><span class="w"> </span><span class="nx">apiToken</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">headers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s1">&#39;Authorization&#39;</span><span class="o">:</span><span class="w"> </span><span class="sb">`Bearer </span><span class="si">${</span><span class="nx">apiToken</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;application/json&#39;</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">query</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">user_id</span><span class="o">:</span><span class="w"> </span><span class="nx">userId</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">request_id</span><span class="o">:</span><span class="w"> </span><span class="nx">requestId</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">session_id</span><span class="o">:</span><span class="w"> </span><span class="nx">sessionId</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;https://api.solnai.com/api/agent-name&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;POST&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">headers</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// Example usage</span>
+<span class="nx">callAgent</span><span class="p">(</span>
+<span class="w">    </span><span class="s1">&#39;What is the capital of France?&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;user123&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;req456&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;sess789&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;your_api_token_here&#39;</span>
+<span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">result</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">output</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div>
+
+<h3 id="curl-example">cURL Example</h3>
+<div class="codehilite"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://api.solnai.com/api/agent-name<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer your_api_token_here&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">    &quot;query&quot;: &quot;What is the capital of France?&quot;,</span>
+<span class="s1">    &quot;user_id&quot;: &quot;user123&quot;,</span>
+<span class="s1">    &quot;request_id&quot;: &quot;req456&quot;,</span>
+<span class="s1">    &quot;session_id&quot;: &quot;sess789&quot;</span>
+<span class="s1">  }&#39;</span>
+</code></pre></div>
+    </div>
+</body>
+</html>

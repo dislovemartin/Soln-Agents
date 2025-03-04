@@ -1,0 +1,12 @@
+
+        name: "Invalid Crew"
+        agents:
+          - name: "Agent 1"
+            role: "Role 1"
+        tasks:
+          - id: 1
+            description: "Task 1"
+            expected_output: "Output"
+            agent_name: "Non-existent Agent"  # This agent doesn't exist
+        process: "sequential"
+        

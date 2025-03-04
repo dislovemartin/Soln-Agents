@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolnAI Agents Documentation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Documentation</h2>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="overview.html">Overview</a></li>
+            <li><a href="creating_new_agent.html">Creating a New Agent</a></li>
+            <li><a href="agent_api_reference.html">API Reference</a></li>
+            <li><a href="deployment_guide.html">Deployment Guide</a></li>
+            <li><a href="troubleshooting_guide.html">Troubleshooting</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h1 id="solnai-agents-documentation">SolnAI Agents Documentation</h1>
+<p>Welcome to the SolnAI Agents documentation. This documentation provides comprehensive information about the SolnAI Agents Collection, including how to use, develop, deploy, and troubleshoot agents.</p>
+<h2 id="documentation-sections">Documentation Sections</h2>
+<h3 id="core-documentation">Core Documentation</h3>
+<ul>
+<li><a href="overview.md"><strong>Overview</strong></a> - A comprehensive overview of the SolnAI Agents Collection</li>
+<li><a href="agent_api_reference.md"><strong>API Reference</strong></a> - Detailed API documentation for SolnAI agents</li>
+<li><a href="creating_new_agent.md"><strong>Creating a New Agent</strong></a> - Step-by-step guide for creating your own agent</li>
+</ul>
+<h3 id="deployment-and-operations">Deployment and Operations</h3>
+<ul>
+<li><a href="deployment_guide.md"><strong>Deployment Guide</strong></a> - Instructions for deploying agents in various environments</li>
+<li><a href="troubleshooting_guide.md"><strong>Troubleshooting Guide</strong></a> - Solutions to common issues and debugging techniques</li>
+</ul>
+<h2 id="quick-start">Quick Start</h2>
+<p>To get started with SolnAI agents quickly:</p>
+<ol>
+<li>
+<p><strong>Understand the basics</strong>: Read the <a href="overview.md">Overview</a> to understand what SolnAI agents are and how they work.</p>
+</li>
+<li>
+<p><strong>Create your first agent</strong>: Follow the <a href="creating_new_agent.md">Creating a New Agent</a> guide to build your own agent.</p>
+</li>
+<li>
+<p><strong>Deploy your agent</strong>: Use the <a href="deployment_guide.md">Deployment Guide</a> to deploy your agent to your preferred environment.</p>
+</li>
+<li>
+<p><strong>Integrate with your application</strong>: Refer to the <a href="agent_api_reference.md">API Reference</a> to learn how to interact with your agent.</p>
+</li>
+</ol>
+<h2 id="example-basic-agent-usage">Example: Basic Agent Usage</h2>
+<p>Here's a simple example of how to interact with a SolnAI agent using Python:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">call_agent</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">request_id</span><span class="p">,</span> <span class="n">session_id</span><span class="p">,</span> <span class="n">api_token</span><span class="p">):</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">api_token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span>
+    <span class="p">}</span>
+
+    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span>
+        <span class="s2">&quot;user_id&quot;</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span>
+        <span class="s2">&quot;request_id&quot;</span><span class="p">:</span> <span class="n">request_id</span><span class="p">,</span>
+        <span class="s2">&quot;session_id&quot;</span><span class="p">:</span> <span class="n">session_id</span>
+    <span class="p">}</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+        <span class="s2">&quot;https://api.solnai.com/api/agent-name&quot;</span><span class="p">,</span>
+        <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">call_agent</span><span class="p">(</span>
+    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;What is the capital of France?&quot;</span><span class="p">,</span>
+    <span class="n">user_id</span><span class="o">=</span><span class="s2">&quot;user123&quot;</span><span class="p">,</span>
+    <span class="n">request_id</span><span class="o">=</span><span class="s2">&quot;req456&quot;</span><span class="p">,</span>
+    <span class="n">session_id</span><span class="o">=</span><span class="s2">&quot;sess789&quot;</span><span class="p">,</span>
+    <span class="n">api_token</span><span class="o">=</span><span class="s2">&quot;your_api_token_here&quot;</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">])</span>
+</code></pre></div>
+
+<h2 id="contributing">Contributing</h2>
+<p>We welcome contributions to the SolnAI Agents Collection! If you'd like to contribute:</p>
+<ol>
+<li>Fork the repository</li>
+<li>Create a feature branch</li>
+<li>Make your changes</li>
+<li>Submit a pull request</li>
+</ol>
+<p>Please ensure your code follows our coding standards and includes appropriate tests.</p>
+<h2 id="support">Support</h2>
+<p>If you need help with SolnAI agents:</p>
+<ul>
+<li>Check the <a href="troubleshooting_guide.md">Troubleshooting Guide</a> for solutions to common issues</li>
+<li>Search for similar issues in the GitHub repository</li>
+<li>Create a new issue with detailed information about your problem</li>
+<li>Contact the SolnAI support team at support@solnai.com for urgent issues </li>
+</ul>
+    </div>
+</body>
+</html>

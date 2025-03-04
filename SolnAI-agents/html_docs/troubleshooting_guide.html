@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolnAI Agents Documentation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Documentation</h2>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="overview.html">Overview</a></li>
+            <li><a href="creating_new_agent.html">Creating a New Agent</a></li>
+            <li><a href="agent_api_reference.html">API Reference</a></li>
+            <li><a href="deployment_guide.html">Deployment Guide</a></li>
+            <li><a href="troubleshooting_guide.html">Troubleshooting</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h1 id="solnai-agent-troubleshooting-guide">SolnAI Agent Troubleshooting Guide</h1>
+<p>This guide provides solutions to common issues you might encounter when working with SolnAI agents.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#installation-issues">Installation Issues</a></li>
+<li><a href="#configuration-problems">Configuration Problems</a></li>
+<li><a href="#runtime-errors">Runtime Errors</a></li>
+<li><a href="#api-connection-issues">API Connection Issues</a></li>
+<li><a href="#database-problems">Database Problems</a></li>
+<li><a href="#performance-issues">Performance Issues</a></li>
+<li><a href="#deployment-challenges">Deployment Challenges</a></li>
+<li><a href="#common-error-messages">Common Error Messages</a></li>
+<li><a href="#debugging-techniques">Debugging Techniques</a></li>
+<li><a href="#getting-help">Getting Help</a></li>
+</ul>
+<h2 id="installation-issues">Installation Issues</h2>
+<h3 id="python-dependency-conflicts">Python Dependency Conflicts</h3>
+<p><strong>Problem</strong>: Conflicting Python package versions when installing dependencies.</p>
+<p><strong>Solution</strong>: Use a virtual environment and specify exact package versions:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Create a virtual environment</span>
+python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+<span class="nb">source</span><span class="w"> </span>venv/bin/activate<span class="w">  </span><span class="c1"># On Windows: venv\Scripts\activate</span>
+
+<span class="c1"># Install dependencies with specific versions</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</code></pre></div>
+
+<p>If you're still experiencing conflicts, try:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Clear pip cache</span>
+pip<span class="w"> </span>cache<span class="w"> </span>purge
+
+<span class="c1"># Install dependencies one by one</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="nv">fastapi</span><span class="o">==</span><span class="m">0</span>.110.0
+pip<span class="w"> </span>install<span class="w"> </span><span class="nv">uvicorn</span><span class="o">==</span><span class="m">0</span>.27.1
+<span class="c1"># Continue with other dependencies</span>
+</code></pre></div>
+
+<h3 id="docker-build-failures">Docker Build Failures</h3>
+<p><strong>Problem</strong>: Docker build fails with errors.</p>
+<p><strong>Solution</strong>: Check for common issues:</p>
+<ol>
+<li>Ensure your Dockerfile is correctly formatted</li>
+<li>Verify base image compatibility</li>
+<li>Check for network issues during build</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Build with verbose output</span>
+docker<span class="w"> </span>build<span class="w"> </span>--progress<span class="o">=</span>plain<span class="w"> </span>-t<span class="w"> </span>your-agent<span class="w"> </span>.
+
+<span class="c1"># Check if base image can be pulled</span>
+docker<span class="w"> </span>pull<span class="w"> </span>ottomator/base-python:latest
+</code></pre></div>
+
+<h2 id="configuration-problems">Configuration Problems</h2>
+<h3 id="missing-environment-variables">Missing Environment Variables</h3>
+<p><strong>Problem</strong>: Agent fails to start due to missing environment variables.</p>
+<p><strong>Solution</strong>: Ensure all required environment variables are set:</p>
+<ol>
+<li>Check if <code>.env</code> file exists and is properly formatted</li>
+<li>Verify environment variables are loaded correctly</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Create .env file from example</span>
+cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+
+<span class="c1"># Edit .env file with your values</span>
+nano<span class="w"> </span>.env
+
+<span class="c1"># Verify environment variables are loaded</span>
+python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import os; from dotenv import load_dotenv; load_dotenv(); print(os.getenv(&#39;API_BEARER_TOKEN&#39;))&quot;</span>
+</code></pre></div>
+
+<h3 id="invalid-configuration-format">Invalid Configuration Format</h3>
+<p><strong>Problem</strong>: Configuration files have syntax errors or invalid values.</p>
+<p><strong>Solution</strong>: Validate your configuration files:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># For JSON files</span>
+python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import json; json.load(open(&#39;config.json&#39;))&quot;</span>
+
+<span class="c1"># For YAML files</span>
+python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import yaml; yaml.safe_load(open(&#39;config.yaml&#39;))&quot;</span>
+</code></pre></div>
+
+<h2 id="runtime-errors">Runtime Errors</h2>
+<h3 id="agent-crashes-on-startup">Agent Crashes on Startup</h3>
+<p><strong>Problem</strong>: Agent crashes immediately after starting.</p>
+<p><strong>Solution</strong>: Check for common startup issues:</p>
+<ol>
+<li>Look at the error message in the logs</li>
+<li>Verify port availability</li>
+<li>Check database connection</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Run with debug logging</span>
+<span class="nv">LOG_LEVEL</span><span class="o">=</span>DEBUG<span class="w"> </span>python<span class="w"> </span>main.py
+
+<span class="c1"># Check if port is already in use</span>
+lsof<span class="w"> </span>-i<span class="w"> </span>:8001<span class="w">  </span><span class="c1"># On Linux/Mac</span>
+netstat<span class="w"> </span>-ano<span class="w"> </span><span class="p">|</span><span class="w"> </span>findstr<span class="w"> </span>:8001<span class="w">  </span><span class="c1"># On Windows</span>
+</code></pre></div>
+
+<h3 id="unhandled-exceptions">Unhandled Exceptions</h3>
+<p><strong>Problem</strong>: Agent crashes with unhandled exceptions during operation.</p>
+<p><strong>Solution</strong>: Implement proper error handling and logging:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Add try-except blocks around critical code</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Your code here</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">process_request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing request: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span>
+</code></pre></div>
+
+<h2 id="api-connection-issues">API Connection Issues</h2>
+<h3 id="authentication-failures">Authentication Failures</h3>
+<p><strong>Problem</strong>: API requests fail with authentication errors.</p>
+<p><strong>Solution</strong>: Verify your authentication token:</p>
+<ol>
+<li>Check if <code>API_BEARER_TOKEN</code> is set correctly</li>
+<li>Ensure the token is included in the request header</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Test API with curl</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8001/api/your-agent<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer your_token_here&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;query&quot;: &quot;test&quot;}&#39;</span>
+</code></pre></div>
+
+<h3 id="cors-issues">CORS Issues</h3>
+<p><strong>Problem</strong>: Browser requests fail with CORS errors.</p>
+<p><strong>Solution</strong>: Configure CORS properly in your agent:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># In FastAPI app</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.middleware.cors</span><span class="w"> </span><span class="kn">import</span> <span class="n">CORSMiddleware</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span>
+    <span class="n">CORSMiddleware</span><span class="p">,</span>
+    <span class="n">allow_origins</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>  <span class="c1"># In production, specify exact origins</span>
+    <span class="n">allow_credentials</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">allow_methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
+    <span class="n">allow_headers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<h2 id="database-problems">Database Problems</h2>
+<h3 id="connection-failures">Connection Failures</h3>
+<p><strong>Problem</strong>: Agent can't connect to Supabase.</p>
+<p><strong>Solution</strong>: Verify your Supabase configuration:</p>
+<ol>
+<li>Check <code>SUPABASE_URL</code> and <code>SUPABASE_KEY</code> values</li>
+<li>Ensure network connectivity to Supabase</li>
+<li>Verify the Supabase project is active</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Test Supabase connection</span>
+curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://your-supabase-url/rest/v1/messages?limit=1&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;apikey: your-supabase-key&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer your-supabase-key&quot;</span>
+</code></pre></div>
+
+<h3 id="missing-tables">Missing Tables</h3>
+<p><strong>Problem</strong>: Database queries fail because tables don't exist.</p>
+<p><strong>Solution</strong>: Create the required tables:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">-- Run this SQL in the Supabase SQL Editor</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">messages</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="n">uuid</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">gen_random_uuid</span><span class="p">()</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">TIME</span><span class="w"> </span><span class="k">ZONE</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">session_id</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">message</span><span class="w"> </span><span class="n">JSONB</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">idx_messages_session_id</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">messages</span><span class="w"> </span><span class="p">(</span><span class="n">session_id</span><span class="p">);</span>
+</code></pre></div>
+
+<h2 id="performance-issues">Performance Issues</h2>
+<h3 id="slow-response-times">Slow Response Times</h3>
+<p><strong>Problem</strong>: Agent responses are slow.</p>
+<p><strong>Solution</strong>: Optimize performance:</p>
+<ol>
+<li>Check resource usage (CPU, memory)</li>
+<li>Optimize database queries</li>
+<li>Implement caching for frequent operations</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Add caching for expensive operations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span>
+
+<span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">expensive_operation</span><span class="p">(</span><span class="n">input_data</span><span class="p">):</span>
+    <span class="c1"># Your expensive operation here</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+
+<h3 id="memory-leaks">Memory Leaks</h3>
+<p><strong>Problem</strong>: Agent's memory usage grows over time.</p>
+<p><strong>Solution</strong>: Identify and fix memory leaks:</p>
+<ol>
+<li>Use memory profiling tools</li>
+<li>Check for unclosed resources (file handles, connections)</li>
+<li>Implement proper cleanup in your code</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Install memory profiler</span>
+pip<span class="w"> </span>install<span class="w"> </span>memory-profiler
+
+<span class="c1"># Run with memory profiling</span>
+python<span class="w"> </span>-m<span class="w"> </span>memory_profiler<span class="w"> </span>main.py
+</code></pre></div>
+
+<h2 id="deployment-challenges">Deployment Challenges</h2>
+<h3 id="container-orchestration-issues">Container Orchestration Issues</h3>
+<p><strong>Problem</strong>: Kubernetes pods fail to start or become unhealthy.</p>
+<p><strong>Solution</strong>: Troubleshoot Kubernetes deployments:</p>
+<ol>
+<li>Check pod status and logs</li>
+<li>Verify resource limits and requests</li>
+<li>Ensure health checks are properly configured</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Check pod status</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods
+
+<span class="c1"># View pod logs</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>your-agent-pod-name
+
+<span class="c1"># Describe pod for more details</span>
+kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>your-agent-pod-name
+</code></pre></div>
+
+<h3 id="load-balancing-problems">Load Balancing Problems</h3>
+<p><strong>Problem</strong>: Traffic isn't properly distributed to agent instances.</p>
+<p><strong>Solution</strong>: Verify load balancer configuration:</p>
+<ol>
+<li>Check service and endpoint definitions</li>
+<li>Ensure health checks are passing</li>
+<li>Verify network policies allow traffic</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Check service endpoints</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>endpoints<span class="w"> </span>your-agent-service
+
+<span class="c1"># Test service from within the cluster</span>
+kubectl<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>debug<span class="w"> </span>--image<span class="o">=</span>curlimages/curl<span class="w"> </span>--<span class="w"> </span>curl<span class="w"> </span>http://your-agent-service/health
+</code></pre></div>
+
+<h2 id="common-error-messages">Common Error Messages</h2>
+<h3 id="failed-to-connect-to-database">"Failed to connect to database"</h3>
+<p><strong>Problem</strong>: Agent can't establish a connection to Supabase.</p>
+<p><strong>Solution</strong>:
+1. Verify <code>SUPABASE_URL</code> and <code>SUPABASE_KEY</code> are correct
+2. Check network connectivity to Supabase
+3. Ensure your IP is allowed in Supabase settings</p>
+<h3 id="invalid-token">"Invalid token"</h3>
+<p><strong>Problem</strong>: Authentication token is rejected.</p>
+<p><strong>Solution</strong>:
+1. Verify <code>API_BEARER_TOKEN</code> is set correctly
+2. Ensure the token is included in the request header
+3. Check for whitespace or special characters in the token</p>
+<h3 id="port-already-in-use">"Port already in use"</h3>
+<p><strong>Problem</strong>: Agent can't start because the port is already occupied.</p>
+<p><strong>Solution</strong>:
+1. Stop any other services using the port
+2. Change the port in your configuration
+3. Use a process manager to handle port conflicts</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Change port in .env file</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PORT=8002&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.env
+</code></pre></div>
+
+<h2 id="debugging-techniques">Debugging Techniques</h2>
+<h3 id="enable-debug-logging">Enable Debug Logging</h3>
+<p>Increase log verbosity to get more information:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Set log level to DEBUG</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">LOG_LEVEL</span><span class="o">=</span>DEBUG
+python<span class="w"> </span>main.py
+</code></pre></div>
+
+<h3 id="use-interactive-debugging">Use Interactive Debugging</h3>
+<p>Use Python's debugger for interactive troubleshooting:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Add this to your code where you want to debug</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pdb</span><span class="p">;</span> <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Or use an IDE like VS Code with breakpoints.</p>
+<h3 id="http-request-inspection">HTTP Request Inspection</h3>
+<p>Use tools to inspect HTTP requests and responses:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Install httpie for better request visualization</span>
+pip<span class="w"> </span>install<span class="w"> </span>httpie
+
+<span class="c1"># Make a request with httpie</span>
+http<span class="w"> </span>POST<span class="w"> </span>http://localhost:8001/api/your-agent<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>Authorization:<span class="s2">&quot;Bearer your_token_here&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="nv">query</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="nv">user_id</span><span class="o">=</span><span class="s2">&quot;user123&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="nv">request_id</span><span class="o">=</span><span class="s2">&quot;req456&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="nv">session_id</span><span class="o">=</span><span class="s2">&quot;sess789&quot;</span>
+</code></pre></div>
+
+<h2 id="getting-help">Getting Help</h2>
+<p>If you're still experiencing issues:</p>
+<ol>
+<li><strong>Check Documentation</strong>: Review the agent's README.md and other documentation</li>
+<li><strong>Search Issues</strong>: Look for similar issues in the GitHub repository</li>
+<li><strong>Ask for Help</strong>: Create a new issue with detailed information:</li>
+<li>Agent version</li>
+<li>Environment details (OS, Python version)</li>
+<li>Steps to reproduce</li>
+<li>Error messages and logs</li>
+<li>What you've tried so far</li>
+</ol>
+<p>For urgent issues, contact the SolnAI support team at support@solnai.com. </p>
+    </div>
+</body>
+</html>

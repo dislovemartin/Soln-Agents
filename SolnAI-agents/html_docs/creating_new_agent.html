@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolnAI Agents Documentation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Documentation</h2>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="overview.html">Overview</a></li>
+            <li><a href="creating_new_agent.html">Creating a New Agent</a></li>
+            <li><a href="agent_api_reference.html">API Reference</a></li>
+            <li><a href="deployment_guide.html">Deployment Guide</a></li>
+            <li><a href="troubleshooting_guide.html">Troubleshooting</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h1 id="creating-a-new-solnai-agent">Creating a New SolnAI Agent</h1>
+<p>This guide walks you through the process of creating a new agent for the SolnAI platform. By following these steps, you'll be able to develop, test, and deploy your own custom agent.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Before you begin, make sure you have the following:</p>
+<ul>
+<li>Docker installed</li>
+<li>Python 3.11+ installed</li>
+<li>Basic knowledge of FastAPI (for Python agents) or n8n (for workflow agents)</li>
+<li>Git for version control</li>
+</ul>
+<h2 id="step-1-choose-a-template">Step 1: Choose a Template</h2>
+<p>SolnAI provides two main templates to start with:</p>
+<ol>
+<li><strong>Python Agent Template</strong>: Located at <code>~sample-python-agent~</code></li>
+<li><strong>n8n Workflow Template</strong>: Located at <code>~sample-n8n-agent~</code></li>
+</ol>
+<p>Choose the template that best fits your needs. For this guide, we'll use the Python agent template.</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Clone the repository if you haven&#39;t already</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/your-org/SolnAI-agents.git
+<span class="nb">cd</span><span class="w"> </span>SolnAI-agents
+
+<span class="c1"># Create a new directory for your agent</span>
+cp<span class="w"> </span>-r<span class="w"> </span>~sample-python-agent~<span class="w"> </span>my-new-agent
+<span class="nb">cd</span><span class="w"> </span>my-new-agent
+</code></pre></div>
+
+<h2 id="step-2-configure-your-agent">Step 2: Configure Your Agent</h2>
+<h3 id="update-the-readmemd">Update the README.md</h3>
+<p>Edit the README.md file to describe your agent:</p>
+<div class="codehilite"><pre><span></span><code><span class="gh"># My New Agent</span>
+
+Author: [<span class="nt">Your Name</span>](<span class="na">https://github.com/your-username</span>)
+
+A brief description of what your agent does and its key features.
+
+<span class="gu">## Features</span>
+
+<span class="k">-</span><span class="w"> </span>Feature 1
+<span class="k">-</span><span class="w"> </span>Feature 2
+<span class="k">-</span><span class="w"> </span>Feature 3
+
+<span class="gu">## Setup</span>
+
+<span class="k">1.</span> Clone the repository
+<span class="k">2.</span> Install dependencies:
+<span class="sb">   ```bash</span>
+<span class="w">   </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+<span class="sb">   ```</span>
+<span class="k">3.</span> Copy <span class="sb">`.env.example`</span> to <span class="sb">`.env`</span> and fill in your credentials
+<span class="k">4.</span> Run the agent:
+<span class="sb">   ```bash</span>
+<span class="w">   </span>python<span class="w"> </span>main.py
+<span class="sb">   ```</span>
+
+<span class="gu">## Usage</span>
+
+Describe how to use your agent, including API endpoints and example requests.
+</code></pre></div>
+
+<h3 id="update-the-envexample-file">Update the .env.example File</h3>
+<p>Edit the <code>.env.example</code> file to include any environment variables your agent needs:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">API_BEARER_TOKEN</span><span class="o">=</span><span class="n">your_token_here</span>
+<span class="n">SUPABASE_URL</span><span class="o">=</span><span class="n">your_supabase_url</span>
+<span class="n">SUPABASE_KEY</span><span class="o">=</span><span class="n">your_supabase_key</span>
+<span class="c1"># Add any other environment variables your agent needs</span>
+</code></pre></div>
+
+<h2 id="step-3-implement-your-agent">Step 3: Implement Your Agent</h2>
+<h3 id="update-mainpy">Update main.py</h3>
+<p>The <code>main.py</code> file is the entry point for your agent. Edit it to implement your agent's functionality:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">HTTPException</span><span class="p">,</span> <span class="n">Depends</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.security</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTTPBearer</span><span class="p">,</span> <span class="n">HTTPAuthorizationCredentials</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.middleware.cors</span><span class="w"> </span><span class="kn">import</span> <span class="n">CORSMiddleware</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">supabase.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_client</span><span class="p">,</span> <span class="n">Client</span>
+
+<span class="c1"># Load environment variables</span>
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="c1"># FastAPI setup</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+<span class="n">security</span> <span class="o">=</span> <span class="n">HTTPBearer</span><span class="p">()</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span>
+    <span class="n">CORSMiddleware</span><span class="p">,</span>
+    <span class="n">allow_origins</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
+    <span class="n">allow_credentials</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">allow_methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
+    <span class="n">allow_headers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="c1"># Configure logging</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># Model definitions</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AgentRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">query</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">session_id</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AgentResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">output</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">error</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="c1"># Authentication</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">verify_token</span><span class="p">(</span><span class="n">credentials</span><span class="p">:</span> <span class="n">HTTPAuthorizationCredentials</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">security</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="n">credentials</span><span class="o">.</span><span class="n">credentials</span> <span class="o">!=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;API_BEARER_TOKEN&quot;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">401</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Invalid token&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">credentials</span><span class="o">.</span><span class="n">credentials</span>
+
+<span class="c1"># Supabase setup</span>
+<span class="n">supabase_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SUPABASE_URL&quot;</span><span class="p">)</span>
+<span class="n">supabase_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SUPABASE_KEY&quot;</span><span class="p">)</span>
+<span class="n">supabase</span><span class="p">:</span> <span class="n">Client</span> <span class="o">=</span> <span class="n">create_client</span><span class="p">(</span><span class="n">supabase_url</span><span class="p">,</span> <span class="n">supabase_key</span><span class="p">)</span>
+
+<span class="c1"># Store message in database</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">store_message</span><span class="p">(</span><span class="n">session_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">supabase</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;messages&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span>
+            <span class="s2">&quot;session_id&quot;</span><span class="p">:</span> <span class="n">session_id</span><span class="p">,</span>
+            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">message</span>
+        <span class="p">})</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error storing message: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Main endpoint</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/my-agent&quot;</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">AgentResponse</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_request</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">AgentRequest</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">verify_token</span><span class="p">)):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Store user message</span>
+        <span class="k">await</span> <span class="n">store_message</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">query</span><span class="p">,</span>
+            <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;user_id&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span>
+                <span class="s2">&quot;request_id&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">request_id</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+
+        <span class="c1"># Process the request</span>
+        <span class="c1"># TODO: Implement your agent&#39;s logic here</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Processed query: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Store AI response</span>
+        <span class="k">await</span> <span class="n">store_message</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span>
+            <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;user_id&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span>
+                <span class="s2">&quot;request_id&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">request_id</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+
+        <span class="k">return</span> <span class="n">AgentResponse</span><span class="p">(</span>
+            <span class="n">success</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="n">result</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;processed&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing request: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">AgentResponse</span><span class="p">(</span>
+            <span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="s2">&quot;An error occurred while processing your request.&quot;</span><span class="p">,</span>
+            <span class="n">error</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="p">)</span>
+
+<span class="c1"># Health check endpoint</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/health&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">health_check</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;healthy&quot;</span><span class="p">}</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">uvicorn</span>
+    <span class="n">port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PORT&quot;</span><span class="p">,</span> <span class="s2">&quot;8001&quot;</span><span class="p">))</span>
+    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;main:app&quot;</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">reload</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="update-requirementstxt">Update requirements.txt</h3>
+<p>Make sure to include all the dependencies your agent needs:</p>
+<div class="codehilite"><pre><span></span><code>fastapi==0.110.0
+uvicorn==0.27.1
+pydantic==2.6.1
+python-dotenv==1.0.0
+supabase==2.3.1
+httpx==0.27.0
+# Add any other dependencies your agent needs
+</code></pre></div>
+
+<h3 id="update-dockerfile">Update Dockerfile</h3>
+<p>Update the Dockerfile to build your agent:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">ottomator/base-python:latest</span>
+
+<span class="c"># Build argument for port with default value</span>
+<span class="k">ARG</span><span class="w"> </span><span class="nv">PORT</span><span class="o">=</span><span class="m">8001</span>
+<span class="k">ENV</span><span class="w"> </span><span class="nv">PORT</span><span class="o">=</span><span class="si">${</span><span class="nv">PORT</span><span class="si">}</span>
+
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+
+<span class="c"># Copy requirements first to leverage Docker cache</span>
+<span class="k">COPY</span><span class="w"> </span>requirements.txt<span class="w"> </span>.
+<span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-cache-dir<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+
+<span class="c"># Copy the application code</span>
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+
+<span class="c"># Expose the port from build argument</span>
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">${PORT}</span>
+
+<span class="c"># Command to run the application</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;sh&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-c&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;uvicorn main:app --host 0.0.0.0 --port ${PORT}&quot;</span><span class="p">]</span>
+</code></pre></div>
+
+<h2 id="step-4-test-your-agent">Step 4: Test Your Agent</h2>
+<h3 id="local-testing">Local Testing</h3>
+<p>Test your agent locally to make sure it works as expected:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Install dependencies</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+
+<span class="c1"># Set up environment variables</span>
+cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+<span class="c1"># Edit .env with your credentials</span>
+
+<span class="c1"># Run the agent</span>
+python<span class="w"> </span>main.py
+</code></pre></div>
+
+<p>You can test your agent using curl or a tool like Postman:</p>
+<div class="codehilite"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8001/api/my-agent<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer your_token_here&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">    &quot;query&quot;: &quot;Test query&quot;,</span>
+<span class="s1">    &quot;user_id&quot;: &quot;test-user&quot;,</span>
+<span class="s1">    &quot;request_id&quot;: &quot;test-request&quot;,</span>
+<span class="s1">    &quot;session_id&quot;: &quot;test-session&quot;</span>
+<span class="s1">  }&#39;</span>
+</code></pre></div>
+
+<h3 id="docker-testing">Docker Testing</h3>
+<p>Test your agent in a Docker container:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Build the Docker image</span>
+docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>my-new-agent<span class="w"> </span>.
+
+<span class="c1"># Run the Docker container</span>
+docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">8001</span>:8001<span class="w"> </span>--env-file<span class="w"> </span>.env<span class="w"> </span>my-new-agent
+</code></pre></div>
+
+<h2 id="step-5-deploy-your-agent">Step 5: Deploy Your Agent</h2>
+<p>Once your agent is working correctly, you can deploy it to your environment:</p>
+<h3 id="docker-deployment">Docker Deployment</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Build the Docker image</span>
+docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>my-new-agent<span class="w"> </span>.
+
+<span class="c1"># Push the image to a registry (optional)</span>
+docker<span class="w"> </span>tag<span class="w"> </span>my-new-agent<span class="w"> </span>your-registry/my-new-agent:latest
+docker<span class="w"> </span>push<span class="w"> </span>your-registry/my-new-agent:latest
+
+<span class="c1"># Run the Docker container</span>
+docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">8001</span>:8001<span class="w"> </span>--env-file<span class="w"> </span>.env<span class="w"> </span>my-new-agent
+</code></pre></div>
+
+<h3 id="kubernetes-deployment">Kubernetes Deployment</h3>
+<p>Create a Kubernetes deployment file:</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-new-agent</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-new-agent</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-new-agent</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-new-agent</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-registry/my-new-agent:latest</span>
+<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8001</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">API_BEARER_TOKEN</span>
+<span class="w">          </span><span class="nt">valueFrom</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">secretKeyRef</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-new-agent-secrets</span>
+<span class="w">              </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-bearer-token</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SUPABASE_URL</span>
+<span class="w">          </span><span class="nt">valueFrom</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">secretKeyRef</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-new-agent-secrets</span>
+<span class="w">              </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">supabase-url</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SUPABASE_KEY</span>
+<span class="w">          </span><span class="nt">valueFrom</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">secretKeyRef</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-new-agent-secrets</span>
+<span class="w">              </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">supabase-key</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-new-agent</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-new-agent</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8001</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterIP</span>
+</code></pre></div>
+
+<p>Apply the deployment:</p>
+<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>deployment.yaml
+</code></pre></div>
+
+<h2 id="step-6-document-your-agent">Step 6: Document Your Agent</h2>
+<p>Make sure to document your agent thoroughly:</p>
+<ol>
+<li>Update the README.md with detailed usage instructions</li>
+<li>Add examples of API requests and responses</li>
+<li>Document any environment variables or configuration options</li>
+<li>Include troubleshooting tips</li>
+</ol>
+<h2 id="conclusion">Conclusion</h2>
+<p>Congratulations! You've created a new SolnAI agent. Your agent can now be used as part of the SolnAI ecosystem or as a standalone service.</p>
+<p>Remember to follow best practices:
+- Keep your code modular and maintainable
+- Add comprehensive error handling
+- Implement proper logging
+- Secure your API endpoints
+- Optimize resource usage</p>
+<p>For more information, refer to the <a href="overview.md">SolnAI Agents Collection Overview</a>. </p>
+    </div>
+</body>
+</html>
