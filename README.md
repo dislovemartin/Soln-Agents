@@ -1,269 +1,156 @@
-<a name="readme-top"></a>
-
-<p align="center">
-  <a href="https://anythingllm.com"><img src="https://github.com/Mintplex-Labs/anything-llm/blob/master/images/wordmark.png?raw=true" alt="AnythingLLM logo"></a>
-</p>
-
-<div align='center'>
-<a href="https://trendshift.io/repositories/2415" target="_blank"><img src="https://trendshift.io/api/badge/repositories/2415" alt="Mintplex-Labs%2Fanything-llm | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
-</div>
-
-<p align="center">
-    <b>AnythingLLM:</b> The all-in-one AI app you were looking for.<br />
-    Chat with your docs, use AI Agents, hyper-configurable, multi-user, & no frustrating set up required.
-</p>
-
-<p align="center">
-  <a href="https://discord.gg/6UyHPeGZAC" target="_blank">
-      <img src="https://img.shields.io/badge/chat-mintplex_labs-blue.svg?style=flat&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAH1UExURQAAAP////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////r6+ubn5+7u7/3+/v39/enq6urq6/v7+97f39rb26eoqT1BQ0pOT4+Rkuzs7cnKykZKS0NHSHl8fdzd3ejo6UxPUUBDRdzc3RwgIh8jJSAkJm5xcvHx8aanqB4iJFBTVezt7V5hYlJVVuLj43p9fiImKCMnKZKUlaaoqSElJ21wcfT09O3u7uvr6zE0Nr6/wCUpK5qcnf7+/nh7fEdKTHx+f0tPUOTl5aipqiouMGtubz5CRDQ4OsTGxufn515hY7a3uH1/gXBydIOFhlVYWvX29qaoqCQoKs7Pz/Pz87/AwUtOUNfY2dHR0mhrbOvr7E5RUy8zNXR2d/f39+Xl5UZJSx0hIzQ3Odra2/z8/GlsbaGjpERHSezs7L/BwScrLTQ4Odna2zM3Obm7u3x/gKSmp9jZ2T1AQu/v71pdXkVISr2+vygsLiInKTg7PaOlpisvMcXGxzk8PldaXPLy8u7u7rm6u7S1tsDBwvj4+MPExbe4ueXm5s/Q0Kyf7ewAAAAodFJOUwAABClsrNjx/QM2l9/7lhmI6jTB/kA1GgKJN+nea6vy/MLZQYeVKK3rVA5tAAAAAWJLR0QB/wIt3gAAAAd0SU1FB+cKBAAmMZBHjXIAAAISSURBVDjLY2CAAkYmZhZWNnYODnY2VhZmJkYGVMDIycXNw6sBBbw8fFycyEoYGfkFBDVQgKAAPyMjQl5IWEQDDYgIC8FUMDKKsmlgAWyiEBWMjGJY5YEqxMAqGMWFNXAAYXGgAkYJSQ2cQFKCkYFRShq3AmkpRgYJbghbU0tbB0Tr6ukbgGhDI10gySfBwCwDUWBsYmpmDqQtLK2sbTQ0bO3sHYA8GWYGWWj4WTs6Obu4ami4OTm7exhqeHp5+4DCVJZBDmqdr7ufn3+ArkZgkJ+fU3CIRmgYWFiOARYGvo5OQUHhEUAFTkF+kVHRsLBgkIeyYmLjwoOc4hMSk5JTnINS06DC8gwcEEZ6RqZGlpOfc3ZObl5+gZ+TR2ERWFyBQQFMF5eklmqUpQb5+ReU61ZUOvkFVVXXQBSAraitq29o1GiKcfLzc29u0mjxBzq0tQ0kww5xZHtHUGeXhkZhdxBYgZ4d0LI6c4gjwd7siQQraOp1AivQ6CuAKZCDBBRQQQNQgUb/BGf3cqCCiZOcnCe3QQIKHNRTpk6bDgpZjRkzg3pBQTBrdtCcuZCgluAD0vPmL1gIdvSixUuWgqNs2YJ+DUhkEYxuggkGmOQUcckrioPTJCOXEnZ5JS5YslbGnuyVERlDDFvGEUPOWvwqaH6RVkHKeuDMK6SKnHlVhTgx8jeTmqy6Eij7K6nLqiGyPwChsa1MUrnq1wAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMy0xMC0wNFQwMDozODo0OSswMDowMB9V0a8AAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjMtMTAtMDRUMDA6Mzg6NDkrMDA6MDBuCGkTAAAAKHRFWHRkYXRlOnRpbWVzdGFtcAAyMDIzLTEwLTA0VDAwOjM4OjQ5KzAwOjAwOR1IzAAAAABJRU5ErkJggg==" alt="Discord">
-  </a> |
-  <a href="https://github.com/Mintplex-Labs/anything-llm/blob/master/LICENSE" target="_blank">
-      <img src="https://img.shields.io/static/v1?label=license&message=MIT&color=white" alt="License">
-  </a> |
-  <a href="https://docs.anythingllm.com" target="_blank">
-    Docs
-  </a> |
-   <a href="https://my.mintplexlabs.com/aio-checkout?product=anythingllm" target="_blank">
-    Hosted Instance
-  </a>
-</p>
-
-<p align="center">
-  <b>English</b> · <a href='./locales/README.zh-CN.md'>简体中文</a> · <a href='./locales/README.ja-JP.md'>日本語</a>
-</p>
-
-<p align="center">
-👉 AnythingLLM for desktop (Mac, Windows, & Linux)! <a href="https://anythingllm.com/download" target="_blank"> Download Now</a>
-</p>
-
-A full-stack application that enables you to turn any document, resource, or piece of content into context that any LLM can use as references during chatting. This application allows you to pick and choose which LLM or Vector Database you want to use as well as supporting multi-user management and permissions.
-
-![Chatting](https://github.com/Mintplex-Labs/anything-llm/assets/16845892/cfc5f47c-bd91-4067-986c-f3f49621a859)
-
-<details>
-<summary><kbd>Watch the demo!</kbd></summary>
-
-[![Watch the video](/images/youtube.png)](https://youtu.be/f95rGD9trL0)
-
-</details>
-
-### Product Overview
-
-AnythingLLM is a full-stack application where you can use commercial off-the-shelf LLMs or popular open source LLMs and vectorDB solutions to build a private ChatGPT with no compromises that you can run locally as well as host remotely and be able to chat intelligently with any documents you provide it.
-
-AnythingLLM divides your documents into objects called `workspaces`. A Workspace functions a lot like a thread, but with the addition of containerization of your documents. Workspaces can share documents, but they do not talk to each other so you can keep your context for each workspace clean.
-
-## Cool features of AnythingLLM
-
-- 🆕 [**Custom AI Agents**](https://docs.anythingllm.com/agent/custom/introduction)
-- 🆕 [**No-code AI Agent builder**](https://docs.anythingllm.com/agent-flows/overview)
-- 🖼️ **Multi-modal support (both closed and open-source LLMs!)**
-- 👤 Multi-user instance support and permissioning _Docker version only_
-- 🦾 Agents inside your workspace (browse the web, etc)
-- 💬 [Custom Embeddable Chat widget for your website](https://github.com/Mintplex-Labs/anythingllm-embed/blob/main/README.md) _Docker version only_
-- 📖 Multiple document type support (PDF, TXT, DOCX, etc)
-- Simple chat UI with Drag-n-Drop funcitonality and clear citations.
-- 100% Cloud deployment ready.
-- Works with all popular [closed and open-source LLM providers](#supported-llms-embedder-models-speech-models-and-vector-databases).
-- Built-in cost & time-saving measures for managing very large documents compared to any other chat UI.
-- Full Developer API for custom integrations!
-- Much more...install and find out!
-
-### Supported LLMs, Embedder Models, Speech models, and Vector Databases
-
-**Large Language Models (LLMs):**
-
-- [Any open-source llama.cpp compatible model](/server/storage/models/README.md#text-generation-llm-selection)
-- [OpenAI](https://openai.com)
-- [OpenAI (Generic)](https://openai.com)
-- [Azure OpenAI](https://azure.microsoft.com/en-us/products/ai-services/openai-service)
-- [AWS Bedrock](https://aws.amazon.com/bedrock/)
-- [Anthropic](https://www.anthropic.com/)
-- [NVIDIA NIM (chat models)](https://build.nvidia.com/explore/discover)
-- [Google Gemini Pro](https://ai.google.dev/)
-- [Hugging Face (chat models)](https://huggingface.co/)
-- [Ollama (chat models)](https://ollama.ai/)
-- [LM Studio (all models)](https://lmstudio.ai)
-- [LocalAi (all models)](https://localai.io/)
-- [Together AI (chat models)](https://www.together.ai/)
-- [Fireworks AI  (chat models)](https://fireworks.ai/)
-- [Perplexity (chat models)](https://www.perplexity.ai/)
-- [OpenRouter (chat models)](https://openrouter.ai/)
-- [DeepSeek (chat models)](https://deepseek.com/)
-- [Mistral](https://mistral.ai/)
-- [Groq](https://groq.com/)
-- [Cohere](https://cohere.com/)
-- [KoboldCPP](https://github.com/LostRuins/koboldcpp)
-- [LiteLLM](https://github.com/BerriAI/litellm)
-- [Text Generation Web UI](https://github.com/oobabooga/text-generation-webui)
-- [Apipie](https://apipie.ai/)
-- [xAI](https://x.ai/)
-- [Novita AI (chat models)](https://novita.ai/model-api/product/llm-api?utm_source=github_anything-llm&utm_medium=github_readme&utm_campaign=link)
-- [PPIO](https://ppinfra.com?utm_source=github_anything-llm)
+# Simple Interpreted Programming Language
+
+This is a fully-featured interpreted programming language implemented in Python. The language supports variables, control structures, functions, and more.
 
-**Embedder models:**
+## Features
+
+- **Data Types:** Integers, floats, strings, booleans, and lists.
+- **Variables:** Dynamic typing with global and local scopes.
+- **Control Structures:** If-else statements, while loops, and for loops.
+- **Functions:** Function definitions with parameters and return values.
+- **Operators:** Arithmetic, comparison, logical, and assignment operators.
 
-- [AnythingLLM Native Embedder](/server/storage/models/README.md) (default)
-- [OpenAI](https://openai.com)
-- [Azure OpenAI](https://azure.microsoft.com/en-us/products/ai-services/openai-service)
-- [LocalAi (all)](https://localai.io/)
-- [Ollama (all)](https://ollama.ai/)
-- [LM Studio (all)](https://lmstudio.ai)
-- [Cohere](https://cohere.com/)
+## Project Structure
 
-**Audio Transcription models:**
+- `interpreter/`: Main package containing all components of the interpreter.
+  - `lexer/`: The lexical analyzer that converts source code into tokens.
+  - `parser/`: The parser that converts tokens into an Abstract Syntax Tree (AST).
+  - `ast/`: Definitions of AST nodes for expressions and statements.
+  - `interpreter/`: The runtime interpreter that evaluates the AST.
+  - `main.py`: Entry point for the interpreter.
 
-- [AnythingLLM Built-in](https://github.com/Mintplex-Labs/anything-llm/tree/master/server/storage/models#audiovideo-transcription) (default)
-- [OpenAI](https://openai.com/)
+## Architecture
 
-**TTS (text-to-speech) support:**
+The interpreter follows a classic compiler/interpreter architecture:
 
-- Native Browser Built-in (default)
-- [PiperTTSLocal - runs in browser](https://github.com/rhasspy/piper)
-- [OpenAI TTS](https://platform.openai.com/docs/guides/text-to-speech/voice-options)
-- [ElevenLabs](https://elevenlabs.io/)
-- Any OpenAI Compatible TTS service.
+1. **Lexer:** Scans the source code and produces a stream of tokens.
+2. **Parser:** Parses the tokens into an Abstract Syntax Tree (AST).
+3. **Resolver:** Resolves variable references and binds them to their declarations.
+4. **Interpreter:** Evaluates the AST to execute the program.
+
+## Language Syntax
 
-**STT (speech-to-text) support:**
+### Variables
+
+```
+var name = expression;
+```
+
+### Arithmetic
+
+```
+1 + 2
+3 - 4
+5 * 6
+7 / 8
+```
 
-- Native Browser Built-in (default)
+### Comparison and Logical Operators
 
-**Vector Databases:**
+```
+a > b
+c < d
+e >= f
+g <= h
+i == j
+k != l
+true and false
+true or false
+!true
+```
 
-- [LanceDB](https://github.com/lancedb/lancedb) (default)
-- [Astra DB](https://www.datastax.com/products/datastax-astra)
-- [Pinecone](https://pinecone.io)
-- [Chroma](https://trychroma.com)
-- [Weaviate](https://weaviate.io)
-- [Qdrant](https://qdrant.tech)
-- [Milvus](https://milvus.io)
-- [Zilliz](https://zilliz.com)
+### Control Structures
 
-### Technical Overview
+```
+// If-else statement
+if (condition) {
+    // then branch
+} else {
+    // else branch
+}
 
-This monorepo consists of three main sections:
+// While loop
+while (condition) {
+    // body
+}
 
-- `frontend`: A viteJS + React frontend that you can run to easily create and manage all your content the LLM can use.
-- `server`: A NodeJS express server to handle all the interactions and do all the vectorDB management and LLM interactions.
-- `collector`: NodeJS express server that process and parses documents from the UI.
-- `docker`: Docker instructions and build process + information for building from source.
-- `embed`: Submodule for generation & creation of the [web embed widget](https://github.com/Mintplex-Labs/anythingllm-embed).
-- `browser-extension`: Submodule for the [chrome browser extension](https://github.com/Mintplex-Labs/anythingllm-extension).
+// For loop
+for (var i = 0; i < 10; i = i + 1) {
+    // body
+}
+```
 
-## 🛳 Self Hosting
+### Functions
 
-Mintplex Labs & the community maintain a number of deployment methods, scripts, and templates that you can use to run AnythingLLM locally. Refer to the table below to read how to deploy on your preferred environment or to automatically deploy.
-| Docker | AWS | GCP | Digital Ocean | Render.com |
-|----------------------------------------|----|-----|---------------|------------|
-| [![Deploy on Docker][docker-btn]][docker-deploy] | [![Deploy on AWS][aws-btn]][aws-deploy] | [![Deploy on GCP][gcp-btn]][gcp-deploy] | [![Deploy on DigitalOcean][do-btn]][do-deploy] | [![Deploy on Render.com][render-btn]][render-deploy] |
+```
+fun name(param1, param2) {
+    // body
+    return value;
+}
+```
 
-| Railway  |  RepoCloud | Elestio |
-| --- | --- | --- |
-| [![Deploy on Railway][railway-btn]][railway-deploy] | [![Deploy on RepoCloud][repocloud-btn]][repocloud-deploy] | [![Deploy on Elestio][elestio-btn]][elestio-deploy] |
+### Lists
 
-[or set up a production AnythingLLM instance without Docker →](./BARE_METAL.md)
+```
+var list = [1, 2, 3];
+list[0]  // Accessing elements
+```
 
-## How to setup for development
+## Running the Interpreter
 
-- `yarn setup` To fill in the required `.env` files you'll need in each of the application sections (from root of repo).
-  - Go fill those out before proceeding. Ensure `server/.env.development` is filled or else things won't work right.
-- `yarn dev:server` To boot the server locally (from root of repo).
-- `yarn dev:frontend` To boot the frontend locally (from root of repo).
-- `yarn dev:collector` To then run the document collector (from root of repo).
+To run the interpreter on a file:
 
-[Learn about documents](./server/storage/documents/DOCUMENTS.md)
+```bash
+python -m interpreter.main your_file.lang
+```
 
-[Learn about vector caching](./server/storage/vector-cache/VECTOR_CACHE.md)
+To start the interactive REPL:
 
-## External Apps & Integrations
+```bash
+python -m interpreter.main
+```
 
-_These are apps that are not maintained by Mintplex Labs, but are compatible with AnythingLLM. A listing here is not an endorsement._
+## Example
 
-- [Midori AI Subsystem Manager](https://io.midori-ai.xyz/subsystem/anythingllm/) - A streamlined and efficient way to deploy AI systems using Docker container technology.
-- [Coolify](https://coolify.io/docs/services/anythingllm/) - Deploy AnythingLLM with a single click.
-- [GPTLocalhost for Microsoft Word](https://gptlocalhost.com/demo/) - A local Word Add-in for you to use AnythingLLM in Microsoft Word.
+```
+// Variables and assignments
+var a = 10;
+var b = 20;
+var c = a + b;
+print "a + b = " + c;
 
-## Telemetry & Privacy
+// Functions
+fun add(a, b) {
+    return a + b;
+}
 
-AnythingLLM by Mintplex Labs Inc contains a telemetry feature that collects anonymous usage information.
+fun factorial(n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+}
 
-<details>
-<summary><kbd>More about Telemetry & Privacy for AnythingLLM</kbd></summary>
+print "add(3, 4) = " + add(3, 4);
+print "factorial(5) = " + factorial(5);
 
-### Why?
+// Lists
+var list = [1, 2, 3, 4, 5];
+print "list: " + list;
+print "list[2]: " + list[2];
+```
 
-We use this information to help us understand how AnythingLLM is used, to help us prioritize work on new features and bug fixes, and to help us improve AnythingLLM's performance and stability.
+## Learning and Resources
 
-### Opting out
+This interpreter was built based on principles from:
 
-Set `DISABLE_TELEMETRY` in your server or docker .env settings to "true" to opt out of telemetry. You can also do this in-app by going to the sidebar > `Privacy` and disabling telemetry.
+- "Crafting Interpreters" by Robert Nystrom
+- "Programming Language Pragmatics" by Michael L. Scott
+- "Compilers: Principles, Techniques, and Tools" by Alfred V. Aho, Monica S. Lam, Ravi Sethi, and Jeffrey D. Ullman
 
-### What do you explicitly track?
+## Future Extensions
 
-We will only track usage details that help us make product and roadmap decisions, specifically:
-
-- Type of your installation (Docker or Desktop)
-- When a document is added or removed. No information _about_ the document. Just that the event occurred. This gives us an idea of use.
-- Type of vector database in use. Let's us know which vector database provider is the most used to prioritize changes when updates arrive for that provider.
-- Type of LLM in use. Let's us know the most popular choice and prioritize changes when updates arrive for that provider.
-- Chat is sent. This is the most regular "event" and gives us an idea of the daily-activity of this project across all installations. Again, only the event is sent - we have no information on the nature or content of the chat itself.
-
-You can verify these claims by finding all locations `Telemetry.sendTelemetry` is called. Additionally these events are written to the output log so you can also see the specific data which was sent - if enabled. No IP or other identifying information is collected. The Telemetry provider is [PostHog](https://posthog.com/) - an open-source telemetry collection service.
-
-[View all telemetry events in source code](https://github.com/search?q=repo%3AMintplex-Labs%2Fanything-llm%20.sendTelemetry\(&type=code)
-
-</details>
-
-
-## 👋 Contributing
-
-- create issue
-- create PR with branch name format of `<issue number>-<short name>`
-- LGTM from core-team
-
-## 🌟 Contributors
-
-[![anythingllm contributors](https://contrib.rocks/image?repo=mintplex-labs/anything-llm)](https://github.com/mintplex-labs/anything-llm/graphs/contributors)
-
-[![Star History Chart](https://api.star-history.com/svg?repos=mintplex-labs/anything-llm&type=Timeline)](https://star-history.com/#mintplex-labs/anything-llm&Date)
-
-## 🔗 More Products
-
-- **[VectorAdmin][vector-admin]:** An all-in-one GUI & tool-suite for managing vector databases.
-- **[OpenAI Assistant Swarm][assistant-swarm]:** Turn your entire library of OpenAI assistants into one single army commanded from a single agent.
-
-<div align="right">
-
-[![][back-to-top]](#readme-top)
-
-</div>
-
----
-
-Copyright © 2025 [Mintplex Labs][profile-link]. <br />
-This project is [MIT](./LICENSE) licensed.
-
-<!-- LINK GROUP -->
-
-[back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-222628?style=flat-square
-[profile-link]: https://github.com/mintplex-labs
-[vector-admin]: https://github.com/mintplex-labs/vector-admin
-[assistant-swarm]: https://github.com/Mintplex-Labs/openai-assistant-swarm
-[docker-btn]: ./images/deployBtns/docker.png
-[docker-deploy]: ./docker/HOW_TO_USE_DOCKER.md
-[aws-btn]: ./images/deployBtns/aws.png
-[aws-deploy]: ./cloud-deployments/aws/cloudformation/DEPLOY.md
-[gcp-btn]: https://deploy.cloud.run/button.svg
-[gcp-deploy]: ./cloud-deployments/gcp/deployment/DEPLOY.md
-[do-btn]: https://www.deploytodo.com/do-btn-blue.svg
-[do-deploy]: ./cloud-deployments/digitalocean/terraform/DEPLOY.md
-[render-btn]: https://render.com/images/deploy-to-render-button.svg
-[render-deploy]: https://render.com/deploy?repo=https://github.com/Mintplex-Labs/anything-llm&branch=render
-[render-btn]: https://render.com/images/deploy-to-render-button.svg
-[render-deploy]: https://render.com/deploy?repo=https://github.com/Mintplex-Labs/anything-llm&branch=render
-[railway-btn]: https://railway.app/button.svg
-[railway-deploy]: https://railway.app/template/HNSCS1?referralCode=WFgJkn
-[repocloud-btn]: https://d16t0pc4846x52.cloudfront.net/deploylobe.svg
-[repocloud-deploy]: https://repocloud.io/details/?app_id=276
-[elestio-btn]: https://elest.io/images/logos/deploy-to-elestio-btn.png
-[elestio-deploy]: https://elest.io/open-source/anythingllm
+Possible future enhancements:
+- Class-based object system
+- Modules and imports
+- Tailored standard library
+- Performance optimizations
+- JIT compilation

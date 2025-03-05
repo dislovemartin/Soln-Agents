@@ -28,8 +28,8 @@ class NovitaLLM {
       baseURL: this.basePath,
       apiKey: process.env.NOVITA_LLM_API_KEY ?? null,
       defaultHeaders: {
-        "HTTP-Referer": "https://anythingllm.com",
-        "X-Novita-Source": "anythingllm",
+        "HTTP-Referer": "https://solnai.com",
+        "X-Novita-Source": "solnai",
       },
     });
     this.model =

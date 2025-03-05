@@ -1,8 +1,8 @@
 version: '3.8'
 services:
-  anythingllm:
-    image: mintplexlabs/anythingllm
-    container_name: anythingllm
+  solnai:
+    image: mintplexlabs/solnai
+    container_name: solnai
     ports:
       - "3001:3001"
     cap_add:
@@ -10,14 +10,14 @@ services:
     env_file:
       - .env
     volumes:
-      - anythingllm_storage:/app/server/storage
+      - solnai_storage:/app/server/storage
       - ./.env:/app/server/.env
     restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
 volumes:
-  anythingllm_storage:
+  solnai_storage:
     driver: local
     driver_opts:
       type: none

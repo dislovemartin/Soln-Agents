@@ -1,0 +1,81 @@
+// Variables and assignments
+var a = 10;
+var b = 20;
+var c = a + b;
+print "a + b = " + c;
+
+// Arithmetic operations
+print "Arithmetic:";
+print "2 + 3 = " + (2 + 3);
+print "5 - 2 = " + (5 - 2);
+print "4 * 3 = " + (4 * 3);
+print "10 / 2 = " + (10 / 2);
+
+// Comparison operations
+print "\nComparison:";
+print "5 > 3: " + (5 > 3);
+print "5 < 3: " + (5 < 3);
+print "5 >= 5: " + (5 >= 5);
+print "5 <= 4: " + (5 <= 4);
+print "5 == 5: " + (5 == 5);
+print "5 != 5: " + (5 != 5);
+
+// Logical operations
+print "\nLogical:";
+print "true and false: " + (true and false);
+print "true or false: " + (true or false);
+print "!true: " + (!true);
+
+// Control structures - if-else
+print "\nIf-Else:";
+if (c > 25) {
+    print "c is greater than 25";
+} else {
+    print "c is not greater than 25";
+}
+
+// Control structures - while loop
+print "\nWhile Loop:";
+var counter = 1;
+while (counter <= 5) {
+    print "Counter: " + counter;
+    counter = counter + 1;
+}
+
+// Control structures - for loop
+print "\nFor Loop:";
+for (var i = 1; i <= 5; i = i + 1) {
+    print "i: " + i;
+}
+
+// Functions
+print "\nFunctions:";
+fun add(a, b) {
+    return a + b;
+}
+
+fun factorial(n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+}
+
+print "add(3, 4) = " + add(3, 4);
+print "factorial(5) = " + factorial(5);
+
+// Lists
+print "\nLists:";
+var list = [1, 2, 3, 4, 5];
+print "list: " + list;
+print "list[2]: " + list[2];
+
+// Scopes
+print "\nScopes:";
+var global = "I'm global";
+{
+    var local = "I'm local";
+    print "Inside block, global: " + global;
+    print "Inside block, local: " + local;
+}
+print "Outside block, global: " + global;
+// Uncommenting the following line would cause an error:
+// print "Outside block, local: " + local;

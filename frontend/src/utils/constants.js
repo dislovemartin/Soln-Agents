@@ -1,14 +1,14 @@
 export const API_BASE = import.meta.env.VITE_API_BASE || "/api";
-export const ONBOARDING_SURVEY_URL = "https://onboarding.anythingllm.com";
+export const ONBOARDING_SURVEY_URL = "https://onboarding.solnai.com";
 
-export const AUTH_USER = "anythingllm_user";
-export const AUTH_TOKEN = "anythingllm_authToken";
-export const AUTH_TIMESTAMP = "anythingllm_authTimestamp";
-export const COMPLETE_QUESTIONNAIRE = "anythingllm_completed_questionnaire";
-export const SEEN_DOC_PIN_ALERT = "anythingllm_pinned_document_alert";
-export const SEEN_WATCH_ALERT = "anythingllm_watched_document_alert";
+export const AUTH_USER = "solnai_user";
+export const AUTH_TOKEN = "solnai_authToken";
+export const AUTH_TIMESTAMP = "solnai_authTimestamp";
+export const COMPLETE_QUESTIONNAIRE = "solnai_completed_questionnaire";
+export const SEEN_DOC_PIN_ALERT = "solnai_pinned_document_alert";
+export const SEEN_WATCH_ALERT = "solnai_watched_document_alert";
 
-export const APPEARANCE_SETTINGS = "anythingllm_appearance_settings";
+export const APPEARANCE_SETTINGS = "solnai_appearance_settings";
 
 export const OLLAMA_COMMON_URLS = [
   "http://127.0.0.1:11434",

@@ -81,8 +81,8 @@ class Provider {
           configuration: {
             baseURL: "https://openrouter.ai/api/v1",
             defaultHeaders: {
-              "HTTP-Referer": "https://anythingllm.com",
-              "X-Title": "AnythingLLM",
+              "HTTP-Referer": "https://solnai.com",
+              "X-Title": "SolnAI",
             },
           },
           apiKey: process.env.OPENROUTER_API_KEY ?? null,
@@ -173,7 +173,7 @@ class Provider {
         });
 
       // OSS Model Runners
-      // case "anythingllm_ollama":
+      // case "solnai_ollama":
       //   return new ChatOllama({
       //     baseUrl: process.env.PLACEHOLDER,
       //     ...config,

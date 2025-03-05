@@ -114,11 +114,11 @@ const TRANSLATIONS = {
   },
   welcomeMessage: {
     part1:
-      "AnythingLLM'e hoş geldiniz. AnythingLLM, Mintplex Labs tarafından geliştirilen açık kaynaklı bir yapay zeka aracıdır ve her şeyi, sorgulayabileceğiniz ve sohbet edebileceğiniz eğitimli bir chatbota dönüştürür. AnythingLLM, BYOK (kendi anahtarlarınızı getirin) yazılımıdır; bu nedenle, kullanmak istediğiniz hizmetler dışında herhangi bir abonelik, ücret ya da ek masraf yoktur.",
+      "SolnAI'e hoş geldiniz. SolnAI, Mintplex Labs tarafından geliştirilen açık kaynaklı bir yapay zeka aracıdır ve her şeyi, sorgulayabileceğiniz ve sohbet edebileceğiniz eğitimli bir chatbota dönüştürür. SolnAI, BYOK (kendi anahtarlarınızı getirin) yazılımıdır; bu nedenle, kullanmak istediğiniz hizmetler dışında herhangi bir abonelik, ücret ya da ek masraf yoktur.",
     part2:
-      "AnythingLLM, OpenAi, GPT-4, LangChain, PineconeDB, ChromaDB ve benzeri güçlü yapay zeka ürünlerini zahmetsizce, düzenli bir paket içinde bir araya getirmenin en kolay yoludur; böylece verimliliğinizi 100 kat artırabilirsiniz.",
+      "SolnAI, OpenAi, GPT-4, LangChain, PineconeDB, ChromaDB ve benzeri güçlü yapay zeka ürünlerini zahmetsizce, düzenli bir paket içinde bir araya getirmenin en kolay yoludur; böylece verimliliğinizi 100 kat artırabilirsiniz.",
     part3:
-      "AnythingLLM tamamen yerel olarak makinenizde çok az kaynakla çalışabilir—orada olduğunu bile fark etmezsiniz! GPU gerekmez. Bulut veya şirket içi (on-premises) kurulum da mevcuttur.\nYapay zeka araç ekosistemi her geçen gün daha da güçleniyor. AnythingLLM bu gücü kolayca kullanmanızı sağlar.",
+      "SolnAI tamamen yerel olarak makinenizde çok az kaynakla çalışabilir—orada olduğunu bile fark etmezsiniz! GPU gerekmez. Bulut veya şirket içi (on-premises) kurulum da mevcuttur.\nYapay zeka araç ekosistemi her geçen gün daha da güçleniyor. SolnAI bu gücü kolayca kullanmanızı sağlar.",
     githubIssue: "GitHub'da bir sorun oluşturun",
     user1: "Nasıl başlarım?!",
     part4:
@@ -127,7 +127,7 @@ const TRANSLATIONS = {
     user2:
       "Bu bir tür yapay zeka Dropbox'ı gibi mi? Peki sohbet etmek nasıl? Bir chatbot değil mi?",
     part5:
-      "AnythingLLM, sıradan bir Dropbox'tan çok daha fazlasıdır.\n\nAnythingLLM, verilerinizle etkileşime geçmenin iki yolunu sunar:\n\n<i>Sorgu (Query):</i> Sohbetleriniz, çalışma alanınızdaki belgelere erişip onlardan elde ettiği verileri veya çıkarımları size sunar. Çalışma Alanınıza daha fazla belge eklemek, onu daha akıllı hâle getirir!\n\n<i>Konuşma (Conversational):</i> Belgeleriniz ve devam eden sohbet geçmişiniz, aynı anda LLM'in bilgi tabanına katkıda bulunur. Bu, gerçek zamanlı metin bilgileri, düzeltmeler veya LLM'nin yanlış anlayabileceği noktaların düzeltilmesi için mükemmeldir.\n\nSohbet esnasında, <i>iki mod arasında istediğiniz an</i> geçiş yapabilirsiniz!",
+      "SolnAI, sıradan bir Dropbox'tan çok daha fazlasıdır.\n\nSolnAI, verilerinizle etkileşime geçmenin iki yolunu sunar:\n\n<i>Sorgu (Query):</i> Sohbetleriniz, çalışma alanınızdaki belgelere erişip onlardan elde ettiği verileri veya çıkarımları size sunar. Çalışma Alanınıza daha fazla belge eklemek, onu daha akıllı hâle getirir!\n\n<i>Konuşma (Conversational):</i> Belgeleriniz ve devam eden sohbet geçmişiniz, aynı anda LLM'in bilgi tabanına katkıda bulunur. Bu, gerçek zamanlı metin bilgileri, düzeltmeler veya LLM'nin yanlış anlayabileceği noktaların düzeltilmesi için mükemmeldir.\n\nSohbet esnasında, <i>iki mod arasında istediğiniz an</i> geçiş yapabilirsiniz!",
     user3: "Vay, harika görünüyor. Hemen denemek istiyorum!",
     part6: "İyi eğlenceler!",
     starOnGitHub: "GitHub'da Yıldız Verin",
@@ -160,7 +160,7 @@ const TRANSLATIONS = {
       add: "Yeni mesaj ekle",
       save: "Mesajları Kaydet",
       heading: "Bana açıkla",
-      body: "AnythingLLM'nin faydalarını",
+      body: "SolnAI'nin faydalarını",
     },
     pfp: {
       title: "Asistan Profil Görseli",
@@ -354,7 +354,7 @@ const TRANSLATIONS = {
       system: "sistem",
       user: "kullanıcı",
       message: "mesaj",
-      assistant: "AnythingLLM Sohbet Asistanı",
+      assistant: "SolnAI Sohbet Asistanı",
       "double-click": "Düzenlemek için çift tıklayın...",
       save: "Mesajları Kaydet",
     },
@@ -369,7 +369,7 @@ const TRANSLATIONS = {
   api: {
     title: "API Anahtarları",
     description:
-      "API anahtarları, bu AnythingLLM örneğine programatik olarak erişmeye ve yönetmeye olanak tanır.",
+      "API anahtarları, bu SolnAI örneğine programatik olarak erişmeye ve yönetmeye olanak tanır.",
     link: "API dokümantasyonunu okuyun",
     generate: "Yeni API Anahtarı Oluştur",
     table: {
@@ -381,7 +381,7 @@ const TRANSLATIONS = {
   llm: {
     title: "LLM Tercihi",
     description:
-      "Bu, tercih ettiğiniz LLM sohbet ve gömme sağlayıcısının kimlik bilgileri ile ayarlarıdır. Bu anahtarların güncel ve doğru olması önemlidir; aksi takdirde AnythingLLM doğru çalışmayacaktır.",
+      "Bu, tercih ettiğiniz LLM sohbet ve gömme sağlayıcısının kimlik bilgileri ile ayarlarıdır. Bu anahtarların güncel ve doğru olması önemlidir; aksi takdirde SolnAI doğru çalışmayacaktır.",
     provider: "LLM Sağlayıcısı",
   },
   transcription: {
@@ -390,7 +390,7 @@ const TRANSLATIONS = {
       "Bu, tercih ettiğiniz transkripsiyon modeli sağlayıcısının kimlik bilgileri ve ayarlarıdır. Anahtarların güncel ve doğru olması önemlidir; aksi takdirde medya dosyaları ve sesler transkribe edilemez.",
     provider: "Transkripsiyon Sağlayıcısı",
     "warn-start":
-      "Sınırlı RAM veya CPU'ya sahip makinelerde yerel Whisper modelini kullanmak, medya dosyalarını işlerken AnythingLLM'nin duraksamasına neden olabilir.",
+      "Sınırlı RAM veya CPU'ya sahip makinelerde yerel Whisper modelini kullanmak, medya dosyalarını işlerken SolnAI'nin duraksamasına neden olabilir.",
     "warn-recommend":
       "En az 2GB RAM öneriyoruz ve 10MB üzerinde dosya yüklememeye dikkat edin.",
     "warn-end":
@@ -401,11 +401,11 @@ const TRANSLATIONS = {
     "desc-start":
       "Yerel olarak gömme mekanizmasını desteklemeyen bir LLM kullanıyorsanız, metinleri gömmek için ek kimlik bilgileri girmeniz gerekebilir.",
     "desc-end":
-      "Gömme, metni vektörlere dönüştürme sürecidir. Dosyalarınızın ve komutlarınızın işlenebilmesi için AnythingLLM, bu kimlik bilgilerine ihtiyaç duyar.",
+      "Gömme, metni vektörlere dönüştürme sürecidir. Dosyalarınızın ve komutlarınızın işlenebilmesi için SolnAI, bu kimlik bilgilerine ihtiyaç duyar.",
     provider: {
       title: "Embedding Sağlayıcısı",
       description:
-        "AnythingLLM'nin yerel gömme motoru kullanıldığında ek bir kurulum gerekmez.",
+        "SolnAI'nin yerel gömme motoru kullanıldığında ek bir kurulum gerekmez.",
     },
   },
   text: {
@@ -432,7 +432,7 @@ const TRANSLATIONS = {
   vector: {
     title: "Vektör Veritabanı",
     description:
-      "AnythingLLM örneğinizin nasıl çalışacağını belirleyen kimlik bilgileri ve ayarları burada bulunur. Bu anahtarların güncel ve doğru olması önemlidir.",
+      "SolnAI örneğinizin nasıl çalışacağını belirleyen kimlik bilgileri ve ayarları burada bulunur. Bu anahtarların güncel ve doğru olması önemlidir.",
     provider: {
       title: "Vektör Veritabanı Sağlayıcısı",
       description: "LanceDB için ek bir yapılandırma gerekmez.",
@@ -477,7 +477,7 @@ const TRANSLATIONS = {
     password: {
       title: "Şifre Koruması",
       description:
-        "AnythingLLM örneğinizi bir şifre ile koruyun. Bu şifreyi unutmanız hâlinde kurtarma yöntemi yoktur, bu yüzden mutlaka güvende saklayın.",
+        "SolnAI örneğinizi bir şifre ile koruyun. Bu şifreyi unutmanız hâlinde kurtarma yöntemi yoktur, bu yüzden mutlaka güvende saklayın.",
     },
     instance: {
       title: "Örneği Şifreyle Koru",
@@ -500,7 +500,7 @@ const TRANSLATIONS = {
   privacy: {
     title: "Gizlilik & Veri İşleme",
     description:
-      "Bağlantılı üçüncü taraf sağlayıcılarla ve AnythingLLM ile verilerinizin nasıl ele alındığını burada yapılandırabilirsiniz.",
+      "Bağlantılı üçüncü taraf sağlayıcılarla ve SolnAI ile verilerinizin nasıl ele alındığını burada yapılandırabilirsiniz.",
     llm: "LLM Seçimi",
     embedding: "Gömme Tercihi",
     vector: "Vektör Veritabanı",

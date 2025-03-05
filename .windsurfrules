@@ -1,0 +1,213 @@
+---
+description: Improve organization, maintainability, and clarity.
+globs: 
+---
+**Phase 1: Immediate Cleanup and Standardization (Short-Term)**
+
+1. **Consolidate `.gitignore` Rules:**
+   - Create a comprehensive `.gitignore` at repository root.
+   - Merge existing `.gitignore` files, prioritizing comprehensive lists.
+   - Include rules for: build artifacts, logs, caches, virtual environments, IDE files, dependency directories, environment files, output directories.
+   - Test with `git status --ignored`.
+
+2. **Remove Virtual Environments and Dependency Artifacts:**
+   - Delete committed virtual environments and dependency artifacts.
+   - Use `git rm -r --cached <directory_name>` to remove from history.
+   - Ensure directories are ignored in `.gitignore`.
+
+3. **Standardize `.env.example`:**
+   - Create `.env.example` at repository root.
+   - Include necessary environment variables with placeholders.
+   - Document variable purposes as comments.
+   - Commit `.env.example`, ignore `.env` files.
+
+**Phase 2: Project Structure and Documentation (Mid-Term)**
+
+4. **Evaluate Project Structure:**
+   - Analyze relationships between projects.
+   - Categorize as: Independent, Loosely Coupled, or Tightly Coupled.
+   - Decide on: Separate Repositories or Monorepo structure.
+
+5. **Modularize Directory Structure:**
+   - Define consistent structure for all projects.
+   - Establish top-level directories: `src/`, `tests/`, `docs/`, `config/`, `scripts/`, `docker/`, `k8s/`, `deploy/`.
+   - Organize `src/` by feature, layer, or component type.
+   - Apply structure consistently across projects.
+
+6. **Document Architecture and Conventions:**
+   - Create root `README.md` for repository overview.
+   - Create `ARCHITECTURE.md` for structure and tech stack details.
+   - Consider `CONTRIBUTING.md` for coding standards and guidelines.
+   - Document configuration management strategy.
+
+**Phase 3: Implementation and Refinement (Longer-Term)**
+
+7. **Implement Configuration Loading Modules:**
+   - Create dedicated config module per project (e.g., `config.py`, `config.ts`).
+   - Handle loading from env variables/files, validation, and access interface.
+   - Replace scattered env variable calls with centralized module.
+
+8. **Isolate Language-Specific Code and Tooling:**
+   - Ensure clear separation of language-specific code.
+   - Use appropriate tooling for each language within project directories.
+   - Configure language-specific linters, formatters, and build tools.
+
+9. **CI/CD Integration:**
+   - Update CI/CD configs for new structure and configuration management.
+   - Run linters and tests for each project.
+   - Build artifacts based on new structure.
+   - Handle deployment configs from standardized locations.
+   - Automate build, test, and deployment processes.
+
+**Important Notes:**
+- Prioritize Phase 1 for immediate cleanup, then move to Phases 2 and 3.
+- Discuss plan and get team buy-in before major changes.
+- Implement changes iteratively, focusing on one phase at a time.
+- Use branches and pull requests for structural changes.
+- Adapt plan to specific project needs and context.
+
+**Detailed Steps for Key Actions:**
+
+1. Consolidating `.gitignore`:
+   ```
+   # Merge existing .gitignore files
+   cat .gitignore */.gitignore > combined_gitignore.txt
+   # Remove duplicates and sort
+   sort -u combined_gitignore.txt > .gitignore
+   # Add common rules
+   echo "
+   # Build artifacts
+   build/
+   dist/
+   .next/
+   out/
+   lib/
+
+   # Logs
+   *.log
+   logs/
+
+   # Caches
+   .cache/
+   .nyc_output/
+   .pytest_cache/
+   .eslintcache/
+   .aider*
+
+   # Virtual environments
+   venv/
+   .venv/
+   env/
+
+   # IDE files
+   .idea/
+   .vscode/
+   .DS_Store
+
+   # Dependencies
+   node_modules/
+   jspm_packages/
+   .pnpm/
+
+   # Environment files
+   .env
+   .env.local
+
+   # Output directories
+   output/
+   input/
+   prompt_executions/
+   session_dir/
+   " >> .gitignore
+   ```
+
+2. Removing virtual environments:
+   ```
+   # Find and remove virtual environments
+   find . -type d -name "venv" -o -name ".venv" | xargs git rm -r --cached
+   ```
+
+3. Creating `.env.example`:
+   ```
+   # Create .env.example template
+   echo "
+   # API Keys
+   API_KEY=your_api_key_here
+
+   # Database Configuration
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_NAME=your_database_name
+   DB_USER=your_database_user
+   DB_PASSWORD=your_database_password
+
+   # Application Settings
+   DEBUG=False
+   LOG_LEVEL=INFO
+
+   # Add other necessary variables with descriptions
+   " > .env.example
+   ```
+
+4. Modularizing directory structure:
+   ```
+   # Create standard directories
+   mkdir -p src tests docs config scripts docker k8s deploy
+
+   # Create sub-directories in src (example)
+   mkdir -p src/{agents,core,interfaces,components,contexts}
+   ```
+
+5. Creating documentation files:
+   ```
+   # Create README.md
+   echo "# Project Name
+
+   Brief description of the project.
+
+   ## Projects
+   - Project A: Description
+   - Project B: Description
+
+   ## Getting Started
+   Instructions for setting up and running the project.
+
+   ## Contributing
+   Link to CONTRIBUTING.md
+   " > README.md
+
+   # Create ARCHITECTURE.md
+   echo "# Architecture Overview
+
+   ## Project Structure
+   Detailed explanation of the project structure.
+
+   ## Technology Stack
+   - Frontend: React, Next.js
+   - Backend: Node.js, Express
+   - Database: PostgreSQL
+   - ...
+
+   ## Inter-project Relationships
+   Explanation of how projects interact (if applicable).
+   " > ARCHITECTURE.md
+
+   # Create CONTRIBUTING.md
+   echo "# Contributing Guidelines
+
+   ## Code Style
+   - Use ESLint and Prettier for JavaScript/TypeScript
+   - Follow PEP 8 for Python
+
+   ## Commit Conventions
+   Use conventional commits (feat, fix, docs, etc.)
+
+   ## Pull Request Process
+   1. Create a branch
+   2. Make changes
+   3. Submit PR with description
+   4. ...
+   " > CONTRIBUTING.md
+   ```
+
+These steps provide a starting point for implementing the plan. Adjust as needed for your specific project requirements.

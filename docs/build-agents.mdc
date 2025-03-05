@@ -1,0 +1,359 @@
+---
+description: agentic systems using LLMs
+globs: 
+---
+---
+title: Complete Guide to Building Agentic LLM Systems and Principled AI Coding
+---
+
+# Complete Guide to Building Agentic LLM Systems and Principled AI Coding
+
+This guide combines two documents: "Guide to Building Agentic LLM Systems" and "Principled AI Coding in Agentic Engineering" to provide a comprehensive overview of agentic systems, their development, ethical considerations, and the impact on software engineering.
+
+---
+
+# Guide to Building Agentic LLM Systems
+
+This section details the architecture, workflows, and implementation techniques for building agentic systems using LLMs. It is intended for developers seeking to create systems that are both powerful and maintainable. Throughout this section, integrated parts are annotated to trace their origins and provide context from the original "Guide to Building Agentic LLM Systems" document.
+
+## 1. Introduction
+
+Rapid advances in LLM capabilities have led to diverse implementations—from simple prompt-based systems to fully autonomous agents that use external tools. Our experience shows that the most successful systems are built not with overly complex frameworks but by composing simple, well-understood patterns. This guide synthesizes insights from real-world applications and outlines best practices for building agentic systems.
+
+*Traceability: Integrated from the “Building effective agents” post.*
+
+## 2. Definitions: Workflows vs. Agents
+
+### 2.1 What Are Agents?
+
+- **Agentic Systems:** At their core, these systems use LLMs to guide their own decision-making, dynamically directing tool usage in a feedback loop with the environment.
+- **Workflow Systems:** These rely on predefined code paths to orchestrate LLM calls and tool usage, offering consistency for well-defined tasks.
+
+**Key Distinction:**
+
+- **Workflows:** Operate on fixed subtasks, prioritizing predictability.
+- **Agents:** Rely on model-driven decision making, allowing for flexibility while balancing tradeoffs in latency, cost, and error propagation.
+
+*Traceability: Adapted from the definitions section in the source document.*
+
+## 3. When (and When Not) to Use Agentic Systems
+
+### 3.1 Choosing the Right Approach
+
+- **Simplicity First:** Start with single LLM calls enhanced with retrieval and context examples.
+- **Adding Complexity:** Consider multi-step workflows or autonomous agents only when a straightforward approach does not meet your requirements.
+
+### 3.2 Tradeoffs
+
+- **Workflow Systems:** Best for tasks that can be decomposed into fixed, sequential subtasks.
+- **Agents:** Suitable for open-ended or complex tasks requiring dynamic decision making and iterative feedback.
+
+*Traceability: Concepts integrated from “Building effective agents,” emphasizing tradeoffs between complexity, cost, and latency.*
+
+## 4. Frameworks and Their Usage
+
+While many frameworks aim to simplify the development of agentic systems, be cautious of added abstraction layers that might obscure the underlying logic. Some popular frameworks include:
+
+- **LangGraph (from LangChain):** Excellent for visualizing and building prompt flows.
+- **Amazon Bedrock’s AI Agent Framework:** Integrates with cloud-native services.
+- **Rivet & Vellum:** Provide drag-and-drop interfaces for LLM workflow creation.
+
+**Advice to Developers:**
+
+Start with direct LLM API calls to understand basic patterns. If you choose to use a framework, ensure you grasp the underlying code to avoid hidden pitfalls.
+
+*Traceability: Integrated framework recommendations from the source, with additional emphasis on transparency and low-level control.*
+
+## 5. Core Building Blocks and Workflows
+
+### 5.1 The Augmented LLM
+
+The backbone of any agentic system is the augmented LLM—a model enhanced with capabilities such as:
+
+- **Retrieval:** Enabling it to generate appropriate search queries.
+- **Tool Usage:** Allowing on-demand invocation of external services.
+- **Memory:** Retaining critical context across interactions.
+
+**Implementation Tip:**
+
+Tailor these augmentations to your use case, and provide a clear, documented API. Consider the Model Context Protocol for integrating third-party tools with minimal client overhead.
+
+*Traceability: Based on the “Building block: The augmented LLM” section from the original content.*
+
+### 5.2 Workflow Patterns
+
+Below are common patterns used in agentic systems, each suited for specific tasks:
+
+#### A. Prompt Chaining
+
+- **Concept:** Decompose a task into a sequence of LLM calls where each call processes the previous output.
+- **Usage:** Ideal for tasks like multi-step content generation and translation.
+- **Example:** Generating marketing copy, then translating it.
+
+*Traceability: Integrated from the “Workflow: Prompt chaining” section.*
+
+#### B. Routing
+
+- **Concept:** Classify incoming queries into distinct categories, directing them to specialized processes.
+- **Usage:** Customer support or multi-type query systems.
+- **Example:** Routing customer queries—technical support vs. refund requests—to the appropriate downstream service.
+
+*Traceability: Integrated from the “Workflow: Routing” section.*
+
+#### C. Parallelization
+
+- **Concept:** Execute multiple independent LLM calls in parallel and aggregate the results.
+- **Variations:**
+  - **Sectioning:** Splitting a task into subtasks.
+  - **Voting:** Running multiple attempts to select the best response.
+- **Usage:**
+  - **Sectioning Example:** Running simultaneous content moderation and core task processing.
+  - **Voting Example:** Multiple reviews of code or content to catch vulnerabilities.
+
+*Traceability: Content taken and refined from the “Workflow: Parallelization” section.*
+
+#### D. Orchestrator-Workers
+
+- **Concept:** Use a central LLM to break a complex task into undefined subtasks, which are then distributed to worker models.
+- **Usage:** Complex workflows such as code refactoring across multiple files.
+- **Example:** A coding agent dynamically determining and delegating file changes.
+
+*Traceability: Integrated from the “Workflow: Orchestrator-workers” description.*
+
+#### E. Evaluator-Optimizer
+
+- **Concept:** Create a feedback loop where one LLM generates output while another evaluates and refines it.
+- **Usage:** Tasks where iterative improvement is measurable, such as literary translation or complex search processes.
+- **Example:** Translation tasks refined through successive evaluation and feedback rounds.
+
+*Traceability: Extracted and refined from the “Workflow: Evaluator-optimizer” section.*
+
+## 6. Designing Effective Agents
+
+### 6.1 Autonomous Agent Considerations
+
+Autonomous agents start with a clear command or dialogue with a user and then operate independently. Key considerations include:
+
+- **Dynamic Planning:** LLMs plan and execute multiple turns while gathering “ground truth” via feedback (e.g., tool responses).
+- **Safety and Fidelity:** Incorporate checkpoints for human feedback and clearly defined stopping conditions.
+
+**Use Cases:**
+
+- **Coding Agents:** Tackle complex programming tasks by iterating on code changes.
+- **Customer Support:** Engage customers interactively with integrated tool usage for data queries and updates.
+
+**Best Practices:**
+
+- Design clear toolsets and document the API interfaces.
+- Test extensively in sandbox environments.
+- Plan for iterative improvements based on performance evaluations.
+
+*Traceability: Adapted from “Agents” and “Autonomous agent” sections of the source document.*
+
+### 6.2 Combining and Customizing Patterns
+
+Building agentic systems is not a one-size-fits-all exercise. It's common to blend multiple workflows (e.g., prompt chaining with parallelization) to fit specific use cases. Always measure performance and iterate on your design.
+
+**Guiding Principles:**
+
+- **Simplicity:** Avoid unnecessary complexity.
+- **Transparency:** Explicitly document planning steps.
+- **Robust ACI (Agent-Computer Interface):** Invest in clear, well-structured documentation.
+
+*Traceability: Synthesized from the “Combining and customizing these patterns” summary in the source.*
+
+## 7. Testing, Performance, and Iteration
+
+- **Performance Metrics:** Establish clear criteria to measure success at every stage.
+- **Iterative Testing:** Leverage automated testing (e.g., for coding agents) and human reviews to improve reliability.
+- **Guardrails:** Use both programmatic and human-in-the-loop checkpoints to catch and recover from errors.
+
+*Traceability: Integrated best practices for iterative development drawn from the overall guidelines.*
+
+## 8. Appendices
+
+### Appendix A: Agents in Practice
+
+**A. Customer Support Agents**
+
+- **Integration:** Combines conversational AI with tool integrations.
+- **Key Attributes:**
+  - Natural conversation flow
+  - Access to customer records and order history
+  - Programmatic actions like refunds or ticket updates
+- **Outcome:** Clear resolution metrics enable usage-based pricing and reliable performance tracking.
+
+**B. Coding Agents**
+
+- **Focus:** Handling complex, multi-file code changes using LLM-driven diagnosis and iterative updates.
+- **Benefits:**
+  - Code verification through automated tests
+  - Faster iteration on code changes with direct feedback loops
+  - Human review for ensuring compliance with broader system requirements
+
+*Traceability: Directly integrated from “Appendix 1: Agents in practice” in the source document.*
+
+### Appendix B: Prompt Engineering for Your Tools
+
+Effective tool design is critical for enabling smooth interactions between the LLM and external APIs. Follow these guidelines:
+
+- **Minimize Formatting Overhead:** Choose output formats (e.g., JSON over markdown) that reduce unnecessary complexity.
+- **Model-Friendly Design:** Ensure tool instructions feel natural and align with common patterns seen in publicly available content.
+- **Documentation & Examples:** Provide clear parameter names, usage examples, and edge case scenarios. Include detailed descriptions similar to well-crafted docstrings.
+- **Iterative Testing:** Use workbenches and simulation environments. Incorporate “poka-yoke” principles—design tools that are hard to misuse (e.g., absolute rather than relative file paths).
+
+*Traceability: Integrated from “Appendix 2: Prompt engineering your tools” with added development context.*
+
+## 9. Final Recommendations
+
+- **Start Simple:** Explore basic LLM integration before moving on to multi-step agentic systems.
+- **Measure and Iterate:** Use both automated and human testing to continuously refine your agents.
+- **Deep Dive into Tools:** Invest time in perfecting your agent-computer interfaces with excellent documentation and robust tool specifications.
+
+By following these guidelines and integrating these building blocks thoughtfully, you can develop agents that not only scale effectively but are also transparent, maintainable, and trusted by their users.
+
+---
+
+# Principled AI Coding in Agentic Engineering
+
+This section integrates the "Principled AI Coding in Agentic Engineering" document, focusing on the ethical and methodological aspects of agentic system development, along with the impact on traditional software engineering and responsible AI use.
+
+## Introduction to Principled AI Coding in Agentic Engineering
+
+**Agentic Engineering** is a new paradigm for building software that centers around **AI “agents” driven by prompts** (@Agentic Engineer - Build LIVING software). Instead of writing static code to handle every scenario, developers in this paradigm write high-level **prompts** (natural language instructions) and leverage large language models (LLMs) as a core component of the system’s logic. As one practitioner puts it, *“The prompt is the new fundamental unit of knowledge work & programming”*, highlighting that instructing an AI model has become as essential as writing functions or classes (@Agentic Engineer - Build LIVING software). The goal is to create **“living” software** – systems with a mission and the **autonomy, tools, and context** to execute that mission on our behalf (@Agentic Engineer - Build LIVING software). These AI agents can perceive information, reason about tasks, and act to achieve goals, rather than just respond to direct user inputs. In effect, agentic AI systems combine an LLM “brain” with external tools and well-crafted prompts to perform complex tasks autonomously (@Top 7 Frameworks for Building AI Agents in 2025).
+
+This shift is **transformative** for software engineering. Traditional software (often called *“Software 1.0”*) relies on explicit, human-written instructions, whereas *“Software 2.0”* systems are partly defined by learned model parameters and behavior emerging from data (@What is Software 2.0? — Klu). In Agentic Engineering, developers focus more on designing prompts, data flows, and constraints for AI agents, rather than coding every rule. Advocates argue that LLM technology represents *“a complete rewiring of the way we build valuable experiences through software”* (@Agentic Engineer - Build LIVING software). Indeed, modern LLM-based agents can carry out tasks like writing code, summarizing documents, or making recommendations – activities that previously required direct human effort ([Will Large Language Models Really Change How Work Is Done?](mdc:https:/sloanreview.mit.edu/article/will-large-language-models-really-change-how-work-is-done/#:~:text=Large%20language%20models%20,only%20humans%20could%20do%20before)). However, this power comes with new challenges. AI agents operate with a degree of autonomy that *“presents an expanded set of ethical dilemmas in comparison to traditional AI models”* (@New Ethics Risks Courtesy of AI Agents? Researchers Are on the Case | IBM). Building **trustworthy** agentic systems requires careful design and adherence to principled practices. The following sections explore key ethical guidelines, development methodologies, impacts on traditional engineering, tools for implementation, and considerations for responsible use in the agentic paradigm.
+
+## Ethical AI Development Principles for Agentic Systems
+
+When software can act on its own via AI agents, **ethical development principles** are paramount. Industry leaders and researchers have begun formulating guidelines to ensure these autonomous systems behave responsibly. Salesforce’s Office of Ethical & Humane Use, for example, outlines several **guiding principles for agentic AI** (@Salesforce releases responsible agentic AI guidelines - Salesforce) (@Salesforce releases responsible agentic AI guidelines - Salesforce):
+
+- **Accuracy:** Agents should prioritize correctness and truthfulness. Developers are encouraged to build in checks and constraints so the AI doesn’t act on faulty information. For instance, using *topic classification* to route requests through appropriate policies and instructions can set clear boundaries on what an agent is allowed to do (@Salesforce releases responsible agentic AI guidelines - Salesforce). If the agent is unsure, it should seek validation (e.g. providing citations or asking for user confirmation) rather than outputting potentially incorrect results (@Salesforce releases responsible agentic AI guidelines - Salesforce).
+
+- **Safety:** Proactively mitigate bias, toxicity, and harmful outputs. This involves testing models for biased behavior, conducting **red-teaming** exercises to probe for unsafe responses, and implementing guardrails against misuse (@Salesforce releases responsible agentic AI guidelines - Salesforce). Privacy is a part of safety – agents must handle personal or sensitive data cautiously and avoid leaking information. For example, Agentic systems might include toxicity filters and **model containment policies** that prevent the AI from responding to disallowed requests (@Salesforce releases responsible agentic AI guidelines - Salesforce). Keeping a human in the loop for high-impact decisions is another safety best practice.
+
+- **Honesty & Transparency:** Agentic AI should be transparent about its nature and data usage. This means respecting data provenance and consent – only using data it’s permitted to use – and clearly disclosing AI-generated content (@Salesforce releases responsible agentic AI guidelines - Salesforce). Users and stakeholders should be aware when an output or action was produced by an AI. For instance, an autonomous customer service agent might tag its messages with a note that it’s an AI, or watermark AI-generated images (@Salesforce releases responsible agentic AI guidelines - Salesforce). Honesty also entails that the system not intentionally deceive users about its capabilities or knowledge limits.
+
+- **Empowerment (Human-Centric Design):** The aim of agentic AI is to **augment human capabilities**, not to displace or disempower people (@Salesforce releases responsible agentic AI guidelines - Salesforce). Systems should be designed to **supercharge** what users can do – handling tedious or complex tasks to free up human time for judgment-intensive work. Accessibility is key: these AI tools should empower *all* users, including those with disabilities, to achieve more (@Salesforce releases responsible agentic AI guidelines - Salesforce). Design guidelines suggest maintaining human override options and making it clear when human input is needed. In practice, this could mean an agent defers to a human for decisions that involve ethical judgments or high stakes, ensuring AI remains a *partner* rather than an uncontrollable boss.
+
+- **Sustainability:** Given the computational intensity of AI models, developers should strive for **efficient, “right-sized” models** to reduce carbon footprint (@Salesforce releases responsible agentic AI guidelines - Salesforce). Bigger is not always better – a smaller well-tuned model can often outperform a larger one for a specific task while using far less energy (@Salesforce releases responsible agentic AI guidelines - Salesforce). Sustainable AI also means considering the long-term impacts: using renewable-powered cloud resources, optimizing code for lower energy use, and planning for model updates to avoid degradation. The principle extends to social sustainability – ensuring the AI’s deployment is beneficial to society and doesn’t reinforce harmful dynamics.
+
+- **Alignment and Accountability:** Because agentic AI can make decisions without direct supervision, **alignment with human values** and robust oversight mechanisms are crucial (@New Ethics Risks Courtesy of AI Agents? Researchers Are on the Case | IBM). Developers should encode ethical considerations into the system’s objectives (often via reward functions or prompt instructions that reflect moral and legal constraints). If an AI agent “goes rogue,” the consequences can be serious – real examples include chatbots that produced dangerous instructions or leaked private data (@New Ethics Risks Courtesy of AI Agents? Researchers Are on the Case | IBM). To prevent this, teams must continuously evaluate and **monitor** agents in real-world scenarios, and be ready to intervene. Establishing clear accountability is also important: organizations deploying AI agents need policies on who is responsible for the agent’s actions and how to remediate mistakes. IBM researchers emphasize *“building up safeguards as the technology is being developed”* rather than retrofitting safety later (@New Ethics Risks Courtesy of AI Agents? Researchers Are on the Case | IBM). In practice, this may involve rigorous testing in sandboxes, rate-limiting an agent’s autonomy (e.g. requiring approvals for certain actions), and enabling audit logs of the AI’s decisions.
+
+Adhering to these principles helps ensure that as our software becomes more **agentic**, it remains trustworthy and beneficial. Ethical design is not a one-time checkbox but an ongoing commitment throughout the agent’s lifecycle – from initial model training to deployment and updates. Many **industry standards** and frameworks are emerging to guide this process (e.g. the EU’s AI Act proposals, IEEE’s AI ethics standards, and company-specific AI ethics boards). By following such best practices, developers can better navigate the novel challenges posed by autonomous AI systems.
+
+## Frameworks and Methodologies for AI-Driven Prompt-Centered Engineering
+
+Building AI-driven, prompt-centered systems requires new **methods and frameworks** that differ from traditional software design. In Agentic Engineering, the development process often revolves around crafting prompts, orchestrating AI model interactions, and integrating external tools or data sources. Several key methodologies and frameworks have arisen to support this:
+
+**Prompt Engineering** – This is the practice of designing effective prompts (inputs) to guide LLMs toward desired outputs. It can be thought of as a new form of programming where instructions are given in natural language. A well-structured prompt provides the model with context, defines its role, and clarifies the task. For example, the **RPG framework** (Role, Problem, Guidance) is one formal approach: the prompt explicitly assigns the model a role, states the problem to solve, and gives additional guidance or constraints on how to solve it (@Prompt Engineering for Developers - Enhance LLM Outputs with the RPG Framework). Such frameworks help developers systematically create prompts that yield more relevant and accurate responses. Crafting prompts often involves an iterative trial-and-error process – testing different phrasings and formats – akin to debugging code. Developers may maintain a library of prompt templates for common tasks (e.g. a template for summarizing a document or writing unit tests) to ensure consistency across the application.
+
+**Chain-of-Thought and Stepwise Reasoning** – Instead of a single-shot prompt-response, advanced prompt engineering involves breaking complex tasks into **multiple steps or chained prompts**. Research has shown that prompting an LLM to “think step by step” or follow a reasoning chain can significantly improve accuracy on complex problems. In practice, this is implemented by orchestrating a sequence: the AI generates a plan or intermediate reasoning in one step, then uses that to produce a final answer in the next. One influential approach is the **ReAct framework (Reason + Act)**, which interleaves the model’s reasoning with actions like tool use (@Top 7 Frameworks for Building AI Agents in 2025). In a ReAct-style agent, the LLM might first reason about what it needs (“I should look up today’s weather”), then issue a tool command (call a weather API), then incorporate the result into its final answer. This methodology is at the heart of many agentic systems: the agent maintains an **internal chain-of-thought** and can interact with external functions or data during that chain. Designing these prompt chains and deciding when the AI should invoke a tool (and which tool) is a key part of prompt-centered engineering.
+
+**Agent Architecture & Memory** – Frameworks for agentic systems provide abstractions for defining an AI agent’s architecture. Common components include memory (short-term or long-term), planning modules, and observer interfaces. For example, an agent may use a **vector-store memory** to retain important facts or conversation context between interactions. The agent’s prompt at any time might be constructed from a combination of the user query, relevant stored context retrieved via semantic search, and instructions that govern behavior. Methodologies like **Retrieval-Augmented Generation (RAG)** formalize this process by retrieving relevant documents from a knowledge base (using embeddings and similarity search) and injecting them into the prompt so the LLM stays grounded in facts. In an enterprise setting, RAG might allow a sales chatbot agent to pull up product specs from a company database to answer a customer question accurately. The Moveworks *Brief Me* agent provides a concrete example: it has a two-stage pipeline where first the user’s documents or links are **ingested and parsed**, then the LLM generates answers *grounded in that specific source data* (@What’s behind Brief Me? An exploration of its agentic engineering system  | Moveworks) (@What’s behind Brief Me? An exploration of its agentic engineering system  | Moveworks). By structuring the system this way, the agent’s responses remain authoritative and verifiable against the provided content (@What’s behind Brief Me? An exploration of its agentic engineering system  | Moveworks), demonstrating a methodology to reduce hallucinations.
+
+**Integration of Tools and APIs** – A hallmark of agentic systems is their ability to use external tools through the guidance of prompts. Modern frameworks support a concept often called **tool calling** or function calling (@New Ethics Risks Courtesy of AI Agents? Researchers Are on the Case | IBM). In practice, developers define a set of allowed tools (for example: web search, calculator, database query, email sender) and the LLM is instructed, via its prompt, on how and when to invoke those tools. The agent’s reasoning output might include a step like “Search for X” which the framework executes, then the result is fed back into the agent’s context. This method extends what the AI can do beyond text-generation – it can interact with live data and perform actions. Methodologies for tool integration involve defining standardized interfaces (e.g. JSON schemas or function signatures the LLM can call) and prompting the model in a format that encourages it to output a tool call when appropriate. OpenAI’s function calling API and Microsoft’s guidance in **Semantic Kernel** are examples that formalize this pattern. The design challenge for developers is to anticipate what capabilities the agent will need and provide safe, controlled access to those functions. Testing is critical: one must ensure the agent calls tools correctly and handles errors (for example, if an API is down or returns no result, the agent should handle that gracefully in its next reasoning step).
+
+**Agent Development Workflows (Prompt-Test-Refine)** – Because agent behavior is probabilistic and emergent, the development workflow often resembles ML model development or experimental science more than classical deterministic programming. Teams may adopt an **agile, iterative approach** where prompts and agent strategies are continually refined. This includes:
+  - Writing initial prompts or prompt chains for a task,
+  - Simulating the agent’s behavior on various scenarios (to see how it responds),
+  - Analyzing failures or bad outputs (e.g. did it hallucinate? Did it refuse something it shouldn’t?),
+  - Adjusting the prompt or adding guardrails, and repeating.
+
+In essence, prompt engineering and agent design become an iterative loop of prompt -> evaluate -> tweak. Keeping **evaluation metrics** is useful: for instance, measuring accuracy of answers, or tracking how often the agent has to ask for help. Some methodologies suggest maintaining unit tests for prompts – fixed input-output pairs that the agent should handle – to catch regressions if the prompt or model is changed. There are emerging frameworks for **LLM Ops (Operations)** that parallel MLOps in machine learning, focusing on versioning prompts, monitoring model outputs in production, and managing model updates. All these help bring rigor to prompt-centered development.
+
+Several specialized frameworks and libraries have been created to assist with these methodologies. We’ll discuss prominent examples in the next section, which make it easier to implement the patterns described here (such as chaining, tool use, memory integration, etc.) without starting from scratch.
+
+## Impact of LLMs on Traditional Software Engineering
+
+The rise of large language models is significantly impacting traditional software engineering practices and the nature of knowledge work. **LLMs are enabling a degree of automation and augmentation in programming tasks that was not possible before.** One immediate effect has been in code generation and assistance. Tools like GitHub Copilot use LLMs to suggest code snippets or even entire functions based on comments and context, effectively acting as AI pair programmers. Studies have quantified notable productivity gains: in a controlled experiment, developers using Copilot completed a coding task **55% faster** than those without it (@Research: quantifying GitHub Copilot’s impact on developer productivity and happiness - The GitHub Blog). Such improvements come from the AI handling boilerplate and offering solutions quickly, allowing engineers to focus on higher-level logic or simply vet and integrate the AI’s output.
+
+Beyond coding, LLMs automate many **knowledge-intensive tasks**. They can summarize requirements documents, generate user stories, write test cases, or produce documentation drafts from code. Traditionally, a developer might manually search through documentation or codebases to understand a function; now an LLM-based chatbot can answer these queries or even perform the search and summarization automatically. In organizations, a large portion of work involves reading and synthesizing information (from emails, reports, logs, etc.) – LLMs excel at this kind of text processing. In fact, a survey of business use cases found that **summarizing content and producing reports** was the top application of LLMs (reported by 35% of respondents), followed closely by extracting information from documents (33%) ([Will Large Language Models Really Change How Work Is Done?](mdc:https:/sloanreview.mit.edu/article/will-large-language-models-really-change-how-work-is-done/#:~:text=Most%20of%20the%20potential%20areas,2)). These are tasks that previously soaked up human hours, but can now be offloaded to AI assistants, thereby accelerating workflows.
+
+This shift is altering the **role of the software engineer** and other knowledge workers. Instead of spending time on rote coding or manual data gathering, humans increasingly act as **orchestrators and validators** of AI-driven work. A developer might instruct an AI agent to “generate a data visualization for this dataset” or “draft a module based on these specs,” and then refine or correct the output. The focus moves to **prompting, reviewing, and integrating** AI contributions. In a sense, writing a precise prompt or giving feedback to an AI becomes as important as writing the underlying code. Some have described this as moving from writing low-level code to writing **“metaprograms”** or specifications that the AI then implements.
+
+There is also a broader *paradigm shift* in how we conceive of software construction. For decades, software engineering has been a human-driven, step-by-step process: gather requirements, write code, test, deploy. With LLM-based automation, parts of this process can be compressed or happen out-of-order. For instance, an AI could generate a draft design from requirements, or even simultaneously write code and test cases in an interleaved fashion. Researchers note that SE is transitioning from a **human-dominated process to an AI-supported workflow**, which calls for re-examining how teams collaborate and ensure quality (@Human and Machine: How Software Engineers Perceive and Engage with AI-Assisted Code Reviews Compared to Their Peers). Some routine programming tasks might be handled almost entirely by AI, while engineers focus on overseeing the process and tackling the complex edge cases or novel problems.
+
+However, the impact is not purely positive or without friction. LLMs introduce new **challenges and responsibilities** for engineers:
+- **Verification and Debugging:** AI-generated code or answers can be syntactically correct but logically flawed. Engineers must rigorously test and sometimes debug AI outputs, which can be tricky when the code was written by an inscrutable model. There’s a learning curve in figuring out *why* the AI produced a certain result.
+- **Trust and Adoption:** There can be hesitation in relying on AI suggestions. Human engineers may question the correctness or security of AI-written code. An interview study found that when using AI for tasks like code review, developers had to adjust how they **perceive and trust the AI’s feedback**, often double-checking machine suggestions just as they would a junior colleague’s comments (@Human and Machine: How Software Engineers Perceive and Engage with AI-Assisted Code Reviews Compared to Their Peers) (@Human and Machine: How Software Engineers Perceive and Engage with AI-Assisted Code Reviews Compared to Their Peers). This overhead can offset some productivity gains if not managed well.
+- **Maintenance of AI Assets:** Alongside source code, projects now include prompts, example data, and possibly fine-tuned model weights as part of the codebase. This means configuration management expands to these artifacts. A prompt may need updating when the model is updated (since an optimal prompt for GPT-3 might not be optimal for GPT-4, for example). Ensuring the AI component continues to perform as intended over time becomes an additional maintenance task.
+- **Skill shift:** As AI handles the grunt work, the skills in demand for engineers evolve. There’s less emphasis on memorizing API details or writing boilerplate, and more on creative problem decomposition, prompt crafting, data curation, and verifying outcomes. Even non-engineers find they can accomplish simple programming by instructing an AI (sometimes called *“citizen development”*). This democratization is positive, but also means professional developers might face pressure to justify the complexity of tasks that truly need their expertise, since simpler tasks could be handled by an AI or by a non-expert with AI assistance (@Thoughts on the Impact of Large Language Models on Software ...).
+
+In summary, LLMs are **augmenting traditional software engineering** by automating knowledge work and coding tasks, speeding up development and enabling new capabilities. They allow software to be developed and operated at a higher level of abstraction – the engineer specifies *what* needs to be done and the AI figures out *how*. Yet, this doesn’t remove humans from the loop; rather, it changes their responsibilities. Organizations piloting agentic and AI-assisted approaches report that humans remain crucial for oversight and for handling the parts of work that AI still struggles with (like understanding nuanced requirements or making judgment calls) ([Will Large Language Models Really Change How Work Is Done?](mdc:https:/sloanreview.mit.edu/article/will-large-language-models-really-change-how-work-is-done/#:~:text=This%20raises%20the%20possibility%20that,execute%20in%20any%20given%20job)). The net impact is a profound increase in productivity and possibility, paired with a need to **adapt engineering practices** to effectively harness AI while managing its limitations. The next section contrasts classical engineering methods with those of Agentic Engineering to highlight how this paradigm breaks with past approaches.
+
+## Traditional Software Engineering vs. Agentic Engineering
+
+Agentic Engineering introduces fundamental differences in how we design, build, and manage software compared to traditional software engineering. Below are key points of comparison:
+
+- **Source of Logic:** *Traditional software* relies on **explicit, deterministic code** written by developers. Every possible operation is handled by instructions the programmer wrote or configured. In *Agentic software*, much of the logic emerges from the **AI model’s training** and real-time reasoning. As Andrej Karpathy described in the context of “Software 2.0”, conventional code (Software 1.0) is replaced by **neural network weights and data-driven rules** in Software 2.0 (@What is Software 2.0? — Klu). In other words, humans specify the desired behavior in broad terms (via prompts or training data) and the AI fills in the details. This means the system’s behavior is not fully transparent or hard-coded – it’s learned and often **probabilistic**. We trade fine-grained control for flexibility and adaptability.
+
+- **Development Artifacts:** In a traditional project, the primary artifacts are specifications, source code, and test cases. In an agentic project, **prompts, model configurations, and knowledge bases** become first-class artifacts alongside code. The prompt – possibly a complex script guiding the AI’s behavior – is analogous to a program that can be executed by the LLM. Agentic systems also often include domain data (for grounding the AI) and policies/constraints as key parts of the system. This shifts the engineering focus: success lies in sculpting these artifacts (prompts, datasets, etc.) to coax the right behaviors from the AI. As a result, version control might extend to prompt files and model snapshots, and changes to a prompt are as critical as changes to a function in code.
+
+- **Determinism and Testing:** Classical software is usually deterministic – given the same input, it will produce the same output every time (barring randomness explicitly introduced). This predictability allows for **unit tests** and formal verification of modules. Agentic systems, driven by LLMs, are *stochastic* by nature; the same prompt might yield slightly different phrasings, and if using temperature (randomness) in generation, even the content can vary. Moreover, they can exhibit **unexpected behavior** if they encounter scenarios not well-covered by their training. Testing therefore takes on a different character. Instead of asserting exact outputs, tests for agentic systems might evaluate properties (like “the answer should mention these key facts” or “the agent should not take disallowed actions”). Simulation and monitoring become important – you might run an agent through hundreds of varied scenarios to see how it performs on average. There’s also a greater emphasis on **validation with real data** and continuous testing in production, because an agent might behave correctly during controlled tests but then encounter a novel situation after deployment. Traditional regression testing needs to be complemented with ongoing evaluation of the AI’s outputs for quality and correctness.
+
+- **Development Process:** Traditional engineering often follows a predictable process (waterfall or agile), with distinct phases for design, implementation, testing, and maintenance. Agentic Engineering is more **experimental and iterative**. Since prompt-tuning and model behaviors are not fully predictable, development cycles involve a lot of prototyping and refining. This is closer to the process of training a machine learning model than writing a straightforward script. Documentation in traditional engineering is typically a separate artifact describing system behavior; in agentic systems, some documentation merges with code in the form of prompt comments or guidelines embedded in the prompt itself (because the AI “reads” those at runtime to behave properly). The boundary between “code” and “data” blurs – a prompt is both code (an executable instruction sequence for the AI) and data (input to the model). Methodologies like CRISP-DM (from data mining) or ML lifecycle management might inform agentic development more than a classic SDLC model does.
+
+- **Role of Engineers:** In traditional teams, you have roles like frontend developer, backend developer, QA tester, etc., each focusing on certain layers of a stack. In an agentic team, new roles or skill emphases appear: **Prompt Engineers** (crafting and optimizing prompts), **AI Trainers or Curators** (preparing fine-tuning data or knowledge bases), and **AI Ethics/Ops Specialists** (monitoring AI behavior, ensuring compliance with ethics and regulations). The collaboration dynamics change as well. For example, consider a scenario of using multiple agents – one agent might generate a software design, another writes code, and another reviews it (this was demonstrated in the experimental *ChatDev* project, where AIs assumed roles of PM, Developer, and Tester to simulate a software team) (@AI Agent Frameworks (Page 2)). In such a setup, a human engineer’s role might be to set up the initial prompts for each “AI team member” and then integrate their outputs. This is a far cry from a traditional team meeting where humans do all the talking and coding. While this extreme is experimental, it showcases how agentic approaches challenge the conventional team structure and workflow.
+
+- **Flexibility and Adaptability:** Traditional software is often inflexible once deployed – it only does what it was explicitly programmed to do unless a developer modifies it. Agentic systems, by leveraging LLMs, can be *highly adaptive*. They can handle inputs or questions that weren’t anticipated at design time, because the AI can generalize or apply reasoning on the fly. For example, a traditional customer support bot might have a fixed set of question-response pairs, whereas an agentic LLM-based bot can answer an unlimited range of questions by synthesizing information. The flip side is that this adaptability comes with **less reliability** in specific edge cases. Traditional systems excel at reliably handling the exact cases they were designed for; agentic systems handle the general case better but might falter on specific, detailed requirements (especially if the prompt or training data didn’t cover them well). In practice, we might see a **hybrid**: using traditional code for the critical, well-defined core logic and an AI agent for the open-ended, fuzzy tasks. Microsoft’s *Semantic Kernel* framework, for example, is explicitly designed to **bridge traditional development with AI**, allowing a gradual integration of AI components into a stable software base (@Top 7 Frameworks for Building AI Agents in 2025). This hybrid approach highlights how agentic and traditional methods can complement each other.
+
+In summary, Agentic Engineering departs from the deterministic, manually-specified paradigm of classical software engineering and moves toward a model where **autonomous AI components** play a central role. The “programming” is done partly by **writing prompts and providing examples** rather than just writing code. This yields systems that can do far more (in terms of unbounded natural language understanding, etc.) but also require **new strategies to ensure quality and correctness**. It’s not a wholesale replacement of traditional methods – rather, it’s an expansion of the software engineering toolbox. As one source notes, traditional Software 1.0 and AI-driven Software 2.0 will likely **coexist**, each used where appropriate (@What is Software 2.0? — Klu). The challenge for engineers is determining how to split tasks between hard-coded logic and agentic AI, and how to integrate the two smoothly.
+
+## Tools, Libraries, and Workflows for Building AI Agents (“Living” Software)
+
+With the emergence of the agentic paradigm, a variety of **tools and libraries** have been developed to help engineers build these "living" AI-powered systems. These frameworks abstract much of the complexity of managing prompts, models, and agent loops, providing building blocks for agentic applications. Here are some recommended tools and workflows:
+
+- **LangChain:** An open-source framework that has become a go-to for developing LLM-powered applications. LangChain provides a modular way to chain prompts together, manage conversational state, and integrate with external tools/APIs. It includes abstractions for creating **agents** that use an LLM coupled with a suite of tools. For example, LangChain’s agent can be configured to decide among tools (like Google search, calculator, etc.) based on the user’s query, using a reasoning loop under the hood. Its key features include easy integration with multiple LLM providers and a **“chain” interface** to string together sequences of model calls (@Top 7 Frameworks for Building AI Agents in 2025). LangChain’s popularity stems from its flexibility: developers can rapidly prototype complex workflows (like an AI assistant that first fetches data then analyzes it) by assembling components rather than writing all glue logic themselves. It’s widely used for applications such as chatbots with long-term memory, automated report generators, and more (@Top 7 Frameworks for Building AI Agents in 2025).
+
+- **Microsoft Semantic Kernel (SK):** An SDK and runtime from Microsoft that helps integrate LLM AI into existing applications, particularly in enterprise scenarios. Semantic Kernel is designed to **bridge traditional software and AI**, allowing developers to define *skills* (AI functions), *connectors* (to data sources or APIs), and *planners* (to orchestrate multi-step processes). A standout feature is SK’s focus on enterprise concerns: it provides hooks for **security, compliance, and governance**, recognizing that businesses need to control what the AI can do and log its actions (@Top 7 Frameworks for Building AI Agents in 2025). SK supports a planner module that can take a high-level goal and break it into steps (invoking appropriate AI skills for each step), effectively implementing an agentic planner. Because it’s open-source and extensible, developers can incorporate their own business rules easily. Semantic Kernel’s philosophy is to adopt AI gradually – you can start by augmenting one part of your application with an AI-powered feature, without having to rebuild everything. This makes it a strong choice for introducing agentic capabilities into legacy systems or complex enterprise software (@Top 7 Frameworks for Building AI Agents in 2025).
+
+- **AutoGPT and Open-Source Autonomous Agents:** AutoGPT is an experimental open-source project that gained popularity for showcasing what a fully autonomous GPT-4 powered agent could do. It stringed GPT calls in a loop to attempt arbitrary goals set by the user – for instance, “research and write a report on trend X”. Under the hood, AutoGPT implements a **goal-oriented loop**: it keeps track of a task list, uses GPT-4 to generate next actions, executes those actions (which may involve tool use), and iterates until the goal is complete (@Top 7 Frameworks for Building AI Agents in 2025). While not a production-ready system, AutoGPT and similar projects (e.g. BabyAGI, AgentGPT) have spurred the development of more robust successors. They illustrate how an agent can **iteratively plan and execute** sub-tasks towards a high-level objective. Developers inspired by these have created libraries to simplify building such loops. For example, **Microsoft’s Autogen** framework allows defining multiple agents that can converse and collaborate to solve a problem, providing structure for things like messaging between agents and shared memory. These tools are still evolving, but they point toward “meta” workflows where you can set a goal and let a team of AI agents work out the solution with minimal human intervention (@Top 7 Frameworks for Building AI Agents in 2025). For now, these are best applied to constrained problems or used under human supervision, as fully open-ended autonomy remains challenging.
+
+- **CrewAI, LangGraph, and Multi-Agent Orchestration:** Newer frameworks like CrewAI and LangGraph extend the single-agent model to **multi-agent systems**. They help orchestrate scenarios where multiple LLM agents with different roles interact. For example, you might have a “Researcher” agent that finds information and a “Writer” agent that uses that info to create content, communicating through a mediator. **LangGraph**, as an extension of LangChain, introduces a graph-based representation of agent workflows where nodes are agents or tools and edges define the flow of information (@Top 7 Frameworks for Building AI Agents in 2025). This allows for visualizing and designing complex interactions, including loops and conditional branches (even cyclic workflows) (@Top 7 Frameworks for Building AI Agents in 2025). These frameworks are important as agentic systems scale in complexity – rather than one monolithic agent, you might deploy a *network of specialized agents* that cooperate. Multi-agent simulations (like the aforementioned ChatDev for software development, or CAMEL which had two agents talk to solve tasks (@AI Agent Frameworks (Page 2))) have shown that agents can complement each other. Tools in this category typically provide a runtime for message passing, role assignment, and conflict resolution between agents. This makes implementing collaborative or adversarial agent setups (e.g. one agent generates content, another critiques it) much more straightforward for developers.
+
+- **Knowledge Bases and Vector Stores:** To build “living” AI systems that retain information and remain context-aware, integrating a **vector database** or similar knowledge store is often essential. Tools like **ChromaDB**, **Weaviate**, or **PGVector** (a Postgres extension) serve as persistent memory for AI agents. They store embeddings (numerical representations) of text and allow similarity search to fetch relevant chunks of data when needed. For instance, ChromaDB can store paragraphs from company manuals, and when an agent gets a question, it retrieves the top relevant paragraphs to include in the prompt – ensuring answers are grounded in factual reference. These vector DBs are optimized for AI use-cases: high-dimensional similarity queries and fast updates. Their emergence reflects the convergence of traditional databases with AI needs (@AI Agent Frameworks (Page 2)) (@AI Agent Frameworks (Page 2)). Many frameworks like LangChain have built-in support for popular vector stores, so an agent can easily use a “retrieval” component. **LlamaIndex (formerly GPT Index)** is another library that simplifies creating indices over your documents and querying them with natural language – effectively acting as an intermediary between an LLM and your data. The recommended workflow for many agentic systems is: whenever the user’s query or the agent’s task goes beyond its immediate knowledge, do a vector DB lookup or tool call to gather facts, then let the LLM operate with that supplemental context. This keeps the agent both **knowledgeable and up-to-date** without retraining the base model on every new piece of information.
+
+- **Observability and Debugging Tools:** As agentic systems run, developers need insight into their decision-making. Tools are emerging to trace the chain-of-thought of LLM agents and visualize their actions. For example, **Helicone** and **LangSmith** provide monitoring dashboards for prompts and responses, helping identify failure modes. Some frameworks include verbose logging modes where each step an agent takes (every prompt it generates, every tool result it gets) is recorded. This is crucial for debugging complex prompt interactions and also for auditing in production (to explain why an agent made a certain decision). Additionally, techniques like **“self-reflection”** can be implemented – where an agent periodically evaluates its own outputs for quality. Libraries don’t fully automate this yet, but patterns exist (e.g. after completing a task, have the LLM run a checklist to verify nothing was missed). A responsible workflow is to not only build the agent, but also build an **evaluation harness** around it.
+
+In terms of overall workflow, building an agentic system often involves:
+1. **Prototyping with notebooks or an interactive console** – trying out prompts and agent behaviors with small examples.
+2. **Incrementally modularizing** – moving the logic into a framework like LangChain or SK, where you define the agent, the tools, memory, etc., and start handling real inputs.
+3. **Testing with simulation** – feeding the agent various test scenarios (both typical and edge cases) to see how it performs and adjusting prompts/tools accordingly.
+4. **Deploying and monitoring** – using cloud services or an API to host the agent, and keeping logs/analytics of its performance. Many teams set up feedback loops: if the agent fails or a user gives a correction, that data is collected to refine the system (perhaps via fine-tuning or prompt adjustment).
+
+The ecosystem is evolving quickly. As indicated by an Analytics Vidhya review of top agent frameworks, the field includes both general platforms (like those above) and niche ones geared to specific needs (@Top 7 Frameworks for Building AI Agents in 2025) (@Top 7 Frameworks for Building AI Agents in 2025). For example, **SmolAI/SmolAgents** is a minimalist approach focusing on very small agents that do one thing well, and **SuperAGI** is an initiative to create more **enterprise-ready agent infrastructure** (@AI Agent Frameworks (Page 2)). When choosing tools, engineers should consider factors like integration with their stack (Python, JavaScript, .NET, etc.), community support, and the complexity of tasks their agent will handle.
+
+To summarize, a rich set of tools now supports Agentic Engineering:
+**LangChain** for chaining and tools, **Semantic Kernel** for planning and enterprise integration, **AutoGPT-like frameworks** for autonomous task loops, **multi-agent orchestrators** for complex workflows, **vector databases** for memory, and various **ops tools** for monitoring. By leveraging these, developers can build sophisticated AI-driven systems faster and with more confidence. The key is to use these libraries to handle the “heavy lifting” (managing LLM calls, memory, etc.) so you can focus on the unique logic and ethical constraints of your particular application.
+
+## Responsible and Sustainable Use of AI in the Agentic Paradigm
+
+As organizations and developers embrace Agentic Engineering, it’s critical to do so responsibly and sustainably. This means ensuring that the deployment of AI agents is ethical, safe, and viable for the long term – both for the business and for society. Several considerations come into play:
+
+**Ongoing Ethical Oversight:** Implementing the earlier-discussed ethical principles is not a one-time task but an active process. AI agents should be subject to **continuous monitoring for biases or harmful behavior**. This might involve regular audits of outputs, user feedback channels to report problems, and analytics to detect drift in the agent’s performance. **Ethical AI boards** or review committees can help oversee major decisions, like deploying an agent in a sensitive domain (healthcare, legal advice, etc.), to ensure due diligence (following guidelines such as the AI Ethics frameworks from bodies like the EU or IEEE). If an agent is found to be making unethical decisions, there must be procedures to suspend and retrain or reconfigure it. Essentially, treat an AI agent as you would a human employee in a position of trust: set clear *policies*, monitor their work, and hold them (and by extension the creators) accountable for misbehavior.
+
+**Human-in-the-Loop and Interpretable Control:** No matter how autonomous an AI system is, maintaining **human oversight** is a wise safeguard. This could mean requiring human approval for certain high-impact actions (for example, an agent that can execute financial transactions might need a human sign-off for transactions above a threshold). It also means designing the system so that a human can **understand and intervene** in the agent’s reasoning process. Providing tools for developers or operators to inspect the agent’s chain-of-thought or to adjust its objectives on the fly contributes to transparency. In safety-critical applications, a **“kill switch”** or manual override is recommended – operators should be able to instantly halt the agent if it starts acting erratically or unsafely. Importantly, maintaining a human in the decision loop for critical judgments aligns with the **Empowerment** principle: AI should *assist* humans, not unilaterally take over in domains where human judgment is essential (@Salesforce releases responsible agentic AI guidelines - Salesforce).
+
+**Privacy and Data Protection:** Agentic systems often deal with large amounts of data (since they read and generate information liberally). It’s crucial to enforce data privacy standards. Ensure that any personal data the agent sees is properly consented and protected. Avoid using production personal data in prompts unless necessary, and when you do, use techniques like anonymization or privacy-preserving ML (some companies explore **federated learning** or on-device models to keep data local). Also, be mindful of the AI’s outputs – they should not inadvertently spill confidential information. For instance, if an agent was privy to internal documents during training or context, it should not reveal those to users who lack clearance. Incorporating **privacy filters** and doing thorough testing for information leaks (a form of red-teaming) is advisable (@Salesforce releases responsible agentic AI guidelines - Salesforce).
+
+**Security and Abuse Prevention:** An autonomous agent connected to tools can potentially be tricked or misused. **Prompt injection attacks** (where a user crafts input that subverts the agent’s instructions) are an emerging security threat. Developers should sanitize inputs and perhaps restrict the agent’s accessible tools to prevent malicious exploits ([AI Insights: Prompt Engineering (HTML) - GOV.UK](mdc:https:/www.gov.uk/government/publications/ai-insights/ai-insights-prompt-engineering-html#:~:text=Safety%20comes%20first%20at%20all,Language%20Model%20do%20no%20harm)). Additionally, rate-limiting the agent’s actions can prevent a runaway loop from spamming an API or performing too many operations in a short time. Security also involves verifying that the AI’s recommendations are not leading users to phishing or malicious content (if the agent fetches URLs, for example). Maintaining an up-to-date threat model for your AI system is part of responsible deployment. Some agent frameworks build in **model containment** – they limit the topics or commands the agent can execute – which is a good practice to use (@Salesforce releases responsible agentic AI guidelines - Salesforce). Just as one would harden a server or application against cyber attacks, an AI agent needs safeguards against both external adversaries and its own possible mistakes.
+
+**Environmental Sustainability:** The training and running of large AI models can be energy-intensive. A responsible strategy considers the **carbon footprint** of your AI services. This might influence choices such as using an appropriately sized model (not always defaulting to the largest), employing model distillation or quantization to reduce runtime costs, and using cloud providers that offer renewable energy options. As noted, smaller specialized models can sometimes replace a massive general model, achieving the needed performance at a fraction of the cost and energy (@Salesforce releases responsible agentic AI guidelines - Salesforce). Monitoring energy usage and optimizing the inference efficiency (through techniques like batching requests, using GPU/TPU efficiently, etc.) are ways to keep the system sustainable. There is also the aspect of **sustaining the software itself**: ensuring the approach is cost-effective in the long term. If an agent requires calling a very expensive API thousands of times a day, is that financially sustainable? Architects should design with efficiency in mind so that AI-driven software remains economically viable to run.
+
+**User Education and Consent:** End-users interacting with AI agents should be educated about what the system can and cannot do. Managing expectations helps prevent misuse and over-reliance. For example, if you deploy an AI legal advisor, make it clear that it’s not a licensed attorney and its advice has limitations. Providing **disclaimers** or info buttons that explain the AI’s nature and its confidence level can help users make informed decisions. Also, if user data is used to adapt the AI (say, learning from user interactions to improve), users should consent to that. Transparency builds trust: people are more likely to forgive an AI agent’s mistake if they understand how it works and that it’s still learning or bounded by certain rules.
+
+**Evaluation and Continuous Improvement:** Responsible use entails regularly measuring how the agentic system is performing on key criteria like fairness, accuracy, user satisfaction, etc. This could mean conducting periodic **bias evaluations** (checking if outputs disadvantage or offend any group), or performance evaluations (is the agent’s quality improving or degrading over time?). In addition, having a mechanism for users to give feedback (thumbs up/down, written feedback) and then acting on that feedback is important. Many organizations treat AI systems as products that require regular updates – fine-tuning the model on new data, expanding the prompt knowledge base when new policies arise, and so on. A feedback loop where real-world results lead to adjustments in the system ensures the AI remains aligned with both user needs and ethical standards.
+
+Finally, **compliance with regulations and standards** cannot be overlooked. Around the world, regulators are crafting rules for AI (e.g., the EU AI Act, which will impose requirements based on risk levels of AI systems). Agentic systems that do things like credit scoring, hiring recommendations, or medical triage will likely fall under high-risk categories and need rigorous documentation, transparency (e.g., providing explanations), and risk management. Engineers should stay informed about relevant standards (ISO/IEC guidelines on AI, industry-specific regulations like HIPAA for health data if applicable, etc.) and incorporate those requirements from the get-go. It’s easier to build with compliance in mind than to retrofit it later.
+
+In conclusion on responsible AI use: adopting Agentic Engineering should be accompanied by a **strong governance framework**. This ensures that the powerful capabilities of AI agents are used in a way that is **safe, fair, and aligned with human values**. By combining technical solutions (like guardrails and audits) with organizational policies (like ethics training and oversight committees), we can **sustainably harness** agentic AI. The result should be systems that not only deliver impressive automation and assistance, but do so in a manner that earns and maintains the trust of all stakeholders.
+
+## Conclusion to Principled AI Coding in Agentic Engineering
+
+Agentic Engineering offers a powerful approach to coding with AI at the center. By adhering to principled development practices – ethically grounding our agents, using robust frameworks, and responsibly managing their deployment – we can unlock the immense potential of AI-driven systems while mitigating risks. The result will be software that not only **acts on our behalf** to perform tasks and solve problems, but does so in a way that we can understand, trust, and sustain. In the coming years, mastering this balance will be a defining skill for software professionals, as the industry transforms under the influence of intelligent agents and the continued integration of human and machine intelligence in engineering.
+
+---
+
+*This document was designed to integrate and refine multiple key resources on agentic system design, ensuring consistency of technical terminology and clarity in implementation strategies. Developers are encouraged to reference the original materials for deeper dives into specific workflows and advanced scenarios.*
+```

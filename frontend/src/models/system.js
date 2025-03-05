@@ -6,10 +6,10 @@ import AgentPlugins from "./experimental/agentPlugins";
 
 const System = {
   cacheKeys: {
-    footerIcons: "anythingllm_footer_links",
-    supportEmail: "anythingllm_support_email",
-    customAppName: "anythingllm_custom_app_name",
-    canViewChatHistory: "anythingllm_can_view_chat_history",
+    footerIcons: "solnai_footer_links",
+    supportEmail: "solnai_support_email",
+    customAppName: "solnai_custom_app_name",
+    canViewChatHistory: "solnai_can_view_chat_history",
   },
   ping: async function () {
     return await fetch(`${API_BASE}/ping`)

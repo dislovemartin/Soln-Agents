@@ -1,6 +1,6 @@
 import PreLoader from "@/components/Preloader";
 import System from "@/models/system";
-import AnythingLLMIcon from "@/media/logo/anything-llm-icon.png";
+import SolnAIIcon from "@/media/logo/solnai-icon.png";
 import OpenAiLogo from "@/media/llmprovider/openai.png";
 import GenericOpenAiLogo from "@/media/llmprovider/generic-openai.png";
 import AzureOpenAiLogo from "@/media/llmprovider/azure.png";
@@ -291,7 +291,7 @@ export const VECTOR_DB_PRIVACY = {
   lancedb: {
     name: "LanceDB",
     description: [
-      "Your vectors and document text are stored privately on this instance of AnythingLLM",
+      "Your vectors and document text are stored privately on this instance of SolnAI",
     ],
     logo: LanceDbLogo,
   },
@@ -299,11 +299,11 @@ export const VECTOR_DB_PRIVACY = {
 
 export const EMBEDDING_ENGINE_PRIVACY = {
   native: {
-    name: "AnythingLLM Embedder",
+    name: "SolnAI Embedder",
     description: [
-      "Your document text is embedded privately on this instance of AnythingLLM",
+      "Your document text is embedded privately on this instance of SolnAI",
     ],
-    logo: AnythingLLMIcon,
+    logo: SolnAIIcon,
   },
   openai: {
     name: "OpenAI",
@@ -391,23 +391,23 @@ export const FALLBACKS = {
   LLM: (provider) => ({
     name: "Unknown",
     description: [
-      `"${provider}" has no known data handling policy defined in AnythingLLM`,
+      `"${provider}" has no known data handling policy defined in SolnAI`,
     ],
-    logo: AnythingLLMIcon,
+    logo: SolnAIIcon,
   }),
   EMBEDDING: (provider) => ({
     name: "Unknown",
     description: [
-      `"${provider}" has no known data handling policy defined in AnythingLLM`,
+      `"${provider}" has no known data handling policy defined in SolnAI`,
     ],
-    logo: AnythingLLMIcon,
+    logo: SolnAIIcon,
   }),
   VECTOR: (provider) => ({
     name: "Unknown",
     description: [
-      `"${provider}" has no known data handling policy defined in AnythingLLM`,
+      `"${provider}" has no known data handling policy defined in SolnAI`,
     ],
-    logo: AnythingLLMIcon,
+    logo: SolnAIIcon,
   }),
 };
 

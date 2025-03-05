@@ -1,115 +1,257 @@
-# Run AnythingLLM in production without Docker
+# Run SolnAI System Monitoring in Production Without Docker
 
 > [!WARNING]
-> This method of deployment is **not supported** by the core-team and is to be used as a reference for your deployment.
+> This method of deployment is **not recommended** for production environments. We strongly recommend using our Docker-based deployment for ease of updates, security, and stability.
 > You are fully responsible for securing your deployment and data in this mode.
-> **Any issues** experienced from bare-metal or non-containerized deployments will be **not** answered or supported.
+> This guide is provided for specialized environments where containerization is not possible.
 
-Here you can find the scripts and known working process to run AnythingLLM outside of a Docker container.
+This document outlines the process for running SolnAI System Monitoring platform directly on a host without containerization.
 
-### Minimum Requirements
+## Minimum Requirements
+
 > [!TIP]
-> You should aim for at least 2GB of RAM. Disk storage is proportional to however much data
-> you will be storing (documents, vectors, models, etc). Minimum 10GB recommended.
+> For optimal performance, we recommend at least 4GB of RAM for monitoring a small to medium infrastructure (10-20 servers).
+> Disk storage requirements scale based on your retention period and the number of systems being monitored.
+> For production environments, we recommend at least 20GB of dedicated storage.
 
-- NodeJS v18
+- NodeJS v18+
 - Yarn
+- Optional: InfluxDB or another time-series database for metric storage
+- Optional: Redis for distributed deployments
 
+## Getting Started
 
-## Getting started
+1. Clone the repository to your server:
+   ```bash
+   git clone https://github.com/SolnAI/system_monitoring.git
+   ```
 
-1. Clone the repo into your server as the user who the application will run as.
-`git clone git@github.com:Mintplex-Labs/anything-llm.git`
+2. Install dependencies:
+   ```bash
+   cd system_monitoring
+   yarn setup
+   ```
 
-2. `cd anything-llm` and run `yarn setup`. This will install all dependencies to run in production as well as debug the application.
+3. Create environment configuration files:
+   ```bash
+   cp server/.env.example server/.env
+   cp collector/.env.example collector/.env
+   ```
 
-3. `cp server/.env.example server/.env` to create the basic ENV file for where instance settings will be read from on service start.
+4. Configure the minimal required environment variables in `server/.env`:
+   ```
+   STORAGE_DIR="/your/absolute/path/to/server/storage"
+   COLLECTOR_API_KEY="your-secure-api-key-for-collector-auth"
+   METRICS_RETENTION_DAYS=30
+   ```
 
-4. Ensure that the `server/.env` file has _at least_ these keys to start. These values will persist and this file will be automatically written and managed after your first successful boot.
-```
-STORAGE_DIR="/your/absolute/path/to/server/storage"
-```
+5. Configure collector settings in `collector/.env`:
+   ```
+   SERVER_URL="http://localhost:3001"
+   COLLECTOR_API_KEY="your-secure-api-key-for-collector-auth"
+   COLLECTION_INTERVAL=60
+   ```
 
-5. Edit the `frontend/.env` file for the `VITE_BASE_API` to now be set to `/api`. This is documented in the .env for which one you should use.
-```
-# VITE_API_BASE='http://localhost:3001/api' # Use this URL when developing locally
-# VITE_API_BASE="https://$CODESPACE_NAME-3001.$GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN/api" # for GitHub Codespaces
-VITE_API_BASE='/api' # Use this URL deploying on non-localhost address OR in docker.
-```
+6. Configure the frontend API endpoint in `frontend/.env`:
+   ```
+   # Use localhost during development
+   # VITE_API_BASE='http://localhost:3001/api'
+   
+   # Use this for production deployment
+   VITE_API_BASE='/api'
+   ```
 
-## To start the application
+## Database Setup
 
-AnythingLLM is comprised of three main sections. The `frontend`, `server`, and `collector`. When running in production you will be running `server` and `collector` on two different processes, with a build step for compilation of the frontend.
+SolnAI uses a relational database for configuration and a time-series database for metrics storage:
 
-1. Build the frontend application.
-`cd frontend && yarn build` - this will produce a `frontend/dist` folder that will be used later.
+1. Set up the relational database:
+   ```bash
+   cd server
+   npx prisma generate --schema=./prisma/schema.prisma
+   npx prisma migrate deploy --schema=./prisma/schema.prisma
+   ```
 
-2. Copy `frontend/dist` to `server/public` - `cp -R frontend/dist server/public`.
-This should create a folder in `server` named `public` which contains a top level `index.html` file and various other files/folders.
+2. If using an external time-series database (recommended for production), configure the connection in `server/.env`:
+   ```
+   # For InfluxDB example
+   TIMESERIES_DB_TYPE=influxdb
+   INFLUXDB_URL=http://localhost:8086
+   INFLUXDB_TOKEN=your-influxdb-token
+   INFLUXDB_ORG=your-org
+   INFLUXDB_BUCKET=solnai-metrics
+   ```
 
-3. Migrate and prepare your database file.
-```
-cd server && npx prisma generate --schema=./prisma/schema.prisma
-cd server && npx prisma migrate deploy --schema=./prisma/schema.prisma
-```
+## Building and Deploying
 
-4. Boot the server in production
-`cd server && NODE_ENV=production node index.js &`
+1. Build the frontend application:
+   ```bash
+   cd frontend
+   yarn build
+   ```
 
-5. Boot the collection in another process
-`cd collector && NODE_ENV=production node index.js &`
+2. Copy the frontend build to the server's public directory:
+   ```bash
+   mkdir -p ../server/public
+   cp -R dist/* ../server/public/
+   ```
 
-AnythingLLM should now be running on `http://localhost:3001`!
+3. Start the main server:
+   ```bash
+   cd ../server
+   NODE_ENV=production node index.js &
+   ```
 
-## Updating AnythingLLM
+4. Start the collector service:
+   ```bash
+   cd ../collector
+   NODE_ENV=production node index.js &
+   ```
 
-To update AnythingLLM with future updates you can `git pull origin master` to pull in the latest code and then repeat steps 2 - 5 to deploy with all changes fully.
+SolnAI should now be running on `http://localhost:3001`!
 
-_note_ You should ensure that each folder runs `yarn` again to ensure packages are up to date in case any dependencies were added, changed, or removed.
+## Deploying Remote Collectors
 
-_note_ You should `pkill node` before running an update so that you are not running multiple AnythingLLM processes on the same instance as this can cause conflicts.
+For monitoring remote systems, you'll need to deploy collectors on each target system:
 
+1. Clone the repository on the target system or copy just the collector directory
+2. Configure the collector's `.env` file:
+   ```
+   SERVER_URL="https://your-solnai-server-url"
+   COLLECTOR_API_KEY="your-secure-api-key-for-collector-auth"
+   COLLECTION_INTERVAL=60
+   SYSTEM_NAME="unique-system-identifier"
+   ```
 
-### Example update script
+3. Install dependencies and start the collector:
+   ```bash
+   cd collector
+   yarn
+   NODE_ENV=production node index.js &
+   ```
 
-```shell
+## Updating SolnAI
+
+To update SolnAI with future releases:
+
+1. Stop all running processes:
+   ```bash
+   pkill -f "node.*index.js"
+   ```
+
+2. Pull the latest code:
+   ```bash
+   git pull origin main
+   ```
+
+3. Update dependencies:
+   ```bash
+   yarn setup
+   ```
+
+4. Rebuild and redeploy following steps in the "Building and Deploying" section above
+
+## Example Update Script
+
+```bash
 #!/bin/bash
 
-cd $HOME/anything-llm &&\
-git checkout . &&\
-git pull origin master &&\
-echo "HEAD pulled to commit $(git log -1 --pretty=format:"%h" | tail -n 1)"
+SOLNAI_HOME="$HOME/system_monitoring"
 
-echo "Freezing current ENVs"
-curl -I "http://localhost:3001/api/env-dump" | head -n 1|cut -d$' ' -f2
+cd $SOLNAI_HOME
+git checkout .
+git pull origin main
+echo "Updated to commit $(git log -1 --pretty=format:"%h" | tail -n 1)"
+
+echo "Backing up current configuration..."
+cp server/.env server/.env.backup
+cp collector/.env collector/.env.backup
 
 echo "Rebuilding Frontend"
-cd $HOME/anything-llm/frontend && yarn && yarn build && cd $HOME/anything-llm
+cd $SOLNAI_HOME/frontend && yarn && yarn build
 
-echo "Copying to Sever Public"
-rm -rf server/public
-cp -r frontend/dist server/public
+echo "Copying to Server Public"
+rm -rf $SOLNAI_HOME/server/public
+mkdir -p $SOLNAI_HOME/server/public
+cp -r $SOLNAI_HOME/frontend/dist/* $SOLNAI_HOME/server/public/
 
-echo "Killing node processes"
-pkill node
+echo "Stopping all SolnAI processes"
+pkill -f "node.*index.js"
 
 echo "Installing collector dependencies"
-cd $HOME/anything-llm/collector && yarn
+cd $SOLNAI_HOME/collector && yarn
 
 echo "Installing server dependencies & running migrations"
-cd $HOME/anything-llm/server && yarn
-cd $HOME/anything-llm/server && npx prisma migrate deploy --schema=./prisma/schema.prisma
-cd $HOME/anything-llm/server && npx prisma generate
+cd $SOLNAI_HOME/server && yarn
+cd $SOLNAI_HOME/server && npx prisma migrate deploy --schema=./prisma/schema.prisma
+cd $SOLNAI_HOME/server && npx prisma generate
 
-echo "Booting up services."
-truncate -s 0 /logs/server.log # Or any other log file location.
-truncate -s 0 /logs/collector.log
+echo "Preparing log files"
+mkdir -p $SOLNAI_HOME/logs
+truncate -s 0 $SOLNAI_HOME/logs/server.log
+truncate -s 0 $SOLNAI_HOME/logs/collector.log
 
-cd $HOME/anything-llm/server
-(NODE_ENV=production node index.js) &> /logs/server.log &
+echo "Starting SolnAI services"
+cd $SOLNAI_HOME/server
+(NODE_ENV=production node index.js) &> $SOLNAI_HOME/logs/server.log &
 
-cd $HOME/anything-llm/collector
-(NODE_ENV=production node index.js) &> /logs/collector.log &
+cd $SOLNAI_HOME/collector
+(NODE_ENV=production node index.js) &> $SOLNAI_HOME/logs/collector.log &
+
+echo "SolnAI services started. Check logs for status."
 ```
 
+## Setting Up as System Services
 
+For better reliability, set up the SolnAI components as system services:
+
+### Server Service (systemd)
+
+Create a file at `/etc/systemd/system/solnai-server.service`:
+
+```ini
+[Unit]
+Description=SolnAI Monitoring Server
+After=network.target
+
+[Service]
+Type=simple
+User=yourusername
+WorkingDirectory=/path/to/system_monitoring/server
+ExecStart=/usr/bin/node index.js
+Restart=on-failure
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
+```
+
+### Collector Service (systemd)
+
+Create a file at `/etc/systemd/system/solnai-collector.service`:
+
+```ini
+[Unit]
+Description=SolnAI Monitoring Collector
+After=network.target solnai-server.service
+
+[Service]
+Type=simple
+User=yourusername
+WorkingDirectory=/path/to/system_monitoring/collector
+ExecStart=/usr/bin/node index.js
+Restart=on-failure
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Enable and start the services:
+
+```bash
+sudo systemctl enable solnai-server.service
+sudo systemctl enable solnai-collector.service
+sudo systemctl start solnai-server.service
+sudo systemctl start solnai-collector.service
+```

@@ -1,5 +1,5 @@
 import { CaretDown, CaretUp, Plus } from "@phosphor-icons/react";
-import AnythingInfinityLogo from "@/media/logo/anything-llm-infinity.png";
+import AnythingInfinityLogo from "@/media/logo/solnai-infinity.png";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import paths from "@/utils/paths";
@@ -118,7 +118,7 @@ export default function HeaderMenu({
             </button>
           </div>
           <Link
-            to="https://docs.anythingllm.com/agent-flows/overview"
+            to="https://docs.solnai.com/agent-flows/overview"
             className="text-theme-text-secondary text-sm hover:underline hover:text-cta-button flex items-center gap-x-1 w-fit float-right"
           >
             view documentation &rarr;

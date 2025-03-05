@@ -9,6 +9,7 @@ import {
   Flag,
   Info,
   BracketsCurly,
+  TextT,
 } from "@phosphor-icons/react";
 import { Tooltip } from "react-tooltip";
 import StartNode from "../nodes/StartNode";
@@ -20,6 +21,7 @@ import LLMInstructionNode from "../nodes/LLMInstructionNode";
 import FinishNode from "../nodes/FinishNode";
 import WebScrapingNode from "../nodes/WebScrapingNode";
 import FlowInfoNode from "../nodes/FlowInfoNode";
+import TextProcessingNode from "../nodes/TextProcessingNode";
 
 const BLOCK_TYPES = {
   FLOW_INFO: "flowInfo",
@@ -30,6 +32,7 @@ const BLOCK_TYPES = {
   // CODE: "code", // Temporarily disabled
   LLM_INSTRUCTION: "llmInstruction",
   WEB_SCRAPING: "webScraping",
+  TEXT_PROCESSING: "textProcessing",
   FINISH: "finish",
 };
 
@@ -132,6 +135,22 @@ const BLOCK_INFO = {
     },
     getSummary: (config) => config.url || "No URL specified",
   },
+  [BLOCK_TYPES.TEXT_PROCESSING]: {
+    label: "Text Processing",
+    icon: <TextT className="w-5 h-5 text-theme-text-primary" />,
+    description: "Process and analyze text with high-performance Rust extensions",
+    defaultConfig: {
+      inputVariable: "",
+      operations: ["count_tokens"],
+      chunkSize: 1000,
+      useRustExtensions: true,
+      resultVariable: "",
+    },
+    getSummary: (config) => {
+      const opCount = config.operations?.length || 0;
+      return `${opCount} operation${opCount !== 1 ? 's' : ''} ${config.useRustExtensions !== false ? '(optimized)' : ''}`;
+    },
+  },
   [BLOCK_TYPES.FINISH]: {
     label: "Flow Complete",
     icon: <Flag className="w-4 h-4" />,
@@ -177,6 +196,8 @@ export default function BlockList({
         return <LLMInstructionNode {...props} />;
       case BLOCK_TYPES.WEB_SCRAPING:
         return <WebScrapingNode {...props} />;
+      case BLOCK_TYPES.TEXT_PROCESSING:
+        return <TextProcessingNode {...props} />;
       case BLOCK_TYPES.FINISH:
         return <FinishNode />;
       default:

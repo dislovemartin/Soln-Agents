@@ -102,24 +102,24 @@ export default {
       },
       backgroundImage: {
         "preference-gradient":
-          "linear-gradient(180deg, #5A5C63 0%, rgba(90, 92, 99, 0.28) 100%);",
+          "linear-gradient(180deg, #232a3d 0%, rgba(35, 42, 61, 0.28) 100%);",
         "chat-msg-user-gradient":
-          "linear-gradient(180deg, #3D4147 0%, #2C2F35 100%);",
+          "linear-gradient(180deg, #2a3346 0%, #171e2e 100%);",
         "selected-preference-gradient":
-          "linear-gradient(180deg, #313236 0%, rgba(63.40, 64.90, 70.13, 0) 100%);",
-        "main-gradient": "linear-gradient(180deg, #3D4147 0%, #2C2F35 100%)",
-        "modal-gradient": "linear-gradient(180deg, #3D4147 0%, #2C2F35 100%)",
-        "sidebar-gradient": "linear-gradient(90deg, #5B616A 0%, #3F434B 100%)",
-        "login-gradient": "linear-gradient(180deg, #3D4147 0%, #2C2F35 100%)",
+          "linear-gradient(180deg, #2a3346 0%, rgba(35, 42, 61, 0) 100%);",
+        "main-gradient": "linear-gradient(180deg, #2a3346 0%, #171e2e 100%)",
+        "modal-gradient": "linear-gradient(180deg, #2a3346 0%, #171e2e 100%)",
+        "sidebar-gradient": "linear-gradient(90deg, #4596ff 0%, #3f8eff 100%)",
+        "login-gradient": "linear-gradient(180deg, #2a3346 0%, #171e2e 100%)",
         "menu-item-gradient":
-          "linear-gradient(90deg, #3D4147 0%, #2C2F35 100%)",
+          "linear-gradient(90deg, #2a3346 0%, #171e2e 100%)",
         "menu-item-selected-gradient":
-          "linear-gradient(90deg, #5B616A 0%, #3F434B 100%)",
+          "linear-gradient(90deg, #3a4158 0%, #232a3d 100%)",
         "workspace-item-gradient":
-          "linear-gradient(90deg, #3D4147 0%, #2C2F35 100%)",
+          "linear-gradient(90deg, #2a3346 0%, #171e2e 100%)",
         "workspace-item-selected-gradient":
-          "linear-gradient(90deg, #5B616A 0%, #3F434B 100%)",
-        "switch-selected": "linear-gradient(146deg, #5B616A 0%, #3F434B 100%)"
+          "linear-gradient(90deg, #3a4158 0%, #232a3d 100%)",
+        "switch-selected": "linear-gradient(146deg, #4596ff 0%, #3f8eff 100%)"
       },
       fontFamily: {
         sans: [

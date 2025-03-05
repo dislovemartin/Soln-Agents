@@ -24,8 +24,8 @@ class PPIOLLM {
       baseURL: this.basePath,
       apiKey: process.env.PPIO_API_KEY ?? null,
       defaultHeaders: {
-        "HTTP-Referer": "https://anythingllm.com",
-        "X-API-Source": "anythingllm",
+        "HTTP-Referer": "https://solnai.com",
+        "X-API-Source": "solnai",
       },
     });
     this.model =
