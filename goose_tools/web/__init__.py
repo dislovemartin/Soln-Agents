@@ -1,0 +1,3 @@
+"""
+Goose Tools web resources
+"""

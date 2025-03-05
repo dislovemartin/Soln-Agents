@@ -1,0 +1,8 @@
+include LICENSE
+include README.md
+include requirements.txt
+recursive-include goose_tools/scripts *.sh
+recursive-include goose_tools/web *.html *.css *.js
+recursive-include goose_tools/api/templates *.html *.j2
+recursive-include goose_tools/api/static *.css *.js *.json *.png *.ico
+recursive-include goose_tools/docs *.md

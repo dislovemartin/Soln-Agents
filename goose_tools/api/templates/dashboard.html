@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goose Context Management Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            flex-grow: 1;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .tab.active {
+            border-bottom-color: #3498db;
+            color: #3498db;
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+        .tab-content {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: in 1rem;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .btn-secondary {
+            background-color: #95a5a6;
+        }
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        .session-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .session-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: white;
+            transition: transform 0.2s;
+        }
+        .session-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .session-name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .session-date {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        .session-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 5px 0;
+        }
+        .tag {
+            background-color: #e0f7fa;
+            color: #00838f;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        .session-size {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        .result-container {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            pre {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+        }
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+        .checkbox-option input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        .alerts {
+            margin-bottom: 1rem;
+        }
+        .alert {
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #3498db;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Goose Context Management Dashboard</h1>
+    </header>
+    
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" data-tab="sessions">Sessions</div>
+            <div class="tab" data-tab="extract-web">Extract Web</div>
+            <div class="tab" data-tab="extract-code">Extract Code</div>
+            <div class="tab" data-tab="clean">Clean Sessions</div>
+            <div class="tab" data-tab="convert">Convert</div>
+        </div>
+
+        <div class="alerts" id="alerts"></div>
+        
+        <!-- Loading indicator -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Processing...</p>
+        </div>
+
+        <!-- Sessions Tab -->
+        <div class="tab-content active" id="sessions-content">
+            <div class="form-group">
+                <input type="text" id="session-search" placeholder="Search sessions...">
+                <button class="btn" onclick="refreshSessions()">Refresh Sessions</button>
+            </div>
+            <div class="session-list" id="session-list">
+                <!-- Sessions will be loaded here -->
+                <p>Loading sessions...</p>
+            </div>
+        </div>
+
+        <!-- Extract Web Tab -->
+        <div class="tab-content" id="extract-web-content">
+            <h2>Extract Web Content</h2>
+            <div class="form-group">
+                <label for="web-url">URL</label>
+                <input type="text" id="web-url" placeholder="https://example.com">
+            </div>
+            <div class="form-group">
+                <label for="web-output">Output File (optional)</label>
+                <input type="text" id="web-output" placeholder="output.txt">
+            </div>
+            <div class="form-group">
+                <label>Options</label>
+                <div class="options-container">
+                    <div class="checkbox-option">
+                        <input type="checkbox" id="web-summary">
+                        <label for="web-summary">Generate Summary</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input type="checkbox" id="web-render-js">
+                        <label for="web-render-js">Render JavaScript</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input type="checkbox" id="web-with-tables" checked>
+                        <label for="web-with-tables">Include Tables</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="web-max-lines">Max Lines</label>
+                    <input type="number" id="web-max-lines" value="500">
+                </div>
+                <div class="form-group">
+                    <label for="web-selector">CSS Selector (optional)</label>
+                    <input type="text" id="web-selector" placeholder=".main-content">
+                </div>
+            </div>
+            <button class="btn" onclick="extractWeb()">Extract Content</button>
+            
+            <div class="result-container" id="web-result" style="display: none;">
+                <h3>Extraction Result</h3>
+                <pre id="web-result-content"></pre>
+            </div>
+        </div>
+
+        <!-- Extract Code Tab -->
+        <div class="tab-content" id="extract-code-content">
+            <h2>Extract Code Content</h2>
+            <div class="form-group">
+                <label for="code-path">File Path</label>
+                <input type="text" id="code-path" placeholder="/path/to/file.py">
+            </div>
+            <div class="form-group">
+                <label for="code-output">Output File (optional)</label>
+                <input type="text" id="code-output" placeholder="code_extract.txt">
+            </div>
+            <div class="form-group">
+                <label>Options</label>
+                <div class="options-container">
+                    <div class="checkbox-option">
+                        <input type="checkbox" id="code-full-functions">
+                        <label for="code-full-functions">Full Functions</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input type="checkbox" id="code-no-imports">
+                        <label for="code-no-imports">Skip Imports</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input type="checkbox" id="code-no-comments">
+                        <label for="code-no-comments">Skip Comments</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="code-lang">Force Language (optional)</label>
+                    <select id="code-lang">
+                        <option value="">Auto-detect</option>
+                        <option value="python">Python</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="typescript">TypeScript</option>
+                        <option value="java">Java</option>
+                        <option value="cpp">C++</option>
+                        <option value="c">C</option>
+                        <option value="rust">Rust</option>
+                        <option value="go">Go</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="code-max-lines">Max Lines</label>
+                    <input type="number" id="code-max-lines" value="50">
+                </div>
+                <div class="form-group">
+                    <label for="code-pattern">Custom Pattern (optional)</label>
+                    <input type="text" id="code-pattern" placeholder="def process_">
+                </div>
+            </div>
+            <button class="btn" onclick="extractCode()">Extract Code</button>
+            
+            <div class="result-container" id="code-result" style="display: none;">
+                <h3>Extraction Result</h3>
+                <pre id="code-result-content"></pre>
+            </div>
+        </div>
+
+        <!-- Clean Sessions Tab -->
+        <div class="tab-content" id="clean-content">
+            <h2>Clean Sessions</h2>
+            <div class="form-group">
+                <label for="clean-max-days">Maximum Age (days)</label>
+                <input type="number" id="clean-max-days" value="7">
+            </div>
+            <div class="form-group">
+                <label for="clean-max-size">Maximum Size (MB)</label>
+                <input type="number" id="clean-max-size" value="10">
+            </div>
+            <div class="form-group">
+                <label>Options</label>
+                <div class="options-container">
+                    <div class="checkbox-option">
+                        <input type="checkbox" id="clean-backup">
+                        <label for="clean-backup">Create Backup</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input type="checkbox" id="clean-preview" checked>
+                        <label for="clean-preview">Preview Only</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="clean-preserve-tags">Preserve Tags (comma-separated)</label>
+                    <input type="text" id="clean-preserve-tags" placeholder="important,documentation">
+                </div>
+            </div>
+            <button class="btn" onclick="cleanSessions()">Clean Sessions</button>
+            
+            <div class="result-container" id="clean-result" style="display: none;">
+                <h3>Cleanup Result</h3>
+                <pre id="clean-result-content"></pre>
+            </div>
+        </div>
+
+        <!-- Convert Tab -->
+        <div class="tab-content" id="convert-content">
+            <h2>Convert Content</h2>
+            <div class="form-group">
+                <label for="convert-input">Input File</label>
+                <input type="text" id="convert-input" placeholder="/path/to/input.txt">
+            </div>
+            <div class="form-group">
+                <label for="convert-format">Output Format</label>
+                <select id="convert-format">
+                    <option value="markdown">Markdown</option>
+                    <option value="html">HTML</option>
+                    <option value="text">Text</option>
+                    <option value="json">JSON</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="convert-output">Output File (optional)</label>
+                <input type="text" id="convert-output" placeholder="output.md">
+            </div>
+            <button class="btn" onclick="convertContent()">Convert</button>
+            
+            <div class="result-container" id="convert-result" style="display: none;">
+                <h3>Conversion Result</h3>
+                <pre id="convert-result-content"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API base URL
+        const API_BASE = 'http://localhost:5000/api';
+
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Deactivate all tabs
+                document.querySelectorAll('.tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                
+                // Activate clicked tab and its content
+                tab.classList.add('active');
+                document.getElementById(`${tab.dataset.tab}-content`).classList.add('active');
+            });
+        });
+
+        // Show loading indicator
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+
+        // Hide loading indicator
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // Show alert message
+        function showAlert(message, type = 'success') {
+            const alertsContainer = document.getElementById('alerts');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alertsContainer.appendChild(alert);
+
+            // Remove after 5 seconds
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        // Load sessions
+        async function loadSessions() {
+            try {
+                showLoading();
+                const response = await fetch(`${API_BASE}/sessions`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const sessionList = document.getElementById('session-list');
+                    sessionList.innerHTML = '';
+
+                    if (data.sessions.length === 0) {
+                        sessionList.innerHTML = '<p>No sessions found.</p>';
+                        return;
+                    }
+
+                    data.sessions.forEach(session => {
+                        const card = document.createElement('div');
+                        card.className = 'session-card';
+
+                        // Get human-readable size
+                        const sizeInBytes = session.size;
+                        let sizeStr;
+                        if (sizeInBytes < 1024) {
+                            sizeStr = `${sizeInBytes} B`;
+                        } else if (sizeInBytes < 1024 * 1024) {
+                            sizeStr = `${(sizeInBytes / 1024).toFixed(2)} KB`;
+                        } else {
+                            sizeStr = `${(sizeInBytes / (1024 * 1024)).toFixed(2)} MB`;
+                        }
+
+                        // Format date
+                        const created = new Date(session.created).toLocaleString();
+
+                        // Build card content
+                        card.innerHTML = `
+                            <div class="session-header">
+                                <div class="session-name">${session.name}</div>
+                                <div class="session-date">${created}</div>
+                            </div>
+                            <div class="session-size">Size: ${sizeStr}</div>
+                        `;
+
+                        // Add tags if available
+                        if (session.metadata && session.metadata.tags) {
+                            const tagsDiv = document.createElement('div');
+                            tagsDiv.className = 'session-tags';
+                            
+                            const tags = session.metadata.tags.split(',');
+                            tags.forEach(tag => {
+                                const tagSpan = document.createElement('span');
+                                tagSpan.className = 'tag';
+                                tagSpan.textContent = tag.trim();
+                                tagsDiv.appendChild(tagSpan);
+                            });
+                            
+                            card.appendChild(tagsDiv);
+                        }
+
+                        // Add description if available
+                        if (session.metadata && session.metadata.description) {
+                            const descDiv = document.createElement('div');
+                            descDiv.className = 'session-description';
+                            descDiv.textContent = session.metadata.description;
+                            card.appendChild(descDiv);
+                        }
+
+                        // Add action buttons
+                        const actionsDiv = document.createElement('div');
+                        actionsDiv.className = 'session-actions';
+                        actionsDiv.style.marginTop = '10px';
+                        
+                        const resumeBtn = document.createElement('button');
+                        resumeBtn.className = 'btn';
+                        resumeBtn.textContent = 'Resume';
+                        resumeBtn.onclick = () => {
+                            window.location.href = `goose://session/${session.name}`;
+                        };
+                        
+                        const exportBtn = document.createElement('button');
+                        exportBtn.className = 'btn btn-secondary';
+                        exportBtn.textContent = 'Export';
+                        exportBtn.style.marginLeft = '10px';
+                        exportBtn.onclick = () => exportSession(session.name);
+                        
+                        actionsDiv.appendChild(resumeBtn);
+                        actionsDiv.appendChild(exportBtn);
+                        card.appendChild(actionsDiv);
+
+                        sessionList.appendChild(card);
+                    });
+                } else {
+                    showAlert('Failed to load sessions: ' + data.error, 'danger');
+                }
+            } catch (error) {
+                showAlert('Error loading sessions: ' + error.message, 'danger');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Refresh sessions
+        function refreshSessions() {
+            loadSessions();
+        }
+
+        // Export session
+        async function exportSession(sessionName) {
+            try {
+                showLoading();
+                const format = prompt('Export format (markdown, html, text, json):', 'markdown');
+                if (!format) return;
+
+                const outputFile = prompt('Output file path (optional):');
+                
+                const response = await fetch(`${API_BASE}/convert`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        input_file: `~/.local/share/goose/sessions/${sessionName}.jsonl`,
+                        format: format,
+                        output_file: outputFile
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    showAlert(`Session exported successfully to ${data.output_file}`);
+                } else {
+                    showAlert('Failed to export session: ' + data.error, 'danger');
+                }
+            } catch (error) {
+                showAlert('Error exporting session: ' + error.message, 'danger');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Extract web content
+        async function extractWeb() {
+            const url = document.getElementById('web-url').value;
+            if (!url) {
+                showAlert('URL is required', 'danger');
+                return;
+            }
+
+            try {
+                showLoading();
+                const options = {
+                    'summary': document.getElementById('web-summary').checked,
+                    'render-js': document.getElementById('web-render-js').checked,
+                    'with-tables': document.getElementById('web-with-tables').checked,
+                    'max-lines': document.getElementById('web-max-lines').value
+                };
+
+                const selector = document.getElementById('web-selector').value;
+                if (selector) {
+                    options.selector = selector;
+                }
+
+                const outputFile = document.getElementById('web-output').value;
+
+                const response = await fetch(`${API_BASE}/web/extract`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        url: url,
+                        output_file: outputFile,
+                        options: options
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('web-result').style.display = 'block';
+                    document.getElementById('web-result-content').textContent = data.content;
+                    showAlert('Web content extracted successfully');
+                } else {
+                    showAlert('Failed to extract web content: ' + data.error, 'danger');
+                }
+            } catch (error) {
+                showAlert('Error extracting web content: ' + error.message, 'danger');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Extract code
+        async function extractCode() {
+            const filePath = document.getElementById('code-path').value;
+            if (!filePath) {
+                showAlert('File path is required', 'danger');
+                return;
+            }
+
+            try {
+                showLoading();
+                const options = {
+                    'full-functions': document.getElementById('code-full-functions').checked,
+                    'no-imports': document.getElementById('code-no-imports').checked,
+                    'no-comments': document.getElementById('code-no-comments').checked,
+                    'max-lines': document.getElementById('code-max-lines').value
+                };
+
+                const lang = document.getElementById('code-lang').value;
+                if (lang) {
+                    options.lang = lang;
+                }
+
+                const pattern = document.getElementById('code-pattern').value;
+                if (pattern) {
+                    options.pattern = pattern;
+                }
+
+                const outputFile = document.getElementById('code-output').value;
+
+                const response = await fetch(`${API_BASE}/code/extract`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        file_path: filePath,
+                        output_file: outputFile,
+                        options: options
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('code-result').style.display = 'block';
+                    document.getElementById('code-result-content').textContent = data.content;
+                    showAlert('Code extracted successfully');
+                } else {
+                    showAlert('Failed to extract code: ' + data.error, 'danger');
+                }
+            } catch (error) {
+                showAlert('Error extracting code: ' + error.message, 'danger');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Clean sessions
+        async function cleanSessions() {
+            try {
+                showLoading();
+                const options = {
+                    'max-days': document.getElementById('clean-max-days').value,
+                    'max-size': document.getElementById('clean-max-size').value,
+                    'backup': document.getElementById('clean-backup').checked,
+                    'preview': document.getElementById('clean-preview').checked
+                };
+
+                const preserveTags = document.getElementById('clean-preserve-tags').value;
+                if (preserveTags) {
+                    options['preserve-tags'] = preserveTags;
+                }
+
+                const response = await fetch(`${API_BASE}/clean`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(options)
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('clean-result').style.display = 'block';
+                    document.getElementById('clean-result-content').textContent = data.output;
+                    showAlert('Cleanup completed successfully');
+                    
+                    // Refresh sessions list
+                    loadSessions();
+                } else {
+                    showAlert('Failed to clean sessions: ' + data.error, 'danger');
+                }
+            } catch (error) {
+                showAlert('Error cleaning sessions: ' + error.message, 'danger');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Convert content
+        async function convertContent() {
+            const inputFile = document.getElementById('convert-input').value;
+            if (!inputFile) {
+                showAlert('Input file is required', 'danger');
+                return;
+            }
+
+            try {
+                showLoading();
+                const format = document.getElementById('convert-format').value;
+                const outputFile = document.getElementById('convert-output').value;
+
+                const response = await fetch(`${API_BASE}/convert`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        input_file: inputFile,
+                        format: format,
+                        output_file: outputFile
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('convert-result').style.display = 'block';
+                    document.getElementById('convert-result-content').textContent = data.content;
+                    showAlert(`Content converted successfully to ${data.output_file}`);
+                } else {
+                    showAlert('Failed to convert content: ' + data.error, 'danger');
+                }
+            } catch (error) {
+                showAlert('Error converting content: ' + error.message, 'danger');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Session search functionality
+        document.getElementById('session-search').addEventListener('input', event => {
+            const searchTerm = event.target.value.toLowerCase();
+            document.querySelectorAll('.session-card').forEach(card => {
+                const sessionName = card.querySelector('.session-name').textContent.toLowerCase();
+                const tags = card.querySelector('.session-tags') 
+                    ? Array.from(card.querySelector('.session-tags').querySelectorAll('.tag')).map(tag => tag.textContent.toLowerCase())
+                    : [];
+                const description = card.querySelector('.session-description')
+                    ? card.querySelector('.session-description').textContent.toLowerCase()
+                    : '';
+                
+                const matches = sessionName.includes(searchTerm) || 
+                                tags.some(tag => tag.includes(searchTerm)) ||
+                                description.includes(searchTerm);
+                
+                card.style.display = matches ? 'block' : 'none';
+            });
+        });
+
+        // Load sessions on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSessions();
+        });
+    </script>
+</body>
+</html>
