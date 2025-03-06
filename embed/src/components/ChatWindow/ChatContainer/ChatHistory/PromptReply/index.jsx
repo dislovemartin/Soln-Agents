@@ -2,7 +2,7 @@ import { forwardRef, memo } from "react";
 import { Warning } from "@phosphor-icons/react";
 import renderMarkdown from "@/utils/chat/markdown";
 import { embedderSettings } from "@/main";
-import AnythingLLMIcon from "@/assets/anything-llm-icon.svg";
+import SolnAIIcon from "@/assets/anything-llm-icon.svg";
 import { formatDate } from "@/utils/date";
 
 const PromptReply = forwardRef(
@@ -16,7 +16,7 @@ const PromptReply = forwardRef(
           className={`allm-flex allm-items-start allm-w-full allm-h-fit allm-justify-start`}
         >
           <img
-            src={embedderSettings.settings.assistantIcon || AnythingLLMIcon}
+            src={embedderSettings.settings.assistantIcon || SolnAIIcon}
             alt="Anything LLM Icon"
             className="allm-w-9 allm-h-9 allm-flex-shrink-0 allm-ml-2"
           />
@@ -41,7 +41,7 @@ const PromptReply = forwardRef(
           className={`allm-flex allm-items-end allm-w-full allm-h-fit allm-justify-start`}
         >
           <img
-            src={embedderSettings.settings.assistantIcon || AnythingLLMIcon}
+            src={embedderSettings.settings.assistantIcon || SolnAIIcon}
             alt="Anything LLM Icon"
             className="allm-w-9 allm-h-9 allm-flex-shrink-0 allm-ml-2"
           />
@@ -77,7 +77,7 @@ const PromptReply = forwardRef(
           className={`allm-flex allm-items-start allm-w-full allm-h-fit allm-justify-start`}
         >
           <img
-            src={embedderSettings.settings.assistantIcon || AnythingLLMIcon}
+            src={embedderSettings.settings.assistantIcon || SolnAIIcon}
             alt="Anything LLM Icon"
             className="allm-w-9 allm-h-9 allm-flex-shrink-0 allm-ml-2"
           />

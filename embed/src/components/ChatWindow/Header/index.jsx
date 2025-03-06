@@ -1,4 +1,4 @@
-import AnythingLLMIcon from "@/assets/anything-llm-icon.svg";
+import SolnAIIcon from "@/assets/anything-llm-icon.svg";
 import ChatService from "@/models/chatService";
 import {
   ArrowCounterClockwise,
@@ -52,8 +52,8 @@ export default function ChatWindowHeader({
       <div className="allm-flex allm-justify-center allm-items-center allm-w-full allm-h-[76px]">
         <img
           style={{ maxWidth: 48, maxHeight: 48 }}
-          src={iconUrl ?? AnythingLLMIcon}
-          alt={iconUrl ? "Brand" : "AnythingLLM Logo"}
+          src={iconUrl ?? SolnAIIcon}
+          alt={iconUrl ? "Brand" : "SolnAI Logo"}
         />
       </div>
       <div className="allm-absolute allm-right-0 allm-flex allm-gap-x-1 allm-items-center allm-px-[22px]">

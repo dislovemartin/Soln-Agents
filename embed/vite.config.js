@@ -35,9 +35,9 @@ export default defineConfig({
   build: {
     lib: {
       entry: "src/main.jsx",
-      name: "EmbeddedAnythingLLM",
+      name: "EmbeddedSolnAI",
       formats: ["umd"],
-      fileName: (_format) => `anythingllm-chat-widget.js`
+      fileName: (_format) => `SolnAI-chat-widget.js`
     },
     rollupOptions: {
       external: [
