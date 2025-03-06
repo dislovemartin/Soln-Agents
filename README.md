@@ -1,6 +1,47 @@
-# Simple Interpreted Programming Language
+# SolnAI Platform
 
-This is a fully-featured interpreted programming language implemented in Python. The language supports variables, control structures, functions, and more.
+This is a full-featured AI platform with agent orchestration, web UI, and browser extension capabilities.
+
+## Testing
+
+### Running Tests
+
+The SolnAI project has comprehensive test suites for all components. You can run tests using the following commands:
+
+```bash
+# Run all tests
+yarn test
+
+# Run server tests only
+yarn test:server 
+
+# Run frontend tests only
+yarn test:frontend
+
+# Run agent tests only
+yarn test:agents
+
+# Run browser extension tests
+yarn test:extension
+
+# Run a specific custom agent's tests
+yarn test:custom-agent -- path/to/agent/tests
+```
+
+### Test Coverage
+
+To generate test coverage reports:
+
+```bash
+# Server test coverage
+cd server && yarn test:coverage
+
+# Frontend test coverage
+cd frontend && yarn test:coverage
+
+# Browser extension test coverage
+cd browser-extension && yarn test:coverage
+```
 
 ## Features
 

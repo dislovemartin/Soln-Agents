@@ -7,21 +7,41 @@
     "dev:build": "vite build && cp public/background.js dist/",
     "build": "vite build && cp public/background.js dist/",
     "lint": "yarn prettier --ignore-path ../.prettierignore --write ./src",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "npm run test:simple && npm run test:summary",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:headless": "HEADLESS=true playwright test",
+    "test:integration": "playwright test tests/integration/",
+    "test:stagehand": "tsx tests/e2e/run-stagehand-test.ts",
+    "test:simple": "tsx tests/e2e/simpleTest.ts",
+    "test:code": "tsx tests/e2e/code-content-runner.ts",
+    "test:api": "tsx tests/e2e/api-integration-runner.ts", 
+    "test:advanced": "npm run test:code && npm run test:api",
+    "test:all": "npm run test:simple && npm run test:code && npm run test:api",
+    "test:summary": "tsx tests/e2e/runner-summary.ts"
   },
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@browserbasehq/stagehand": "^1.14.0",
+    "@playwright/test": "^1.50.1",
+    "@types/node": "^20.17.23",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.19",
+    "dotenv": "^16.4.7",
     "nodemon": "^3.1.4",
+    "playwright": "^1.50.1",
     "postcss": "^8.4.40",
     "prettier": "^3.0.3",
     "tailwindcss": "^3.4.7",
-    "vite": "^5.3.4"
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "vite": "^5.3.4",
+    "zod": "^3.24.2"
   }
 }

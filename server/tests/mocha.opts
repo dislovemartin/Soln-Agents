@@ -1,0 +1,4 @@
+--require chai
+--require sinon
+--recursive
+--timeout 5000

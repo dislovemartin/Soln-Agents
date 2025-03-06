@@ -61,6 +61,71 @@ To set up the project for development:
 
 The built extension will be in the `dist` folder.
 
+## Testing
+
+The extension uses Playwright and Stagehand for comprehensive automated testing:
+
+```bash
+# Install Playwright browsers
+npx playwright install
+
+# Run all tests with test runner
+npm test
+
+# Run individual test suites
+npm run test:simple      # Basic file verification
+npm run test:code        # Code extraction tests
+npm run test:api         # API integration tests
+npm run test:stagehand   # Stagehand browser automation tests
+
+# Run tests with UI
+npm run test:ui
+
+# Run tests in debug mode
+npm run test:debug
+
+# Run tests in headless mode
+npm run test:headless
+```
+
+### Test Coverage
+
+Our test suite covers:
+
+1. **Basic Extension Structure**:
+   - Validates all required files exist
+   - Checks manifest.json structure and properties
+   - Ensures background scripts, content scripts, and UI components are present
+
+2. **API Integration**:
+   - Tests workspace loading from SolnAI server
+   - Tests content saving functionality
+   - Handles error cases and network failures
+
+3. **Code Extraction**:
+   - Tests extraction of code blocks from web pages
+   - Verifies language detection for code snippets
+   - Tests preservation of syntax highlighting
+
+4. **Browser Interaction**:
+   - Tests popup interface functionality
+   - Tests content script injection
+   - Tests text selection and contextual operations
+
+### Test Configuration
+
+Create a `.env` file based on `.env.example` to configure your test environment:
+
+```
+# Testing Configuration
+HEADLESS=false
+OPENAI_API_KEY=sk-your-api-key-here
+
+# SolnAI API Settings
+SOLNAI_SERVER_URL=http://localhost:3001
+SOLNAI_API_KEY=your-api-key-here
+```
+
 ## Usage
 
 1. Click on the SolnAI extension icon in your Chrome toolbar.

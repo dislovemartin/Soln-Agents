@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "timestamp": "2025-03-06T18:07:15.226Z",
+  "tests": [
+    "Build directory exists",
+    "manifest.json exists and is valid",
+    "background.js exists",
+    "contentScript.js exists",
+    "index.html exists",
+    "Icons exist"
+  ]
+}

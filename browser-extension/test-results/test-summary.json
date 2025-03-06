@@ -1,0 +1,21 @@
+{
+  "timestamp": "2025-03-06T18:07:15.493Z",
+  "totalTests": 1,
+  "passed": 1,
+  "failed": 0,
+  "details": [
+    {
+      "file": "simple-test-results.json",
+      "success": true,
+      "tests": [
+        "Build directory exists",
+        "manifest.json exists and is valid",
+        "background.js exists",
+        "contentScript.js exists",
+        "index.html exists",
+        "Icons exist"
+      ],
+      "error": null
+    }
+  ]
+}

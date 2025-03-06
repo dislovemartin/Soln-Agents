@@ -25,7 +25,13 @@
     "prod:frontend": "cd frontend && yarn build",
     "generate:cloudformation": "node cloud-deployments/aws/cloudformation/generate.mjs",
     "generate::gcp_deployment": "node cloud-deployments/gcp/deployment/generate.mjs",
-    "verify:translations": "cd frontend/src/locales && node verifyTranslations.mjs"
+    "verify:translations": "cd frontend/src/locales && node verifyTranslations.mjs",
+    "test:server": "cd server && yarn test",
+    "test:frontend": "cd frontend && yarn test",
+    "test:agents": "cd SolnAI-agents && python -m pytest -xvs shared/tests/",
+    "test:custom-agent": "cd SolnAI-agents && python -m pytest -xvs",
+    "test:extension": "cd browser-extension && yarn test",
+    "test": "yarn test:server && yarn test:frontend && yarn test:agents && yarn test:extension"
   },
   "private": false,
   "dependencies": {
