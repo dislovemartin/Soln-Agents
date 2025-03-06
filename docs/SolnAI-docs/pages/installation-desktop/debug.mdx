@@ -1,0 +1,32 @@
+---
+title: "Debug"
+description: "Learn how to run SolnAI in debug mode"
+---
+
+import { Cards } from "nextra/components";
+import Image from "next/image";
+
+<Image
+  src="/images/guides/debug.png"
+  height={1080}
+  width={1920}
+  quality={100}
+  alt="SolnAI Debug Mode"
+/>
+
+## General Debugging
+
+If you are having issues with SolnAI, the first thing you should do is check the logs. You can find the logs in the `logs` folder of your SolnAI storage - which you can find [on your computer using this guide.](./storage.mdx#where-is-my-data-located)
+
+## SolnAI Debug mode on MacOS
+
+To run the SolnAI Application in debug mode (if you are getting errors) you can open a Terminal and navigate to `~/Applications/SolnAI/Content/MacOs` where you can then run the executable and see all application logs while running SolnAI.
+
+## SolnAI Debug mode on Windows
+
+To run the SolnAI Application in debug mode (if you are getting errors) you can open a CMD or Powershell window and run the path to the SolnAI executable. Typically this is in `C:\Users\usr\AppData\Local\Programs\SolnAI-desktop\SolnAIDesktop.exe`.
+This will print all logs to the powershell window while running and should display a verbose error once encountered that is critical for debugging.
+
+## SolnAI Debug mode on Linux
+
+To run the SolnAI Application in debug mode (if you are getting errors) you can open a Terminal and navigate to `~/.config/SolnAI-desktop/SolnAIDesktop.AppImage` where you can then run the executable and see all AppImage logs while running SolnAI.

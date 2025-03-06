@@ -6,12 +6,13 @@ import {
   List,
   Robot,
   Flask,
-  Gear,
+  Gear, 
   UserCircleGear,
   PencilSimpleLine,
   Nut,
   Toolbox,
   Globe,
+  UsersThree,
 } from "@phosphor-icons/react";
 import useUser from "@/hooks/useUser";
 import { isMobile } from "react-device-detect";
@@ -339,6 +340,20 @@ const SidebarOptions = ({ user = null, t }) => (
             {
               btnText: t("settings.embeds"),
               href: paths.settings.embedSetup(),
+              flex: true,
+              roles: ["admin"],
+            },
+            {
+              btnText: "CrewAI Workflows",
+              href: "/admin/crewai",
+              isExternalLink: true,
+              flex: true,
+              roles: ["admin"],
+            },
+            {
+              btnText: "LangGraph Manager",
+              href: "/admin/langgraph",
+              isExternalLink: true,
               flex: true,
               roles: ["admin"],
             },

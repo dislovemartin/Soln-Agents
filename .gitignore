@@ -163,3 +163,6 @@ SolnAI-agents/genericsuite-app-maker-agent/input/*
 !SolnAI-agents/genericsuite-app-maker-agent/input/.gitignore
 SolnAI-agents/genericsuite-app-maker-agent/output/*
 !SolnAI-agents/genericsuite-app-maker-agent/output/.gitignore
+
+# Private individual user cursor rules
+.cursor/rules/_*.mdc

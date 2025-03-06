@@ -1,85 +1,28 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/javascript-node
 {
-  "name": "Node.js",
-  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-  // "build": {
-  //   "args": {
-  //     "ARG_UID": "1000",
-  //     "ARG_GID": "1000"
-  //   },
-  //   "dockerfile": "Dockerfile"
-  // },
-  // "containerUser": "solnai",
-  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-18-bookworm",
-  // Features to add to the dev container. More info: https://containers.dev/features.
+  "name": "Node.js with AI Dev Optimized",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-20-bookworm",
   "features": {
-    // Docker very useful linter
     "ghcr.io/dhoeric/features/hadolint:1": {
       "version": "latest"
     },
-    // Terraform support
     "ghcr.io/devcontainers/features/terraform:1": {},
-    // Just a wrap to install needed packages
-    "ghcr.io/devcontainers-contrib/features/apt-packages:1": {
-      // Dependencies copied from ../docker/Dockerfile plus some dev stuff
-      "packages": [
-        "build-essential",
-        "ca-certificates",
-        "curl",
-        "ffmpeg",
-        "fonts-liberation",
-        "git",
-        "gnupg",
-        "htop",
-        "less",
-        "libappindicator1",
-        "libasound2",
-        "libatk-bridge2.0-0",
-        "libatk1.0-0",
-        "libc6",
-        "libcairo2",
-        "libcups2",
-        "libdbus-1-3",
-        "libexpat1",
-        "libfontconfig1",
-        "libgbm1",
-        "libgcc1",
-        "libgfortran5",
-        "libglib2.0-0",
-        "libgtk-3-0",
-        "libnspr4",
-        "libnss3",
-        "libpango-1.0-0",
-        "libpangocairo-1.0-0",
-        "libstdc++6",
-        "libx11-6",
-        "libx11-xcb1",
-        "libxcb1",
-        "libxcomposite1",
-        "libxcursor1",
-        "libxdamage1",
-        "libxext6",
-        "libxfixes3",
-        "libxi6",
-        "libxrandr2",
-        "libxrender1",
-        "libxss1",
-        "libxtst6",
-        "locales",
-        "lsb-release",
-        "procps",
-        "tzdata",
-        "wget",
-        "xdg-utils"
-      ]
-    }
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11",
+      "installTools": true,
+      "installJupyterlab": true
+    },
+    "ghcr.io/devcontainers/features/rust:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/aws-cli:1": {
+      "version": "latest"
+    },
+     "ghcr.io/warrenbuckley/codespace-features/anthropic-claude:1":{}
   },
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y build-essential ca-certificates curl ffmpeg fonts-liberation git gnupg htop less libappindicator1 libasound2 libatk-bridge2.0-0 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 locales lsb-release procps tzdata wget xdg-utils jq vim sqlite3 unzip zip python3-pip python3-venv python3-dev && python3 -m venv /workspaces/venv && /workspaces/venv/bin/pip install --upgrade pip && /workspaces/venv/bin/pip install tensorflow torch scikit-learn jupyter pandas numpy matplotlib tensorboard ipykernel && npm install -g eslint prettier && if [ \"${CODESPACES}\" = \"true\" ]; then echo 'VITE_API_BASE=\"https://$CODESPACE_NAME-3001.$GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN/api\"' > ./frontend/.env && (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) && sudo mkdir -p -m 755 /etc/apt/keyrings && wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg && echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main\" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null && sudo apt update && sudo apt install gh -y; fi && pip install -r requirements.txt",
   "updateContentCommand": "cd server && yarn && cd ../collector && PUPPETEER_DOWNLOAD_BASE_URL=https://storage.googleapis.com/chrome-for-testing-public yarn && cd ../frontend && yarn && cd .. && yarn setup:envs && yarn prisma:setup && echo \"Please run yarn dev:server, yarn dev:collector, and yarn dev:frontend in separate terminal tabs.\"",
-  // Use 'postCreateCommand' to run commands after the container is created.
-  // This configures VITE for github codespaces and installs gh cli
-  "postCreateCommand": "if [ \"${CODESPACES}\" = \"true\" ]; then echo 'VITE_API_BASE=\"https://$CODESPACE_NAME-3001.$GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN/api\"' > ./frontend/.env && (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) && sudo mkdir -p -m 755 /etc/apt/keyrings && wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg && echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main\" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null && sudo apt update && sudo apt install gh -y; fi",
   "portsAttributes": {
     "3001": {
       "label": "Backend",
@@ -88,19 +31,26 @@
     "3000": {
       "label": "Frontend",
       "onAutoForward": "openPreview"
+    },
+    "5000": {
+      "label": "Flask",
+      "onAutoForward": "notify"
+    },
+    "8000": {
+      "label": "Additional Service",
+      "onAutoForward": "notify"
     }
   },
   "capAdd": [
-    "SYS_ADMIN" // needed for puppeteer using headless chrome in sandbox
+    "SYS_ADMIN"
   ],
   "remoteEnv": {
     "NODE_ENV": "development",
     "ESLINT_USE_FLAT_CONFIG": "true",
-    "ANYTHING_LLM_RUNTIME": "docker"
+    "ANYTHING_LLM_RUNTIME": "docker",
+    "PYTHONPATH": "/workspaces/venv/lib/python3.11/site-packages:${containerWorkspaceFolder}",
+    "PATH": "${containerWorkspaceFolder}/node_modules/.bin:${containerEnv:PATH}"
   },
-  // "initializeCommand": "echo Initialize....",
-  "shutdownAction": "stopContainer",
-  // Configure tool-specific properties.
   "customizations": {
     "codespaces": {
       "openFiles": [
@@ -128,7 +78,17 @@
         "streetsidesoftware.code-spell-checker",
         "actboy168.tasks",
         "tombonnike.vscode-status-bar-format-toggle",
-        "ms-vscode.js-debug"
+        "ms-vscode.js-debug",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml",
+        "github.vscode-github-actions",
+        "github.copilot",
+        "eamodio.gitlens",
+        "ms-vscode.vscode-typescript-next",
+        "ms-toolsai.jupyter",
+        "amazonwebservices.aws-toolkit-vscode"
       ],
       "settings": {
         "[css]": {
@@ -163,6 +123,14 @@
         },
         "[toml]": {
           "editor.defaultFormatter": "tamasfe.even-better-toml"
+        },
+        "[python]": {
+          "editor.formatOnSave": true,
+          "editor.defaultFormatter": "ms-python.black-formatter"
+        },
+        "[rust]": {
+          "editor.formatOnSave": true,
+          "editor.defaultFormatter": "rust-lang.rust-analyzer"
         },
         "eslint.debug": true,
         "eslint.enable": true,
@@ -202,10 +170,18 @@
         "typescript.validate.enable": false,
         "workbench.editorAssociations": {
           "*.md": "vscode.markdown.preview.editor"
-        }
+        },
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "python.formatting.provider": "black",
+        "rust-analyzer.checkOnSave.command": "clippy",
+        "python.defaultInterpreterPath": "/workspaces/venv/bin/python"
       }
     }
-  }
-  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-  // "remoteUser": "root"
+  },
+  "runArgs": [
+    "--gpus",
+    "all"
+  ],
+  "shutdownAction": "stopContainer"
 }

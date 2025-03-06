@@ -16,7 +16,7 @@ Modified ./locales/README.zh-CN.md: 30 replacements
 Modified ./storage/models/README.md: 3 replacements
 Modified ./storage/README.md: 13 replacements
 Modified ./docker/HOW_TO_USE_DOCKER.md: 36 replacements
-Modified ./frontend/public/embed/anythingllm-chat-widget.min.js: 4 replacements
+Modified ./frontend/public/embed/SolnAI-chat-widget.min.js: 4 replacements
 Modified ./frontend/src/hooks/useChatMessageAlignment.js: 2 replacements
 Modified ./frontend/src/hooks/useTextSize.js: 2 replacements
 Modified ./frontend/src/utils/paths.js: 9 replacements
@@ -128,7 +128,7 @@ Modified ./frontend/src/pages/GeneralSettings/CommunityHub/Trending/index.jsx: 1
 Modified ./frontend/src/pages/GeneralSettings/EmbedConfigs/NewEmbedModal/index.jsx: 2 replacements
 Modified ./frontend/src/pages/GeneralSettings/EmbedConfigs/EmbedRow/CodeSnippetModal/index.jsx: 7 replacements
 Modified ./.devcontainer/devcontainer.json: 2 replacements
-Modified ./cloud-deployments/aws/cloudformation/cloudformation_create_anythingllm.json: 20 replacements
+Modified ./cloud-deployments/aws/cloudformation/cloudformation_create_SolnAI.json: 20 replacements
 Modified ./collector/package.json: 1 replacements
 Modified ./frontend/package.json: 1 replacements
 Modified ./server/package.json: 1 replacements

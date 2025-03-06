@@ -1,0 +1,13 @@
+langchain>=0.1.5
+langgraph>=0.0.24
+groq>=0.4.0
+pydantic>=2.5.0
+typing-extensions>=4.8.0
+langsmith>=0.0.75
+pytest>=7.4.0
+python-dotenv>=1.0.0
+maturin>=1.4.0
+crewai>=0.28.0
+fastapi>=0.110.0
+uvicorn>=0.27.0
+loguru>=0.7.0

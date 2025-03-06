@@ -1,6 +1,0 @@
-[workspace]
-resolver = "2"
-members = [
-    "crewai-core",
-    "crewai-pyo3",
-] 

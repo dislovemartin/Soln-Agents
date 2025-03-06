@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # SolnAI Application
+  solnai:
+    image: solnai/agent-ui:latest
+    container_name: solnai-app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - AUTOGEN_API_URL=http://autogen-proxy:3001/api/autogenstudio
+      - AUTOGEN_WS_URL=ws://autogen-proxy:3001/ws/autogenstudio
+    depends_on:
+      - autogen-proxy
+    networks:
+      - solnai-network
+
+  # AutoGen Studio
+  autogenstudio:
+    image: autogenstudio:latest  # You may need to build this image
+    container_name: autogenstudio
+    ports:
+      - "8081:8081"
+    environment:
+      - ALLOW_ORIGINS=http://autogen-proxy:3001,http://localhost:3001
+    volumes:
+      - ./autogen-data:/app/data
+    networks:
+      - solnai-network
+
+  # AutoGen Proxy Service
+  autogen-proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    container_name: autogen-proxy
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - SOLNAI_ORIGIN=http://solnai:3000
+      - AUTOGEN_API_URL=http://autogenstudio:8081
+      - AUTOGEN_WS_URL=ws://autogenstudio:8081
+    depends_on:
+      - autogenstudio
+    networks:
+      - solnai-network
+
+networks:
+  solnai-network:
+    driver: bridge

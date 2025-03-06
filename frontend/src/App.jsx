@@ -26,6 +26,13 @@ const AdminInvites = lazy(() => import("@/pages/Admin/Invitations"));
 const AdminWorkspaces = lazy(() => import("@/pages/Admin/Workspaces"));
 const AdminLogs = lazy(() => import("@/pages/Admin/Logging"));
 const AdminAgents = lazy(() => import("@/pages/Admin/Agents"));
+const UserAgents = lazy(() => import("@/pages/Admin/UserAgents"));
+const SolnAgentsCatalog = lazy(() => import("@/pages/SolnAgentsCatalog"));
+const CrewAIPage = lazy(() => import("@/pages/Admin/CrewAI"));
+const AutoGenStudioSettings = lazy(() => import("@/pages/Admin/AutoGenStudio/AutoGenStudioSettings"));
+const AutoGenStudioDocs = lazy(() => import("@/pages/Admin/AutoGenStudio/AutoGenStudioDocs"));
+const LangGraphManager = lazy(() => import("@/pages/Admin/LangGraph"));
+const LangGraphLanding = lazy(() => import("@/pages/Admin/LangGraph/LandingPage"));
 const GeneralChats = lazy(() => import("@/pages/GeneralSettings/Chats"));
 const GeneralAppearance = lazy(
   () => import("@/pages/GeneralSettings/Appearance")
@@ -145,6 +152,14 @@ export default function App() {
                     element={<AdminRoute Component={AdminAgents} />}
                   />
                   <Route
+                    path="/settings/user-agents"
+                    element={<PrivateRoute Component={UserAgents} />}
+                  />
+                  <Route
+                    path="/agents/catalog"
+                    element={<PrivateRoute Component={SolnAgentsCatalog} />}
+                  />
+                  <Route
                     path="/settings/agents/builder"
                     element={
                       <AdminRoute
@@ -244,6 +259,32 @@ export default function App() {
                   <Route
                     path="/settings/community-hub/import-item"
                     element={<AdminRoute Component={CommunityHubImportItem} />}
+                  />
+
+                  {/* AutoGen Studio Integration */}
+                  <Route
+                    path="/admin/autogen-studio/settings"
+                    element={<AdminRoute Component={AutoGenStudioSettings} />}
+                  />
+                  <Route
+                    path="/admin/autogen-studio/docs"
+                    element={<AdminRoute Component={AutoGenStudioDocs} />}
+                  />
+
+                  {/* LangGraph Integration */}
+                  <Route
+                    path="/admin/langgraph"
+                    element={<AdminRoute Component={LangGraphLanding} />}
+                  />
+                  <Route
+                    path="/admin/langgraph/manager/:slug"
+                    element={<AdminRoute Component={LangGraphManager} />}
+                  />
+                  
+                  {/* CrewAI Integration */}
+                  <Route
+                    path="/admin/crewai"
+                    element={<AdminRoute Component={CrewAIPage} />}
                   />
                 </Routes>
                 <ToastContainer />

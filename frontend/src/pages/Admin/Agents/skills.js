@@ -2,12 +2,14 @@ import AgentWebSearchSelection from "./WebSearchSelection";
 import AgentSQLConnectorSelection from "./SQLConnectorSelection";
 import GenericSkillPanel from "./GenericSkillPanel";
 import DefaultSkillPanel from "./DefaultSkillPanel";
+import ArchonPanel from "../../../components/Agents/ArchonPanel";
 import {
   Brain,
   File,
   Browser,
   ChartBar,
   FileMagnifyingGlass,
+  Robot,
 } from "@phosphor-icons/react";
 import RAGImage from "@/media/agents/rag-memory.png";
 import SummarizeImage from "@/media/agents/view-summarize.png";
@@ -72,5 +74,13 @@ export const configurableSkills = {
     title: "SQL Connector",
     component: AgentSQLConnectorSelection,
     skill: "sql-agent",
+  },
+  "archon-integration": {
+    title: "Archon Agent Builder",
+    description:
+      "Enable the Archon AI Agent Builder to create custom agents with frameworks like Pydantic AI and LangGraph.",
+    component: ArchonPanel,
+    skill: "archon-integration",
+    icon: Robot,
   },
 };

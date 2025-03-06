@@ -54,6 +54,13 @@ const SystemSettings = {
 
     // Hub settings
     "hub_api_key",
+    
+    // AutoGen Studio Integration
+    "autogen_studio_enabled",
+    "autogen_studio_url",
+    "autogen_studio_api_path",
+    "autogen_studio_ws_path",
+    "autogen_studio_timeout",
   ],
   validations: {
     footer_data: (updates) => {
@@ -65,6 +72,55 @@ const SystemSettings = {
       } catch (e) {
         console.error(`Failed to run validation function on footer_data`);
         return JSON.stringify([]);
+      }
+    },
+    autogen_studio_enabled: (update) => {
+      if (typeof update === "boolean")
+        return update === true ? "enabled" : "disabled";
+      if (!["enabled", "disabled"].includes(update)) return "disabled";
+      return String(update);
+    },
+    autogen_studio_url: (url) => {
+      try {
+        if (typeof url !== "string" || !url) return "http://localhost:8081";
+        // Add http:// if not present
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+          url = `http://${url}`;
+        }
+        return String(url);
+      } catch (e) {
+        console.error(`Failed to run validation function on autogen_studio_url`);
+        return "http://localhost:8081";
+      }
+    },
+    autogen_studio_api_path: (path) => {
+      try {
+        if (typeof path !== "string") return "/api";
+        // Ensure path starts with /
+        return path.startsWith('/') ? path : `/${path}`;
+      } catch (e) {
+        console.error(`Failed to run validation function on autogen_studio_api_path`);
+        return "/api";
+      }
+    },
+    autogen_studio_ws_path: (path) => {
+      try {
+        if (typeof path !== "string") return "/ws";
+        // Ensure path starts with /
+        return path.startsWith('/') ? path : `/${path}`;
+      } catch (e) {
+        console.error(`Failed to run validation function on autogen_studio_ws_path`);
+        return "/ws";
+      }
+    },
+    autogen_studio_timeout: (timeout) => {
+      try {
+        const timeoutNum = parseInt(timeout, 10);
+        if (isNaN(timeoutNum) || timeoutNum <= 0) return 30000;
+        return timeoutNum;
+      } catch (e) {
+        console.error(`Failed to run validation function on autogen_studio_timeout`);
+        return 30000;
       }
     },
     text_splitter_chunk_size: (update) => {
@@ -184,6 +240,32 @@ const SystemSettings = {
       return String(apiKey);
     },
   },
+  getSettings: async function () {
+    const settings = {};
+    
+    // Get all settings from the database
+    const allSettings = await this.where({});
+    
+    // Convert to an object
+    allSettings.forEach(setting => {
+      try {
+        // Attempt to parse as JSON if it looks like JSON
+        if (setting.value && (
+          setting.value.startsWith('{') || 
+          setting.value.startsWith('[')
+        )) {
+          settings[setting.label] = JSON.parse(setting.value);
+        } else {
+          settings[setting.label] = setting.value;
+        }
+      } catch (e) {
+        settings[setting.label] = setting.value;
+      }
+    });
+    
+    return settings;
+  },
+
   currentSettings: async function () {
     const { hasVectorCachedFiles } = require("../utils/files");
     const llmProvider = process.env.LLM_PROVIDER;

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Plus, List } from "@phosphor-icons/react";
+import { Plus, List, Robot } from "@phosphor-icons/react";
 import NewWorkspaceModal, {
   useNewWorkspaceModal,
 } from "../Modals/NewWorkspace";
@@ -71,6 +71,15 @@ export default function Sidebar() {
                         </p>
                       </button>
                     )}
+                    <Link
+                      to={paths.agents.catalog()}
+                      className="light:bg-[#F0E8FF] light:hover:bg-[#D3B8FF] flex w-full h-[44px] gap-x-2 py-[5px] px-2.5 mb-2 bg-theme-bg-secondary rounded-[8px] text-theme-text-primary justify-center items-center hover:bg-opacity-80 transition-all duration-300"
+                    >
+                      <Robot size={18} weight="bold" />
+                      <p className="text-sm font-semibold">
+                        SolnAI Agents
+                      </p>
+                    </Link>
                   </div>
                   <ActiveWorkspaces />
                 </div>

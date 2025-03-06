@@ -1,0 +1,147 @@
+---
+title: "Configuration"
+description: "Other settings, environment variables, and configurations for SolnAI"
+---
+
+import { Callout } from "nextra/components";
+
+<Callout type="warning" emoji="️⚠️">
+  **Warning:**
+  If you are not a developer, you should not set environment variables directly. Instead, you should use the in-app interface to manage environment variables.
+
+**Desktop:**
+If you are using SolnAI Desktop, do not edit the `.env` file. This guide is only for users who are using SolnAI Self-hosted or Docker.
+
+</Callout>
+
+# Configuration of SolnAI
+
+In general, the majority of configurations you can set are through environment variables and there is typically an associated in-app interface to manage these settings so you don't have to edit them directly.
+
+However, there are a few configurations that are not configurable via the in-app interface and require you to set environment variables directly. These are usually for more niche use cases that most users will not need.
+
+<Callout type="info" emoji="️💡">
+  **Tip:** After you set these environment variables, you will need to restart
+  the SolnAI service or container for the changes to take effect.
+</Callout>
+
+## Disable View Chat History
+
+Modification of the `DISABLE_VIEW_CHAT_HISTORY` environment variable allows you to disable the **frontend** ability to view chat history by anyone with an account on the instance as well as the instance administrator.
+This blocks any user, including yourself, from viewing chat history from users using the SolnAI chat interface **and** via external embed widgets.
+
+- **This does not impact users from seeing their own chat histories in chat or the LLM from being able to use them for continuous conversations.**
+- This **does not** impact the ability to use API keys to access chat histories via the associated API endpoints.
+- This will impact the ability to export chat histories via the in-app interface as well as the ability to delete chat histories.
+- **Chat history is not deleted when this is enabled. It is simply hidden and blocked from being viewed via the frontend admin interfaces.**
+
+### Enable
+
+Set the `DISABLE_VIEW_CHAT_HISTORY` environment variable to **_any value_** to enable.
+
+```bash
+# This can be any value, number, boolean, or string and it will have the same effect.
+DISABLE_VIEW_CHAT_HISTORY="enable"
+```
+
+### Disable
+
+Fully remove or comment out the `DISABLE_VIEW_CHAT_HISTORY` environment variable to return to the default behavior.
+
+## Simple SSO Passthrough
+
+<Callout type="error" emoji="️🚨">
+  **Important:** You should use an independent API key for using this feature so
+  you can revoke it if needed. This feature configuration is best used for
+  internally facing SolnAI instances that are not exposed to the public
+  internet for the best security practices.
+</Callout>
+
+Modification of the `SIMPLE_SSO_ENABLED` environment variable allows easily enable third party SSO solutions that do not require a full OAuth integration. This environment variable
+will enable you to generate a temporary authentication link **per user** that can be visited in browser to automatically login the user.
+
+This feature is most useful for when you have SolnAI as a simple sub-service within a much larger system and you want to leverage existing user authentication flows within that system and want to provide a seamless login experience for your users to your SolnAI instance.
+
+### Prerequisites
+
+- **Your instance must be in multi-user mode** to use this feature.
+- You should provision an API key for SolnAI so you can create new users as well as issue temporary authentication links for users.
+- The user must already exist within SolnAI before using this feature. You can create a user via the in-app interface or the API.
+
+### Enable
+
+Set the `SIMPLE_SSO_ENABLED` environment variable to **_any value_** to enable.
+
+```bash copy
+# This can be any value, number, boolean, or string and it will have the same effect.
+SIMPLE_SSO_ENABLED="enable"
+```
+
+### Integration
+
+Once enabled, you can issue a temporary authentication link for a user leveraging the `/v1/users/{id}/issue-auth-token` endpoint via the SolnAI API.
+You simply need to provide the user ID and the API key you created earlier to generate a temporary authentication token that can be used by the target user to login to SolnAI.
+
+```bash copy
+curl -X POST "https://your-SolnAI-instance.com/v1/users/{id}/issue-auth-token" \
+  -H "Authorization: Bearer {api_key}"
+# Example Response
+# {
+#   "token": "1234567890",
+#   "loginPath": "/sso/simple?token=1234567890"
+# }
+```
+
+Now, the user can visit the provided `loginPath` URL in their browser to be automatically logged in to SolnAI!
+
+```text copy
+https://your-SolnAI-instance.com/sso/simple?token=1234567890
+```
+
+All temporary authentication tokens expire after 1 hour and are single-use only. Once logged in, the user sessions will be valid for 30 days.
+The user will be redirected to the home page of SolnAI after logging in.
+You can optionally redirect the user to a different URL after logging in by appending `&redirectTo={path/to/redirect}` to the query string of the login path.
+
+For example:
+
+```text copy
+https://your-SolnAI-instance.com/sso/simple?token=1234567890&redirectTo=/workspaces/sample-workspace
+```
+
+Will redirect the user to the `/workspaces/sample-workspace` chat page after logging in. This can be useful if you want to redirect the user to a specific workspace they have access to after logging in.
+
+### Disable
+
+Fully remove or comment out the `SIMPLE_SSO_ENABLED` environment variable to return to the default behavior.
+
+## SolnAI Hub Agent Skills
+
+<Callout type="error" emoji="️🚨">
+  **Important:** Agent skills can enable running untrusted code from untrusted
+  sources. By default, SolnAI will not allow downloading agent skills from
+  the SolnAI Hub.
+</Callout>
+
+Modification of the `COMMUNITY_HUB_BUNDLE_DOWNLOADS_ENABLED` environment variable allows you to pull in agent skills from the SolnAI Hub.
+
+**By default, this feature is disabled.** The reason for this is that running untrusted code from untrusted sources can be very risky and we want to err on the side of caution for self-hosted instances.
+
+There are two settings you can configure to control how this feature works:
+
+- `COMMUNITY_HUB_BUNDLE_DOWNLOADS_ENABLED=1`: This configures enables SolnAI to download agent skills from the SolnAI Hub but **only if the item is verified or a private item**.
+- `COMMUNITY_HUB_BUNDLE_DOWNLOADS_ENABLED=allow_all`: This configures enables SolnAI to download agent skills - including unverified public items - from the SolnAI Hub.
+
+### Enable
+
+Set the `COMMUNITY_HUB_BUNDLE_DOWNLOADS_ENABLED` environment variable to **1** or **allow_all** to enable.
+
+```bash
+# This can be any value, number, boolean, or string and it will have the same effect.
+COMMUNITY_HUB_BUNDLE_DOWNLOADS_ENABLED="1"
+# or to allow all (not recommended)
+#COMMUNITY_HUB_BUNDLE_DOWNLOADS_ENABLED="allow_all"
+```
+
+### Disable
+
+Fully remove or comment out the `COMMUNITY_HUB_BUNDLE_DOWNLOADS_ENABLED` environment variable to return to the default behavior.

@@ -146,6 +146,9 @@ export default {
     editAgent: (uuid) => {
       return `/settings/agents/builder/${uuid}`;
     },
+    catalog: () => {
+      return `/agents/catalog`;
+    },
   },
   communityHub: {
     website: () => {
@@ -182,6 +185,15 @@ export default {
   experimental: {
     liveDocumentSync: {
       manage: () => `/settings/beta-features/live-document-sync/manage`,
+    },
+  },
+  
+  admin: {
+    autogenStudioSettings: "/admin/autogen-studio/settings",
+    autogenStudioDocs: "/admin/autogen-studio/docs",
+    crewai: "/admin/crewai",
+    langgraph: {
+      manager: (workspaceSlug) => `/admin/langgraph/manager/${workspaceSlug}`,
     },
   },
 };

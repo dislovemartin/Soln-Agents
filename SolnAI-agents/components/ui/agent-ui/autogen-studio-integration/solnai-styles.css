@@ -1,0 +1,200 @@
+/**
+ * SolnAI Components Styles for AutoGen Studio
+ * 
+ * This file contains styles for SolnAI components that are embedded
+ * in AutoGen Studio.
+ */
+
+/* Common styles for all SolnAI components */
+.solnai-chat-component,
+.solnai-results-component,
+.solnai-bridge-component {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: var(--autogen-surface-color, #ffffff);
+  color: var(--autogen-text-color, #333333);
+  transition: all 0.3s ease;
+  margin-bottom: 16px;
+}
+
+/* Header styles */
+.component-header {
+  background-color: var(--autogen-primary-color, #4a6cf7);
+  color: white;
+  padding: 12px 16px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.component-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Main content area */
+.component-body {
+  padding: 16px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+/* SolnAI Chat component specific styles */
+.solnai-chat-component .message-list {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 8px;
+  background-color: var(--autogen-background-color, #f5f7fb);
+  border-radius: 6px;
+}
+
+.solnai-chat-component .message {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  max-width: 80%;
+}
+
+.solnai-chat-component .user-message {
+  background-color: var(--autogen-primary-color, #4a6cf7);
+  color: white;
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+.solnai-chat-component .agent-message {
+  background-color: var(--autogen-surface-alt-color, #eaeef6);
+  color: var(--autogen-text-color, #333333);
+}
+
+.solnai-chat-component .message-input {
+  display: flex;
+  margin-top: 12px;
+  gap: 8px;
+}
+
+.solnai-chat-component input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--autogen-border-color, #d0d5dd);
+  font-size: 14px;
+}
+
+.solnai-chat-component button {
+  padding: 10px 16px;
+  background-color: var(--autogen-primary-color, #4a6cf7);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.solnai-chat-component button:hover {
+  background-color: var(--autogen-primary-dark-color, #3a5ce5);
+}
+
+/* SolnAI Results component specific styles */
+.solnai-results-component .result-item {
+  background-color: var(--autogen-surface-alt-color, #eaeef6);
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--autogen-primary-color, #4a6cf7);
+}
+
+.solnai-results-component .result-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+.solnai-results-component .result-content {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* SolnAI Bridge component specific styles */
+.solnai-bridge-component .bridge-status {
+  font-size: 14px;
+  padding: 4px 8px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  margin-left: 12px;
+}
+
+.solnai-bridge-component .last-sync {
+  font-size: 12px;
+  margin-left: auto;
+}
+
+.solnai-bridge-component .bridge-controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.solnai-bridge-component .bridge-button {
+  padding: 10px 16px;
+  background-color: var(--autogen-primary-color, #4a6cf7);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.solnai-bridge-component .bridge-button:hover {
+  background-color: var(--autogen-primary-dark-color, #3a5ce5);
+}
+
+.solnai-bridge-component .bridge-button:disabled {
+  background-color: var(--autogen-disabled-color, #d0d5dd);
+  cursor: not-allowed;
+}
+
+.solnai-bridge-component .bridge-info {
+  background-color: var(--autogen-surface-alt-color, #eaeef6);
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Dark mode support */
+.dark-theme .solnai-chat-component,
+.dark-theme .solnai-results-component,
+.dark-theme .solnai-bridge-component {
+  background-color: var(--autogen-surface-dark-color, #222222);
+  color: var(--autogen-text-dark-color, #e0e0e0);
+}
+
+.dark-theme .component-header {
+  background-color: var(--autogen-primary-dark-color, #3a5ce5);
+}
+
+.dark-theme .solnai-chat-component .message-list {
+  background-color: var(--autogen-background-dark-color, #333333);
+}
+
+.dark-theme .solnai-chat-component .agent-message {
+  background-color: var(--autogen-surface-alt-dark-color, #444444);
+  color: var(--autogen-text-dark-color, #e0e0e0);
+}
+
+.dark-theme .solnai-results-component .result-item {
+  background-color: var(--autogen-surface-alt-dark-color, #444444);
+}
+
+.dark-theme .solnai-bridge-component .bridge-info {
+  background-color: var(--autogen-surface-alt-dark-color, #444444);
+}

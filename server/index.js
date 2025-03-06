@@ -24,9 +24,14 @@ const { workspaceThreadEndpoints } = require("./endpoints/workspaceThreads");
 const { documentEndpoints } = require("./endpoints/document");
 const { agentWebsocket } = require("./endpoints/agentWebsocket");
 const { experimentalEndpoints } = require("./endpoints/experimental");
+const { autogenStudio } = require("./endpoints/experimental/autogen-studio");
 const { browserExtensionEndpoints } = require("./endpoints/browserExtension");
 const { communityHubEndpoints } = require("./endpoints/communityHub");
 const { agentFlowEndpoints } = require("./endpoints/agentFlows");
+const agentInterfaceRouter = require("./endpoints/agentInterface");
+const archonAgentRouter = require("./endpoints/archonAgent");
+const solnAgentsRouter = require("./endpoints/solnAgents");
+const crewaiRouter = require("./endpoints/crewai");
 const app = express();
 const apiRouter = express.Router();
 const FILE_LIMIT = "3GB";
@@ -42,7 +47,27 @@ app.use(
 );
 
 if (!!process.env.ENABLE_HTTPS) {
-  bootSSL(app, process.env.SERVER_PORT || 3001);
+  const server = bootSSL(app, process.env.SERVER_PORT || 3001);
+
+  // Initialize WebSocket bridge for AutoGen Studio integration in HTTPS mode
+  autogenStudio.initializeWebSocketBridge(server);
+
+  // Handle WebSocket upgrade requests for AutoGen Studio in HTTPS mode
+  server.on('upgrade', (request, socket, head) => {
+    // Parse the URL to determine which WebSocket endpoint to use
+    const url = new URL(request.url, `https://${request.headers.host}`);
+    const pathname = url.pathname;
+
+    console.log(`WebSocket upgrade request for: ${pathname} (HTTPS mode)`);
+
+    if (pathname.startsWith('/api/experimental/autogen-studio/ws')) {
+      console.log('Routing to AutoGen Studio WebSocket handler (HTTPS mode)');
+      autogenStudio.handleWebSocketUpgrade(request, socket, head);
+    } else {
+      // No handler found, reject the connection
+      socket.destroy();
+    }
+  });
 } else {
   require("@mintplex-labs/express-ws").default(app); // load WebSockets in non-SSL mode.
 }
@@ -63,6 +88,16 @@ experimentalEndpoints(apiRouter);
 developerEndpoints(app, apiRouter);
 communityHubEndpoints(apiRouter);
 agentFlowEndpoints(apiRouter);
+apiRouter.use(agentInterfaceRouter);
+apiRouter.use(archonAgentRouter);
+apiRouter.use(solnAgentsRouter);
+apiRouter.use(crewaiRouter);
+
+// LangGraph and LangSmith endpoints
+const langGraphRouter = require("./endpoints/langgraph");
+const langSmithRouter = require("./endpoints/langsmith");
+apiRouter.use("/langgraph", langGraphRouter);
+apiRouter.use("/langsmith", langSmithRouter);
 
 // Externally facing embedder endpoints
 embeddedEndpoints(apiRouter);
@@ -131,4 +166,26 @@ app.all("*", function (_, response) {
 
 // In non-https mode we need to boot at the end since the server has not yet
 // started and is `.listen`ing.
-if (!process.env.ENABLE_HTTPS) bootHTTP(app, process.env.SERVER_PORT || 3001);
+if (!process.env.ENABLE_HTTPS) {
+  const server = bootHTTP(app, process.env.SERVER_PORT || 3001);
+
+  // Initialize WebSocket bridge for AutoGen Studio integration
+  autogenStudio.initializeWebSocketBridge(server);
+
+  // Handle WebSocket upgrade requests for AutoGen Studio
+  server.on('upgrade', (request, socket, head) => {
+    // Parse the URL to determine which WebSocket endpoint to use
+    const url = new URL(request.url, `http://${request.headers.host}`);
+    const pathname = url.pathname;
+
+    console.log(`WebSocket upgrade request for: ${pathname}`);
+
+    if (pathname.startsWith('/api/experimental/autogen-studio/ws')) {
+      console.log('Routing to AutoGen Studio WebSocket handler');
+      autogenStudio.handleWebSocketUpgrade(request, socket, head);
+    } else {
+      // No handler found, reject the connection
+      socket.destroy();
+    }
+  });
+}

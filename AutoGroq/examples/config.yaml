@@ -1,0 +1,17 @@
+# AutoGroq Configuration File
+groq:
+  api_key: "" # Replace with your actual Groq API key or use environment variable
+  
+model:
+  name: "qwen-2.5-32b"  # Default model to use
+  temperature: 0.6      # Default temperature for generation
+  
+workflow:
+  default_team_size: 3  # Default team size for dynamic team workflows
+  max_iterations: 10    # Maximum iterations for workflows
+  
+crewai_rust:
+  execution_mode: "parallel"  # Can be "sequential", "parallel", or "async"
+  
+langsmith:
+  project: "autogroq-example"  # Project name for LangSmith tracing

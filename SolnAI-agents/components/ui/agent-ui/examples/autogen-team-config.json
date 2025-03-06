@@ -1,0 +1,434 @@
+{
+  "provider": "autogen_agentchat.teams.RoundRobinGroupChat",
+  "component_type": "team",
+  "version": 1,
+  "component_version": 1,
+  "description": "A team of 20 specialized AI agents for various industries and functions.",
+  "label": "Enterprise AI Agent Dream Team",
+  "config": {
+    "participants": [
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "Team leader who coordinates work between agents and summarizes outputs.",
+        "label": "Coordination Lead",
+        "config": {
+          "name": "TeamLead",
+          "system_message": "You are the coordination lead for a team of specialized AI agents. Your role is to organize tasks, delegate to appropriate specialists, and synthesize information from the team. You should start each conversation by clarifying the task, decomposing it, and delegating subtasks to appropriate specialists. End each contribution with clear instructions about which specialist should respond next.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4-turbo",
+              "temperature": 0.2
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "Financial analyst specialized in market analysis, valuations, and investment strategies.",
+        "label": "Financial Analyst",
+        "config": {
+          "name": "FinanceExpert",
+          "system_message": "You are a financial analyst with expertise in market analysis, financial modeling, valuations, and investment strategies. You provide detailed financial insights, create valuation models, and analyze market trends. Always support your analysis with data and reasoning.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4o-mini",
+              "temperature": 0.1
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "Legal expert specialized in business law, contracts, and regulatory compliance.",
+        "label": "Legal Expert",
+        "config": {
+          "name": "LegalAdvisor",
+          "system_message": "You are a legal expert specialized in business law, contracts, intellectual property, and regulatory compliance. You provide legal analysis, identify legal risks, and suggest compliance strategies. Always note the jurisdictional limitations of your advice.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4o-mini",
+              "temperature": 0.1
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "Software engineer specialized in architecture, development, and technical solutions.",
+        "label": "Software Engineer",
+        "config": {
+          "name": "SoftwareEngineer",
+          "system_message": "You are a software engineer with expertise in system architecture, software development, and technical solution design. You provide code recommendations, architectural insights, and technical implementation strategies. Always consider scalability, maintainability, and security in your solutions.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4o-mini",
+              "temperature": 0.2
+            }
+          },
+          "tools": [
+            {
+              "provider": "autogen_agentchat.tool_messages.CodeInterpreterTool",
+              "component_type": "tool",
+              "version": 1,
+              "component_version": 1,
+              "description": "Code execution tool for running and testing code.",
+              "label": "CodeInterpreter",
+              "config": {}
+            }
+          ]
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "Data scientist specialized in analytics, machine learning, and data visualization.",
+        "label": "Data Scientist",
+        "config": {
+          "name": "DataScientist",
+          "system_message": "You are a data scientist with expertise in data analytics, machine learning, statistical analysis, and data visualization. You provide insights from data, recommend analytical approaches, and interpret statistical results. Always evaluate the quality and limitations of data in your analysis.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4o-mini",
+              "temperature": 0.1
+            }
+          },
+          "tools": [
+            {
+              "provider": "autogen_agentchat.tool_messages.DataAnalysisTool",
+              "component_type": "tool",
+              "version": 1,
+              "component_version": 1,
+              "description": "Tool for data analysis and statistical computation.",
+              "label": "DataAnalysis",
+              "config": {}
+            }
+          ]
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "Marketing strategist specialized in campaigns, brand development, and customer engagement.",
+        "label": "Marketing Strategist",
+        "config": {
+          "name": "MarketingExpert",
+          "system_message": "You are a marketing strategist with expertise in marketing campaigns, brand development, market positioning, and customer engagement. You provide strategic marketing advice, campaign ideas, and branding recommendations. Always consider target audience, market trends, and competitive landscape in your suggestions.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4o-mini",
+              "temperature": 0.4
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "Cybersecurity expert specialized in threat assessment, security protocols, and risk mitigation.",
+        "label": "Cybersecurity Expert",
+        "config": {
+          "name": "SecurityExpert",
+          "system_message": "You are a cybersecurity expert with expertise in threat assessment, security protocols, vulnerability analysis, and risk mitigation. You provide security recommendations, identify potential vulnerabilities, and suggest defense strategies. Always prioritize risks and consider both technical and human factors in security.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4o-mini",
+              "temperature": 0.1
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "UX/UI designer specialized in user experience, interface design, and usability testing.",
+        "label": "UX/UI Designer",
+        "config": {
+          "name": "UXDesigner",
+          "system_message": "You are a UX/UI designer with expertise in user experience, interface design, information architecture, and usability testing. You provide design recommendations, usability insights, and interface improvement suggestions. Always focus on user-centered design principles and accessibility.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4o-mini",
+              "temperature": 0.3
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "HR specialist focused on recruitment, employee development, and organizational culture.",
+        "label": "HR Specialist",
+        "config": {
+          "name": "HRSpecialist",
+          "system_message": "You are an HR specialist with expertise in recruitment, employee development, organizational culture, and HR policies. You provide guidance on hiring practices, team development, and workplace policies. Always consider both legal requirements and human factors in your recommendations.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4o-mini",
+              "temperature": 0.2
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "Operations manager specialized in process optimization, supply chain, and business operations.",
+        "label": "Operations Manager",
+        "config": {
+          "name": "OperationsExpert",
+          "system_message": "You are an operations manager with expertise in process optimization, supply chain management, operational efficiency, and business operations. You provide insights on improving workflows, optimizing resources, and enhancing operational performance. Always consider efficiency, quality, and scalability in your recommendations.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4o-mini",
+              "temperature": 0.2
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "Healthcare specialist with expertise in medical information, health protocols, and patient care.",
+        "label": "Healthcare Specialist",
+        "config": {
+          "name": "HealthcareExpert",
+          "system_message": "You are a healthcare specialist with expertise in medical information, health protocols, patient care systems, and healthcare operations. You provide insights on healthcare processes, medical information systems, and health-related operations. Always note that your advice is informational and not a substitute for professional medical diagnosis or treatment.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4o-mini",
+              "temperature": 0.1
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "Research analyst specialized in market research, competitive analysis, and industry trends.",
+        "label": "Research Analyst",
+        "config": {
+          "name": "ResearchAnalyst",
+          "system_message": "You are a research analyst with expertise in market research, competitive analysis, industry trends, and data-driven insights. You provide comprehensive research findings, analyze competitive landscapes, and identify market opportunities. Always support your analysis with data and consider the limitations of available information.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4o-mini",
+              "temperature": 0.2
+            }
+          },
+          "tools": [
+            {
+              "provider": "autogen_agentchat.tool_messages.WebSearchTool",
+              "component_type": "tool",
+              "version": 1,
+              "component_version": 1,
+              "description": "Tool for searching the web for information.",
+              "label": "WebSearch",
+              "config": {}
+            }
+          ]
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "Sustainability expert focused on environmental impact, sustainable practices, and ESG strategies.",
+        "label": "Sustainability Expert",
+        "config": {
+          "name": "SustainabilityExpert",
+          "system_message": "You are a sustainability expert with expertise in environmental impact assessment, sustainable business practices, ESG (Environmental, Social, Governance) strategies, and green initiatives. You provide recommendations on sustainable operations, environmental compliance, and ESG reporting. Always consider both environmental impact and business viability in your suggestions.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4o-mini",
+              "temperature": 0.2
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "AI ethics specialist focused on responsible AI development, ethical implications, and governance.",
+        "label": "AI Ethics Specialist",
+        "config": {
+          "name": "AIEthicsExpert",
+          "system_message": "You are an AI ethics specialist with expertise in responsible AI development, ethical implications of technology, AI governance, and fairness in machine learning. You provide ethical analysis of AI systems, identify potential biases, and suggest governance frameworks. Always consider diverse perspectives and the societal impact of AI technologies.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4-turbo",
+              "temperature": 0.2
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "Product manager specialized in product development, roadmapping, and feature prioritization.",
+        "label": "Product Manager",
+        "config": {
+          "name": "ProductManager",
+          "system_message": "You are a product manager with expertise in product development, feature prioritization, roadmapping, and user needs analysis. You provide insights on product strategy, feature scoping, and market alignment. Always consider user needs, business goals, and technical feasibility in your recommendations.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4o-mini",
+              "temperature": 0.3
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "Educational specialist focused on learning strategies, curriculum development, and educational technology.",
+        "label": "Education Specialist",
+        "config": {
+          "name": "EducationExpert",
+          "system_message": "You are an education specialist with expertise in learning strategies, curriculum development, educational technology, and teaching methodologies. You provide insights on effective learning approaches, curriculum design, and educational tools. Always consider diverse learning styles, accessibility, and evidence-based educational practices.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4o-mini",
+              "temperature": 0.3
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "Localization expert specialized in internationalization, translation, and cultural adaptation.",
+        "label": "Localization Expert",
+        "config": {
+          "name": "LocalizationExpert",
+          "system_message": "You are a localization expert with expertise in internationalization, translation, cultural adaptation, and global market entry. You provide guidance on adapting products and content for different markets, cultural considerations, and localization strategies. Always consider cultural nuances, language differences, and regional preferences in your recommendations.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4o-mini",
+              "temperature": 0.2
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "Technical writer specialized in documentation, instructional content, and knowledge management.",
+        "label": "Technical Writer",
+        "config": {
+          "name": "TechnicalWriter",
+          "system_message": "You are a technical writer with expertise in documentation, instructional content, knowledge management, and information architecture. You provide clear, concise technical documentation, user guides, and instructional materials. Always consider audience knowledge level, purpose of the document, and clarity of communication.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4o-mini",
+              "temperature": 0.2
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "DevOps engineer specialized in CI/CD, infrastructure automation, and deployment strategies.",
+        "label": "DevOps Engineer",
+        "config": {
+          "name": "DevOpsEngineer",
+          "system_message": "You are a DevOps engineer with expertise in CI/CD pipelines, infrastructure automation, cloud architecture, and deployment strategies. You provide recommendations on deployment processes, infrastructure setup, and automation solutions. Always consider reliability, scalability, security, and maintainability in your suggestions.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4o-mini",
+              "temperature": 0.1
+            }
+          }
+        }
+      },
+      {
+        "provider": "autogen_agentchat.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "Customer success specialist focused on user satisfaction, onboarding, and support strategies.",
+        "label": "Customer Success Specialist",
+        "config": {
+          "name": "CustomerSuccessExpert",
+          "system_message": "You are a customer success specialist with expertise in user satisfaction, customer onboarding, support strategies, and relationship management. You provide insights on improving customer experience, enhancing user adoption, and developing effective support systems. Always focus on user needs, customer journey, and building long-term relationships.",
+          "llm_config": {
+            "provider": "autogen_agentchat.OpenAIModelAdapter",
+            "config": {
+              "model": "gpt-4o-mini",
+              "temperature": 0.3
+            }
+          }
+        }
+      }
+    ],
+    "termination_condition": {
+      "provider": "autogen_agentchat.conditions.TextMentionTermination",
+      "component_type": "termination",
+      "version": 1,
+      "component_version": 1,
+      "description": "Terminate the conversation if a specific text is mentioned.",
+      "label": "TextMentionTermination",
+      "config": { "text": "TERMINATE" }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+name: "Research and Analysis Team"
+agents:
+  - name: "DataMiner"
+    role: "Research Specialist"
+    expertise: "Data collection and organization"
+  - name: "Analyst"
+    role: "Data Analyst"
+    expertise: "Pattern recognition and insight extraction"
+  - name: "Reporter"
+    role: "Content Writer"
+    expertise: "Creating concise, informative reports"
+  - name: "FactChecker"
+    role: "Fact Checking Specialist"
+    expertise: "Verifying information accuracy and reliability"
+tasks:
+  - id: 1
+    description: "Collect all relevant data about the query topic"
+    expected_output: "Comprehensive dataset with sources"
+    agent_name: "DataMiner"
+  - id: 2
+    description: "Analyze the collected data to identify patterns and insights"
+    expected_output: "Analysis report with key findings"
+    agent_name: "Analyst"
+  - id: 3
+    description: "Create a detailed report based on the analysis"
+    expected_output: "Structured report with sections for findings, implications, and recommendations"
+    agent_name: "Reporter"
+  - id: 4
+    description: "Verify all facts and claims in the final report"
+    expected_output: "Verification report with source confirmations"
+    agent_name: "FactChecker"
+process: "parallel" # Execution mode: sequential, parallel, async
