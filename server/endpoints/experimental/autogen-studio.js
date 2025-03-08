@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const { checkAuth } = require('../utils');
+const { validatedRequest } = require('../../utils/middleware');
 const { SystemSettings } = require('../../models/systemSettings');
 const logger = require('../../utils/logger')();
 const { setupWebSocketBridge } = require('./autogen-studio-websocket');
@@ -24,7 +24,7 @@ const AUTOGEN_STUDIO_CONFIG = {
 };
 
 // Get AutoGen Studio configuration
-router.get('/config', checkAuth, async (req, res) => {
+router.get('/config', [validatedRequest], async (req, res) => {
   try {
     const settings = await SystemSettings.getSettings();
     const autoGenSettings = settings.autogenStudio || AUTOGEN_STUDIO_CONFIG;
@@ -43,7 +43,7 @@ router.get('/config', checkAuth, async (req, res) => {
 });
 
 // Update AutoGen Studio configuration
-router.post('/config', checkAuth, async (req, res) => {
+router.post('/config', [validatedRequest], async (req, res) => {
   try {
     const { enabled, baseUrl, apiPath, wsPath, timeout } = req.body;
     const settings = await SystemSettings.getSettings();
@@ -66,7 +66,7 @@ router.post('/config', checkAuth, async (req, res) => {
 });
 
 // Proxy requests to AutoGen Studio API
-router.all('/api/*', checkAuth, async (req, res) => {
+router.all('/api/*', [validatedRequest], async (req, res) => {
   try {
     const settings = await SystemSettings.getSettings();
     const autoGenSettings = settings.autogenStudio || AUTOGEN_STUDIO_CONFIG;
@@ -96,7 +96,7 @@ router.all('/api/*', checkAuth, async (req, res) => {
 });
 
 // Get available SolnAI agents for AutoGen Studio
-router.get('/agents', checkAuth, async (req, res) => {
+router.get('/agents', [validatedRequest], async (req, res) => {
   try {
     // This would typically fetch agents from your database
     // For now, we'll return a simple list of agents
@@ -132,7 +132,7 @@ router.get('/agents', checkAuth, async (req, res) => {
 });
 
 // Install AutoGen Studio plugin
-router.post('/install-plugin', checkAuth, async (req, res) => {
+router.post('/install-plugin', [validatedRequest], async (req, res) => {
   try {
     const settings = await SystemSettings.getSettings();
     const autoGenSettings = settings.autogenStudio || AUTOGEN_STUDIO_CONFIG;
@@ -210,7 +210,7 @@ function handleWebSocketUpgrade(request, socket, head) {
       webSocketServer.emit('connection', ws, request);
       
       // Send a welcome message to confirm connection
-      if (ws.readyState === WebSocket.OPEN) {
+      if (ws.readyState === 1) { // 1 is OPEN in WebSocket
         ws.send(JSON.stringify({
           type: 'connect_success',
           message: 'Successfully connected to SolnAI WebSocket server',

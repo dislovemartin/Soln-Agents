@@ -70,6 +70,7 @@ class CrewAIRustIntegration:
         Returns:
             CrewAI-Rust task
         """
+        # Create task with required parameters only
         task = crewai_rust.Task(
             id=id,
             description=description,
@@ -77,9 +78,16 @@ class CrewAIRustIntegration:
             agent_name=agent_name,
         )
         
-        # Store additional metadata as attributes
-        task.priority = priority
-        task.dependencies = dependencies or []
+        # Create a metadata dictionary instead of setting attributes directly
+        # This avoids trying to set attributes that might not exist on the Task object
+        task_metadata = {
+            "priority": priority,
+            "dependencies": dependencies or []
+        }
+        
+        # Store metadata in task context if available, otherwise just return the task
+        if hasattr(task, "context"):
+            task.context["metadata"] = task_metadata
         
         return task
 

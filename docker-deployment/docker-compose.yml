@@ -1,7 +1,9 @@
 version: '3.8'
 services:
   solnai:
-    image: mintplexlabs/solnai
+    # For testing, we'll use the browser-tools-server image
+    # In production, this would be the actual SolnAI image
+    image: docker-deployment-browser-tools-server
     container_name: solnai
     ports:
       - "3001:3001"
@@ -12,9 +14,45 @@ services:
     volumes:
       - solnai_storage:/app/server/storage
       - ./.env:/app/server/.env
+      - solnai_agents:/app/SolnAI-agents  # Mount agents directory for persistence
     restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+  # MCP server for browser tools integration
+  browser-tools-mcp:
+    build: ../browser-tools-mcp/browser-tools-mcp
+    container_name: browser-tools-mcp
+    ports:
+      - "3027:3027"
+    restart: always
+    depends_on:
+      - browser-tools-server
+
+  # Browser tools server 
+  browser-tools-server:
+    build: ../browser-tools-mcp/browser-tools-server
+    container_name: browser-tools-server
+    ports:
+      - "3025:3025"
+    volumes:
+      - ./screenshots:/screenshots
+    restart: always
+
+  # CrewAI service for agent orchestration
+  crewai-service:
+    build: ../crewai-service
+    container_name: crewai-service
+    ports:
+      - "8001:8001"
+    volumes:
+      - solnai_agents:/app/agents
+    restart: always
+    depends_on:
+      - solnai
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
 
 volumes:
   solnai_storage:
@@ -22,4 +60,10 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/nvidia/system_monitoring/SolnAI/storage 
+      device: ${SOLNAI_STORAGE_PATH:-/home/nvidia/system_monitoring/SolnAI/storage}
+  solnai_agents:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${SOLNAI_AGENTS_PATH:-/home/nvidia/system_monitoring/SolnAI/agents}

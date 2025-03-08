@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { checkAuth } = require('../utils');
+const { validatedRequest } = require('../../utils/middleware');
 const { AgentExecutionHistory } = require('../../models/agentExecutionHistory');
 const logger = require('../../utils/logger')();
 
@@ -12,7 +12,7 @@ const logger = require('../../utils/logger')();
  */
 
 // Get execution history with optional filters
-router.get('/history', checkAuth, async (req, res) => {
+router.get('/history', [validatedRequest], async (req, res) => {
   try {
     const { 
       agentId, 
@@ -53,7 +53,7 @@ router.get('/history', checkAuth, async (req, res) => {
 });
 
 // Get agent execution statistics
-router.get('/stats', checkAuth, async (req, res) => {
+router.get('/stats', [validatedRequest], async (req, res) => {
   try {
     const { 
       agentId, 
@@ -85,7 +85,7 @@ router.get('/stats', checkAuth, async (req, res) => {
 });
 
 // Get time series data for agent executions
-router.get('/time-series', checkAuth, async (req, res) => {
+router.get('/time-series', [validatedRequest], async (req, res) => {
   try {
     const { 
       agentId, 
@@ -116,7 +116,7 @@ router.get('/time-series', checkAuth, async (req, res) => {
 });
 
 // Create a new execution history record
-router.post('/record', checkAuth, async (req, res) => {
+router.post('/record', [validatedRequest], async (req, res) => {
   try {
     const {
       agentId,
@@ -188,7 +188,7 @@ router.post('/record', checkAuth, async (req, res) => {
 });
 
 // Delete execution history record
-router.delete('/:id', checkAuth, async (req, res) => {
+router.delete('/:id', [validatedRequest], async (req, res) => {
   try {
     const { id } = req.params;
     
@@ -202,7 +202,7 @@ router.delete('/:id', checkAuth, async (req, res) => {
 });
 
 // Delete old execution history records
-router.delete('/cleanup/:days', checkAuth, async (req, res) => {
+router.delete('/cleanup/:days', [validatedRequest], async (req, res) => {
   try {
     const { days } = req.params;
     

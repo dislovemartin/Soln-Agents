@@ -32,11 +32,34 @@ check_docker() {
     fi
 }
 
+# Check and create directories if they don't exist
+setup_directories() {
+    # Extract storage path from .env file or use default
+    STORAGE_PATH=$(grep SOLNAI_STORAGE_PATH .env | cut -d '=' -f2 || echo "/home/nvidia/system_monitoring/SolnAI/storage")
+    AGENTS_PATH=$(grep SOLNAI_AGENTS_PATH .env | cut -d '=' -f2 || echo "/home/nvidia/system_monitoring/SolnAI/agents")
+    SCREENSHOTS_PATH="./screenshots"
+    
+    # Create directories if they don't exist
+    mkdir -p "$STORAGE_PATH"
+    mkdir -p "$AGENTS_PATH"
+    mkdir -p "$SCREENSHOTS_PATH"
+    
+    echo "Directory setup complete:"
+    echo " - Storage path: $STORAGE_PATH"
+    echo " - Agents path: $AGENTS_PATH"
+    echo " - Screenshots path: $SCREENSHOTS_PATH"
+}
+
 # Start SolnAI
 start_solnai() {
+    echo "Setting up required directories..."
+    setup_directories
+    
     echo "Starting SolnAI..."
     docker-compose up -d
     echo "SolnAI is now running at http://localhost:3001"
+    echo "Browser Tools MCP is running at http://localhost:3027"
+    echo "CrewAI Service is running at http://localhost:8001"
 }
 
 # Stop SolnAI
@@ -67,10 +90,21 @@ logs_solnai() {
 
 # Update SolnAI
 update_solnai() {
-    echo "Updating SolnAI to the latest version..."
-    docker-compose pull
+    echo "Updating SolnAI system to the latest version..."
+    
+    # Pull latest version of main image
+    docker-compose pull solnai
+    
+    # Rebuild custom services
+    echo "Rebuilding custom services..."
+    docker-compose build browser-tools-mcp browser-tools-server crewai-service
+    
+    # Restart all services
     docker-compose up -d
-    echo "SolnAI has been updated to the latest version."
+    
+    echo "SolnAI system has been updated to the latest version."
+    echo "Services running:"
+    docker-compose ps
 }
 
 # Main script execution

@@ -1,5 +1,6 @@
-const { spawn } = require('child_process');
-const { exec } = require('child_process');
+const childProcess = require('child_process');
+const { spawn } = childProcess;
+const { exec } = childProcess;
 const fs = require('fs').promises;
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
@@ -462,6 +463,7 @@ class SolnAgentsAdapter {
 
   /**
    * Sends a message to an agent session
+   * Includes automatic session recovery if session is broken
    */
   async sendMessage(sessionId, message) {
     try {
@@ -472,6 +474,11 @@ class SolnAgentsAdapter {
       if (!containerInfo && !processInfo) {
         return { success: false, error: 'Session not found' };
       }
+      
+      // Add retry mechanism
+      let retryCount = 0;
+      const maxRetries = 2;
+      let lastError = null;
       
       // Handle based on session type
       if (containerInfo) {
@@ -496,41 +503,170 @@ class SolnAgentsAdapter {
 
   /**
    * Sends a message to a Docker container
+   * Includes health check and container restart on failure
    */
-  async sendMessageToContainer(sessionId, containerInfo, message) {
+  async sendMessageToContainer(sessionId, containerInfo, message, retryAttempt = 0) {
     try {
-      const { port } = containerInfo;
+      const { port, container, imageName } = containerInfo;
       
-      // Send message to the container's API
+      // Check container health before sending message
+      const containerState = await container.inspect();
+      if (!containerState.State.Running) {
+        console.warn(`Container for session ${sessionId} is not running, attempting to restart...`);
+        
+        // Try to restart the container
+        await container.start();
+        
+        // Wait a moment for the container to initialize
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        
+        // If this is the first retry, attempt again
+        if (retryAttempt < 2) {
+          console.info(`Retrying message after container restart (attempt ${retryAttempt + 1})...`);
+          return this.sendMessageToContainer(sessionId, containerInfo, message, retryAttempt + 1);
+        }
+      }
+      
+      // Send message to the container's API with timeout
       const response = await axios.post(`http://localhost:${port}/process`, {
         message,
         sessionId
-      });
+      }, { timeout: 30000 });  // 30 second timeout
       
       return { success: true, data: response.data };
     } catch (error) {
       console.error('Error sending message to container:', error);
-      return { success: false, error: error.message };
+      
+      // If this is the first failure, try to restart the container
+      if (retryAttempt < 2) {
+        console.warn(`Attempting container restart for session ${sessionId} after error...`);
+        try {
+          // Stop the container if it's still running
+          await containerInfo.container.stop().catch(() => {});
+          
+          // Start it again
+          await containerInfo.container.start();
+          
+          // Wait a moment for initialization
+          await new Promise(resolve => setTimeout(resolve, 5000));
+          
+          // Retry the message
+          return this.sendMessageToContainer(sessionId, containerInfo, message, retryAttempt + 1);
+        } catch (restartError) {
+          console.error(`Failed to restart container for session ${sessionId}:`, restartError);
+          return { 
+            success: false, 
+            error: `Container failed and could not be restarted: ${error.message}`,
+            details: error.response?.data || null
+          };
+        }
+      }
+      
+      return { 
+        success: false, 
+        error: error.message,
+        details: error.response?.data || null
+      };
     }
   }
 
   /**
    * Sends a message to a Python process
+   * Includes health check and process restart on failure
    */
-  async sendMessageToProcess(sessionId, processInfo, message) {
+  async sendMessageToProcess(sessionId, processInfo, message, retryAttempt = 0) {
     try {
-      const { port } = processInfo;
+      const { port, process: pythonProcess, agentPath, entryPoint } = processInfo;
       
-      // Send message to the process's API
-      const response = await axios.post(`http://localhost:${port}/process`, {
-        message,
-        sessionId
-      });
+      // Check if process is still running
+      if (pythonProcess && pythonProcess.exitCode !== null) {
+        console.warn(`Process for session ${sessionId} has exited with code ${pythonProcess.exitCode}, attempting to restart...`);
+        
+        if (retryAttempt < 2) {
+          // Try to restart the process
+          const newProcess = spawn('python', [entryPoint], {
+            cwd: agentPath,
+            env: {
+              ...process.env,
+              SESSION_ID: sessionId,
+              PORT: port.toString()
+            }
+          });
+          
+          // Update process info in map
+          processInfo.process = newProcess;
+          this.processMap.set(sessionId, processInfo);
+          
+          // Set up event handlers
+          newProcess.stderr.on('data', (data) => {
+            console.error(`[Restarted ${sessionId}] Error: ${data.toString()}`);
+          });
+          
+          newProcess.on('close', (code) => {
+            console.log(`[Restarted ${sessionId}] Process exited with code ${code}`);
+          });
+          
+          // Wait for process to start
+          await new Promise(resolve => setTimeout(resolve, 5000));
+          
+          // Retry the message
+          return this.sendMessageToProcess(sessionId, processInfo, message, retryAttempt + 1);
+        }
+      }
       
-      return { success: true, data: response.data };
+      // Send message to the process's API with timeout
+      try {
+        const response = await axios.post(`http://localhost:${port}/process`, {
+          message,
+          sessionId
+        }, { timeout: 30000 }); // 30 second timeout
+        
+        return { success: true, data: response.data };
+      } catch (requestError) {
+        // If we get a connection error and haven't retried yet, try to restart the process
+        if (retryAttempt < 2) {
+          console.warn(`Failed to connect to process for session ${sessionId}, attempting to restart...`);
+          
+          // Kill old process if it exists
+          if (pythonProcess && pythonProcess.exitCode === null) {
+            try {
+              pythonProcess.kill();
+              await new Promise(resolve => setTimeout(resolve, 1000));
+            } catch (killError) {
+              console.error(`Failed to kill process for session ${sessionId}:`, killError);
+            }
+          }
+          
+          // Start a new process
+          const newProcess = spawn('python', [entryPoint], {
+            cwd: agentPath,
+            env: {
+              ...process.env,
+              SESSION_ID: sessionId,
+              PORT: port.toString()
+            }
+          });
+          
+          // Update process info
+          processInfo.process = newProcess;
+          this.processMap.set(sessionId, processInfo);
+          
+          // Wait for process to start
+          await new Promise(resolve => setTimeout(resolve, 5000));
+          
+          // Retry the message
+          return this.sendMessageToProcess(sessionId, processInfo, message, retryAttempt + 1);
+        }
+        
+        throw requestError;
+      }
     } catch (error) {
       console.error('Error sending message to process:', error);
-      return { success: false, error: error.message };
+      return { 
+        success: false, 
+        error: error.message,
+        details: error.response?.data || null 
+      };
     }
   }
 

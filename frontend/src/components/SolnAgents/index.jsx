@@ -10,7 +10,10 @@ import {
   MagnifyingGlass,
   Spinner,
   List,
-  ChatCircle
+  ChatCircle,
+  CircleWavyCheck,
+  CircleWavyWarning,
+  DownloadSimple
 } from '@phosphor-icons/react';
 
 const AgentCatalog = () => {
@@ -26,12 +29,24 @@ const AgentCatalog = () => {
   const [refreshingSessions, setRefreshingSessions] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState(null);
   const [view, setView] = useState('catalog'); // 'catalog', 'chat'
+  const [agentHealth, setAgentHealth] = useState({}); // Track agent health status
   
-  // Load agents on component mount
+  // Load agents and restore message history on component mount
   useEffect(() => {
     loadAgents();
     loadSessions();
-  }, []);
+    
+    // Restore message history from localStorage if available
+    if (activeSession) {
+      const history = SolnAgents.getMessageHistory(activeSession);
+      if (history && history.length > 0) {
+        setSessionMessages(prev => ({
+          ...prev,
+          [activeSession]: history
+        }));
+      }
+    }
+  }, [activeSession]);
   
   // Filter agents based on search query
   const filteredAgents = agents.filter(agent => 
@@ -57,12 +72,48 @@ const AgentCatalog = () => {
     }
   };
   
+  // Check the health of a specific agent session
+  const checkAgentHealth = async (sessionId) => {
+    try {
+      const response = await SolnAgents.getSessionInfo(sessionId);
+      if (response.success) {
+        // Set health status to "healthy"
+        setAgentHealth(prev => ({
+          ...prev,
+          [sessionId]: { status: 'healthy', lastChecked: new Date().toISOString() }
+        }));
+        return true;
+      } else {
+        // Set health status to "error"
+        setAgentHealth(prev => ({
+          ...prev,
+          [sessionId]: { status: 'error', lastChecked: new Date().toISOString(), error: response.error }
+        }));
+        return false;
+      }
+    } catch (error) {
+      // Set health status to "error"
+      setAgentHealth(prev => ({
+        ...prev,
+        [sessionId]: { status: 'error', lastChecked: new Date().toISOString(), error: error.message }
+      }));
+      return false;
+    }
+  };
+  
   const loadSessions = async () => {
     try {
       setRefreshingSessions(true);
       const response = await SolnAgents.listSessions();
       if (response.success) {
         setSessions(response.sessions || []);
+        
+        // Check health of each session
+        const healthPromises = (response.sessions || []).map(session => 
+          checkAgentHealth(session.sessionId)
+        );
+        
+        await Promise.all(healthPromises);
       } else {
         console.error('Failed to load sessions:', response.error);
       }
@@ -82,11 +133,13 @@ const AgentCatalog = () => {
         showToast('Agent session created', 'success');
         setActiveSession(response.sessionId);
         await loadSessions();
-        // Initialize empty message array for this session
+        
+        // Initialize UI state with empty array (localStorage already initialized in the model)
         setSessionMessages(prev => ({
           ...prev,
           [response.sessionId]: []
         }));
+        
         // Switch to chat view
         setView('chat');
       } else {
@@ -108,30 +161,18 @@ const AgentCatalog = () => {
       setSendingMessage(true);
       
       // Add user message to the conversation
-      const userMessage = { role: 'user', content: messageInput };
-      setSessionMessages(prev => ({
-        ...prev,
-        [activeSession]: [...(prev[activeSession] || []), userMessage]
-      }));
+      // No need to manually add messages to state here
+      // The SolnAgents.sendMessage function now handles saving the messages
+      // and we'll update our local state from localStorage
       
       const response = await SolnAgents.sendMessage(activeSession, messageInput);
       
       if (response.success) {
-        // Extract response content
-        let content = '';
-        if (response.data && response.data.response) {
-          content = response.data.response;
-        } else if (response.data && response.data.text) {
-          content = response.data.text;
-        } else {
-          content = JSON.stringify(response.data);
-        }
-        
-        // Add AI response to the conversation
-        const aiMessage = { role: 'assistant', content };
+        // Update the UI state from localStorage
+        const history = SolnAgents.getMessageHistory(activeSession);
         setSessionMessages(prev => ({
           ...prev,
-          [activeSession]: [...(prev[activeSession] || []), aiMessage]
+          [activeSession]: history
         }));
         
         setMessageInput('');
@@ -222,11 +263,44 @@ const AgentCatalog = () => {
                 Uptime: {sessionDetails.uptime} min
               </span>
             )}
+            
+            {/* Health status indicator */}
+            <div className="text-xs bg-gray-700 px-2 py-1 rounded-full flex items-center gap-1">
+              Status: 
+              {agentHealth[activeSession]?.status === 'healthy' ? (
+                <CircleWavyCheck size={14} className="text-green-400" title="Agent is healthy" />
+              ) : agentHealth[activeSession]?.status === 'error' ? (
+                <CircleWavyWarning size={14} className="text-yellow-400" title={`Error: ${agentHealth[activeSession]?.error || 'Unknown error'}`} />
+              ) : (
+                <Spinner size={14} className="animate-spin text-gray-400" />
+              )}
+            </div>
+            
+            {/* Check health button */}
+            <button 
+              onClick={() => checkAgentHealth(activeSession)}
+              className="p-1 text-blue-400 hover:text-blue-300 rounded-md"
+              title="Check agent health"
+            >
+              <ArrowsClockwise size={18} />
+            </button>
+            
+            {/* Export chat history button */}
+            <button 
+              onClick={() => SolnAgents.exportChatHistory(activeSession)}
+              className="p-1 text-blue-400 hover:text-blue-300 rounded-md"
+              title="Export chat history"
+            >
+              <DownloadSimple size={18} />
+            </button>
+            
+            {/* End session button */}
             <button 
               onClick={() => endSession(activeSession)}
               className="p-1 text-red-400 hover:text-red-300 rounded-md"
+              title="End session"
             >
-              <Trash size={20} />
+              <Trash size={18} />
             </button>
           </div>
         </div>
@@ -338,18 +412,38 @@ const AgentCatalog = () => {
                       <span>{agent.name}</span>
                     </div>
                     <div className="flex items-center gap-1">
+                      {/* Health status indicator */}
+                      {agentHealth[session.sessionId]?.status === 'healthy' ? (
+                        <CircleWavyCheck size={16} className="text-green-400" title="Agent is healthy" />
+                      ) : agentHealth[session.sessionId]?.status === 'error' ? (
+                        <CircleWavyWarning size={16} className="text-yellow-400" title={`Error: ${agentHealth[session.sessionId]?.error || 'Unknown error'}`} />
+                      ) : (
+                        <Spinner size={16} className="animate-spin text-gray-400" />
+                      )}
+                      
                       <button
                         onClick={() => {
                           setActiveSession(session.sessionId);
                           setView('chat');
                         }}
                         className="p-1 rounded-md hover:bg-gray-600 text-primary-button"
+                        title="Chat with agent"
                       >
                         <ChatCircle size={16} />
                       </button>
+                      
+                      <button
+                        onClick={() => SolnAgents.exportChatHistory(session.sessionId)}
+                        className="p-1 rounded-md hover:bg-gray-600 text-blue-400"
+                        title="Export chat history"
+                      >
+                        <DownloadSimple size={16} />
+                      </button>
+                      
                       <button
                         onClick={() => endSession(session.sessionId)}
                         className="p-1 rounded-md hover:bg-gray-600 text-red-400"
+                        title="End session"
                       >
                         <Trash size={16} />
                       </button>
